@@ -17,8 +17,7 @@ export function FillList(props: {
                     .filter(x => ((props.storageId === allStorage.id) || x.storages.find(x => x.storageId === props.storageId)) && x.checked)
                     .map(x => <FillListItem key={x.id} item={x} showStorage={props.storageId === allStorage.id} />)
             }
-            <List.Section>
-                <List.Subheader>Zuletzt verwendet</List.Subheader>
+            <List.Section title="Zuletzt verwendet">
                 {
                     items.items
                         .filter(x => ((props.storageId === allStorage.id) || x.storages.find(x => x.storageId === props.storageId)) && !x.checked)

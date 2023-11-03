@@ -22,6 +22,7 @@ export function FillFromHistoryList(props: {
                     item={{
                         id: uuid.v4() as string,
                         name: props.text,
+                        shops: [],
                         storages: (props.storageId === allStorage.id) ? [] : [{ storageId: props.storageId }],
                     }}
                     onPress={props.onPress}

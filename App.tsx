@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { PaperProvider } from 'react-native-paper';
 import { Provider } from 'react-redux';
 import { store } from './src/store/store';
-import { HomeScreen } from './src/HomeScreen';
+import { HomeNavigationScreen } from './src/HomeNavigationScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -51,18 +51,18 @@ function AppWithPersistence() {
         <NavigationContainer>
             <RootStack.Navigator>
                 <RootStack.Screen
+                    component={HomeNavigationScreen}
                     name="Home"
-                    component={HomeScreen}
                     options={{ headerShown: false }}
                 />
                 <RootStack.Screen
-                    name="Item"
                     component={ItemScreen}
+                    name="Item"
                     options={{ headerShown: false }}
                 />
                 <RootStack.Screen
-                    name="Settings"
                     component={SettingsScreen}
+                    name="Settings"
                 />
             </RootStack.Navigator>
         </NavigationContainer>

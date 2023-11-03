@@ -20,9 +20,10 @@ export function SearchBar(props: SearchBarProps) {
 
     return (
         <Searchbar
+            mode="view"
             placeholder="Will haben"
-            onChangeText={handleSearchChangeText}
             value={searchQuery}
+            onChangeText={handleSearchChangeText}
         />
     );
 }

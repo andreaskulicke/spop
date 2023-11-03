@@ -1,17 +1,17 @@
+import { useState } from "react";
 import { SafeAreaView, ScrollView } from "react-native";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { Appbar, List, Menu } from "react-native-paper";
-import { useState } from "react";
-import { allStorage, setActiveStorage } from "./store/storagesSlice";
 import { NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
-import { StoragesStackParamList } from "./StoragesScreen";
+import { ShopsStackParamList } from "./ShopsNavigationScreen";
+import { allShop, setActiveShop } from "./store/shopsSlice";
 
-export function StorageScreen(props: {
-    navigation: NavigationProp<RootStackParamList & StoragesStackParamList>;
+export function ShopsScreen(props: {
+    navigation: NavigationProp<RootStackParamList & ShopsStackParamList>;
 }) {
     const [menuVisible, setMenuVisible] = useState(false);
-    const storages = useAppSelector(state => state.storages);
+    const shops = useAppSelector(state => state.shops);
     const dispatch = useAppDispatch();
 
     function handleDotsPress(): void {
@@ -23,15 +23,15 @@ export function StorageScreen(props: {
         props.navigation.navigate("Settings");
     }
 
-    function handleStoragePress(id: string): void {
-        dispatch(setActiveStorage(id));
-        props.navigation.navigate("Fill");
+    function handleShopPress(id: string): void {
+        dispatch(setActiveShop(id));
+        props.navigation.navigate("Shopping");
     }
 
     return (
         <SafeAreaView style={{ height: "100%" }}>
             <Appbar.Header>
-                <Appbar.Content title="Storages" />
+                <Appbar.Content title="Shops" />
                 <Appbar.Action icon="plus" />
                 <Menu
                     anchor={<Appbar.Action icon="dots-vertical" onPress={handleDotsPress} />}
@@ -45,17 +45,17 @@ export function StorageScreen(props: {
             <List.Section>
                 <List.Item
                     left={p => <List.Icon {...p} icon="check-all" />}
-                    title={allStorage.name}
-                    onPress={() => handleStoragePress(allStorage.id)}
+                    title={allShop.name}
+                    onPress={() => handleShopPress(allShop.id)}
                 />
             </List.Section>
-            <List.Section title="Storages">
+            <List.Section title="Shops">
                 <ScrollView keyboardShouldPersistTaps="always">
                     {
-                        storages.storages.map(x => <List.Item
+                        shops.shops.map(x => <List.Item
                             key={x.id}
                             title={x.name}
-                            onPress={() => handleStoragePress(x.id)}
+                            onPress={() => handleShopPress(x.id)}
                         />)
                     }
                 </ScrollView>

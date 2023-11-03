@@ -1,30 +1,31 @@
 import React, { useState } from 'react';
 import { SafeAreaView, ScrollView } from 'react-native';
 import { SearchBar } from './SearchBar';
-import { ItemState, addItem, setItems } from './store/itemsSlice';
+import { ItemState, addItem, deleteItems, setItems } from './store/itemsSlice';
 import { FillFromHistoryList } from './FillFromHistoryList';
 import { FillList } from './FillList';
 import { Appbar, Divider, Menu } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
-import { selectActiveStorage } from './store/storagesSlice';
+import { allStorage, selectActiveStorage } from './store/storagesSlice';
 
 export function FillScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
 }) {
     const [filter, setFilter] = useState("");
     const [menuVisible, setMenuVisible] = useState(false);
+    const items = useAppSelector(state => state.items);
     const storage = useAppSelector(selectActiveStorage);
     const dispatch = useAppDispatch();
 
     function handleDeleteAllPress(): void {
         setMenuVisible(false);
-        dispatch(setItems({ items: [] }));
-    }
+        const itemsToDelete = items.items
+            .filter(x => (storage.id === allStorage.id) || x.storages.find(x => x.storageId === storage.id))
+            .map(x => x.id);
 
-    function handleDotsPress(): void {
-        setMenuVisible(true);
+        dispatch(deleteItems(itemsToDelete));
     }
 
     function handleSettingsPress(): void {
@@ -49,9 +50,9 @@ export function FillScreen(props: {
         <SafeAreaView style={{ height: "100%" }}>
             <Appbar.Header>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
-                <Appbar.Content title={storage?.name ?? "Alle"} />
+                <Appbar.Content title={storage?.name ?? allStorage.name} />
                 <Menu
-                    anchor={<Appbar.Action icon="dots-vertical" onPress={handleDotsPress} />}
+                    anchor={<Appbar.Action icon="dots-vertical" onPress={() => setMenuVisible(true)} />}
                     anchorPosition="bottom"
                     visible={menuVisible}
                     onDismiss={() => setMenuVisible(false)}
