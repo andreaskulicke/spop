@@ -1,27 +1,29 @@
-import React from 'react';
-import { View } from 'react-native';
-import { useAppSelector } from './store/hooks';
-import { ItemState } from './store/itemsSlice';
-import uuid from 'react-native-uuid';
-import { FillFromHistoryListItem } from './FillFromHistoryListItem';
 import { allStorage } from './store/storagesSlice';
+import { FillFromHistoryListItem } from './FillFromHistoryListItem';
+import { ItemState } from './store/itemsSlice';
+import { useAppSelector } from './store/hooks';
+import { View } from 'react-native';
+import React from 'react';
+import uuid from 'react-native-uuid';
 
 export function FillFromHistoryList(props: {
     storageId: string;
     text: string;
+    amount?: string;
     onPress?: (item: ItemState) => void;
-    onIconPress?: (text: string) => void;
+    onIconPress?: (name: string, amount: string | undefined) => void;
 }) {
     const items = useAppSelector(state => state.items);
 
     return (
         <View>
             {
-                !items.items.find(x => x.name.toLowerCase() === props.text.toLowerCase())
+                props.text && !items.items.find(x => x.name.toLowerCase() === props.text.toLowerCase())
                 && <FillFromHistoryListItem
                     item={{
                         id: uuid.v4() as string,
                         name: props.text,
+                        amount: props.amount,
                         shops: [],
                         storages: (props.storageId === allStorage.id) ? [] : [{ storageId: props.storageId }],
                     }}
@@ -30,10 +32,10 @@ export function FillFromHistoryList(props: {
             }
             {
                 items.items
-                    .filter(x => x.name.includes(props.text))
+                    .filter(x => x.name.toLowerCase().includes(props.text.toLowerCase()))
                     .map(x => <FillFromHistoryListItem
                         key={x.id}
-                        item={x}
+                        item={{ ...x, amount: props.amount }}
                         onPress={props.onPress}
                         onIconPress={props.onIconPress} />)
             }

@@ -13,7 +13,7 @@ import { allStorage, selectActiveStorage } from './store/storagesSlice';
 export function FillScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
 }) {
-    const [filter, setFilter] = useState("");
+    const [filter, setFilter] = useState<{ text: string; name?: string; amount?: string }>();
     const [menuVisible, setMenuVisible] = useState(false);
     const items = useAppSelector(state => state.items);
     const storage = useAppSelector(selectActiveStorage);
@@ -34,16 +34,16 @@ export function FillScreen(props: {
     }
 
     function handlePress(item: ItemState): void {
-        dispatch(addItem({ item: item, storageId: storage.id }));
-        setFilter("");
+        dispatch(addItem({ item: { ...item, amount: filter?.amount }, storageId: storage.id }));
+        setFilter(undefined);
     }
 
-    function handleIconPress(text: string): void {
-        setFilter(text);
+    function handleIconPress(name: string, amount: string | undefined): void {
+        setFilter({ text: amount ? `${amount} ${name}` : name, name, amount });
     }
 
-    function handleSearchChange(text: string): void {
-        setFilter(text);
+    function handleSearchChange(text: string, name: string, amount: string): void {
+        setFilter({ text, name, amount });
     }
 
     return (
@@ -63,7 +63,7 @@ export function FillScreen(props: {
                 </Menu>
             </Appbar.Header>
             <SearchBar
-                text={filter}
+                text={filter?.text}
                 onChange={handleSearchChange}
             />
             <ScrollView keyboardShouldPersistTaps={filter ? "always" : "never"}>
@@ -74,7 +74,8 @@ export function FillScreen(props: {
                         />
                         : <FillFromHistoryList
                             storageId={storage.id}
-                            text={filter}
+                            text={filter?.name ?? filter?.text}
+                            amount={filter?.amount}
                             onPress={handlePress}
                             onIconPress={handleIconPress}
                         />

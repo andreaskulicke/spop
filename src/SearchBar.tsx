@@ -3,15 +3,25 @@ import { Searchbar } from 'react-native-paper';
 
 export interface SearchBarProps {
     text?: string;
-    onChange?: (text: string) => void;
+    onChange?: (text: string, name: string, amount: string) => void;
 }
 
 export function SearchBar(props: SearchBarProps) {
     const [searchQuery, setSearchQuery] = useState(props.text ?? "");
 
     function handleSearchChangeText(text: string) {
-        setSearchQuery(text.trimStart());
-        props.onChange(text.trimStart());
+        const t = text.trimStart();
+        const m = t.match("^(?<pre>\\d+[^ ]*)? *(?<name>.*?) *(?<post>\\d+[^ ]*)? *$");
+        if (m) {
+            console.log("name='" + m.groups["name"] + "'")
+            console.log("pre='" + m.groups["pre"] + "'")
+            console.log("post='" + m.groups["post"] + "'")
+            const name = m.groups["name"] + ((m.groups["pre"] && m.groups.post) ? ` ${m.groups["post"]}` : "")
+            props.onChange(t, name, m.groups["pre"] ?? m.groups["post"]);
+        } else {
+            props.onChange(t, t, "");
+        }
+        setSearchQuery(t);
     }
 
     useEffect(() => {

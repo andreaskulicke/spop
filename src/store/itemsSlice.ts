@@ -50,8 +50,10 @@ export const itemsSlice = createSlice({
             }
         },
         addItem: (state, action: PayloadAction<{ item: ItemState, storageId: string }>) => {
+            // console.log("addItem:" + JSON.stringify(action.payload.item));
             const item = state.items.find(x => x.id === action.payload.item.id);
             if (item) {
+                item.amount = action.payload.item.amount;
                 item.checked = true;
                 if ((action.payload.storageId !== allStorage.id)
                     && !item.storages.find(x => x.storageId === action.payload.storageId)) {
