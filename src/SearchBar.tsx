@@ -20,8 +20,9 @@ export function SearchBar(props: SearchBarProps) {
 
     return (
         <Searchbar
-            mode="view"
+            mode="bar"
             placeholder="Will haben"
+            style={{ margin: 8 }}
             value={searchQuery}
             onChangeText={handleSearchChangeText}
         />

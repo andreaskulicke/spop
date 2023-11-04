@@ -17,14 +17,16 @@ export function HomeNavigationScreen() {
                 component={StoragesNavigationScreen}
                 name="StoragesEntry"
                 options={{
-                    tabBarIcon: () => <Icon color={MD3Colors.primary0} size={24} source="home-plus" />
+                    tabBarIcon: () => <Icon color={MD3Colors.primary0} size={24} source="home-plus" />,
+                    tabBarLabel: "Storages",
                 }}
             />
             <Tab.Screen
                 component={ShopsNavigationScreen}
                 name="ShopsEntry"
                 options={{
-                    tabBarIcon: () => <Icon color={MD3Colors.primary0} size={24} source="cart" />
+                    tabBarIcon: () => <Icon color={MD3Colors.primary0} size={24} source="cart" />,
+                    tabBarLabel: "Shops",
                 }}
             />
         </Tab.Navigator>

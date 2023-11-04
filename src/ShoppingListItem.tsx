@@ -11,6 +11,7 @@ export function ShoppingListItem(props: {
     item: ItemState;
     showShops?: boolean;
 }) {
+    const shops = useAppSelector(state => state.shops);
     const dispatch = useAppDispatch();
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
@@ -26,9 +27,17 @@ export function ShoppingListItem(props: {
         navigation.navigate("Item", { id: props.item.id });
     }
 
+    let description = "";
+    if (props.showShops) {
+        description = props.item.shops
+            .map(x => shops.shops.find(s => s.id === x.shopId)?.name)
+            .filter(x => !!x)
+            .join();
+    }
+
     return (
         <List.Item
-            description={<Description {...props} />}
+            description={description ? description : undefined}
             title={props.item.name}
             right={
                 p => (
@@ -44,26 +53,5 @@ export function ShoppingListItem(props: {
                 )}
             onPress={handleItemPress}
         />
-    );
-}
-
-function Description(props: {
-    item: ItemState;
-    showShops?: boolean;
-}) {
-    const shops = useAppSelector(state => state.shops);
-
-    if (!props.showShops) {
-        return undefined;
-    }
-    return (
-        <Text variant="labelSmall">
-            {
-                props.item.shops
-                    .map(x => shops.shops.find(s => s.id === x.shopId)?.name)
-                    .filter(x => !!x)
-                    .join()
-            }
-        </Text>
     );
 }

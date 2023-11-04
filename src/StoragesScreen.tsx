@@ -1,6 +1,6 @@
 import { SafeAreaView, ScrollView } from "react-native";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { Appbar, List, Menu } from "react-native-paper";
+import { Appbar, Avatar, List, Menu, Surface, useTheme } from "react-native-paper";
 import { useState } from "react";
 import { allStorage, setActiveStorage } from "./store/storagesSlice";
 import { NavigationProp } from "@react-navigation/native";
@@ -13,6 +13,7 @@ export function StoragesScreen(props: {
     const [menuVisible, setMenuVisible] = useState(false);
     const storages = useAppSelector(state => state.storages);
     const dispatch = useAppDispatch();
+    const theme = useTheme();
 
     function handleDotsPress(): void {
         setMenuVisible(true);
@@ -42,19 +43,22 @@ export function StoragesScreen(props: {
                     <Menu.Item leadingIcon="cog-outline" title="Einstellungen" onPress={handleSettingsPress} />
                 </Menu>
             </Appbar.Header>
-            <List.Section>
+            <Surface
+                style={{ margin: 8 }}
+            >
                 <List.Item
                     left={p => <List.Icon {...p} icon="check-all" />}
                     title={allStorage.name}
                     onPress={() => handleStoragePress(allStorage.id)}
                 />
-            </List.Section>
+            </Surface>
             <List.Section title="Storages">
                 <ScrollView keyboardShouldPersistTaps="always">
                     {
                         storages.storages.map(x => <List.Item
                             key={x.id}
                             title={x.name}
+                            left={p => <Avatar.Text {...p} color={theme.colors.primaryContainer} label={x.name.substring(0, 1)} size={40} />}
                             onPress={() => handleStoragePress(x.id)}
                         />)
                     }

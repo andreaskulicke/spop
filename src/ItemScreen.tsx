@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
-import { Appbar, Checkbox, Divider, List, TextInput, useTheme } from "react-native-paper";
+import { Appbar, Card, Checkbox, Divider, List, TextInput, useTheme } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RootStackParamList } from "../App";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
@@ -52,78 +52,85 @@ export function ItemScreen(props: {
                 <Appbar.Content title={item?.name ?? "Item"} />
                 <Appbar.Action icon="trash-can" onPress={handleDeletePress} />
             </Appbar.Header>
-            <TextInput
-                label="Name"
-                value={item.name}
-                onChangeText={handleNameChange}
-            />
-            <TextInput
-                label="Menge"
-                value={item.amount}
-                onChangeText={handleAmountChange}
-            />
-            <Pressable onPress={handleCheckPress}>
-                <List.Item
-                    title="Will haben?"
-                    right={p =>
-                        <Checkbox
-                            {...p}
-                            status={item.checked ? "checked" : "unchecked"}
-                            onPress={handleCheckPress}
-                        />}
-                />
-            </Pressable>
-            <Divider />
-            <List.Accordion
-                description={storages.storages.filter(x => item.storages.find(y => y.storageId === x.id)).map(x => x.name).join()}
-                expanded={storagesExpanded}
-                style={{ backgroundColor: theme.colors.elevation.level3 }}
-                title="Storages"
-                onPress={() => {
-                    Keyboard.dismiss();
-                    setStoragesExpanded(v => !v);
-                }}
-            >
-                <ScrollView style={{ backgroundColor: theme.colors.elevation.level1, height: 160 }}>
-                    {
-                        storages.storages.map(s =>
-                            <List.Item
-                                key={s.id}
-                                title={s.name}
-                                right={p => <Checkbox
-                                    {...p}
-                                    status={item.storages.find(x => x.storageId === s.id) ? "checked" : "unchecked"}
-                                    onPress={() => handleStorageCheck(s.id)}
-                                />}
-                            />)
-                    }
-                </ScrollView>
-            </List.Accordion>
-            <Divider />
-            <List.Accordion
-                expanded={shopsExpanded}
-                style={{ backgroundColor: theme.colors.elevation.level3 }}
-                title="Shops"
-                onPress={() => {
-                    Keyboard.dismiss();
-                    setShopsExpanded(v => !v);
-                }}
-            >
-                <ScrollView style={{ backgroundColor: theme.colors.elevation.level1, height: 160 }}>
-                    {
-                        shops.shops.map(s =>
-                            <List.Item
-                                key={s.id}
-                                title={s.name}
-                                right={p => <Checkbox
-                                    {...p}
-                                    status={item.shops.find(x => x.shopId === s.id) ? "checked" : "unchecked"}
-                                    onPress={() => handleShopCheck(s.id)}
-                                />}
-                            />)
-                    }
-                </ScrollView>
-            </List.Accordion>
+            <ScrollView style={{ backgroundColor: theme.colors.elevation.level1, height: 160 }}>
+                <Card
+                    style={{ margin: 8 }}
+                >
+                    <Card.Title title="Allgemein" />
+                    <TextInput
+                        label="Name"
+                        mode="outlined"
+                        style={{ margin: 8 }}
+                        value={item.name}
+                        onChangeText={handleNameChange}
+                    />
+                    <TextInput
+                        label="Menge"
+                        mode="outlined"
+                        style={{ margin: 8 }}
+                        value={item.amount}
+                        onChangeText={handleAmountChange}
+                    />
+                    <Checkbox.Item
+                        label="Will haben?"
+                        status={item.checked ? "checked" : "unchecked"}
+                        style={{ margin: 8 }}
+                        onPress={handleCheckPress}
+                    />
+                </Card>
+                <Card
+                    style={{ margin: 8 }}
+                >
+                    <List.Accordion
+                        description={storages.storages.filter(x => item.storages.find(y => y.storageId === x.id)).map(x => x.name).join()}
+                        expanded={storagesExpanded}
+                        title="Storages"
+                        onPress={() => {
+                            Keyboard.dismiss();
+                            setStoragesExpanded(v => !v);
+                        }}
+                    >
+                        {
+                            storages.storages.map(s =>
+                                <List.Item
+                                    key={s.id}
+                                    title={s.name}
+                                    right={p => <Checkbox
+                                        {...p}
+                                        status={item.storages.find(x => x.storageId === s.id) ? "checked" : "unchecked"}
+                                        onPress={() => handleStorageCheck(s.id)}
+                                    />}
+                                />)
+                        }
+                    </List.Accordion>
+                </Card>
+                <Card
+                    style={{ margin: 8 }}
+                >
+                    <List.Accordion
+                        description={shops.shops.filter(x => item.shops.find(y => y.shopId === x.id)).map(x => x.name).join()}
+                        expanded={shopsExpanded}
+                        title="Shops"
+                        onPress={() => {
+                            Keyboard.dismiss();
+                            setShopsExpanded(v => !v);
+                        }}
+                    >
+                        {
+                            shops.shops.map(s =>
+                                <List.Item
+                                    key={s.id}
+                                    title={s.name}
+                                    right={p => <Checkbox
+                                        {...p}
+                                        status={item.shops.find(x => x.shopId === s.id) ? "checked" : "unchecked"}
+                                        onPress={() => handleShopCheck(s.id)}
+                                    />}
+                                />)
+                        }
+                    </List.Accordion>
+                </Card>
+            </ScrollView>
         </SafeAreaView>
     );
 }
