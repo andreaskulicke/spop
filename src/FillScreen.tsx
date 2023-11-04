@@ -20,7 +20,8 @@ export function FillScreen(props: {
     const dispatch = useAppDispatch();
 
     function handleEditPress(): void {
-n    }
+        n
+    }
 
     function handleDeleteAllPress(): void {
         setMenuVisible(false);
@@ -54,7 +55,10 @@ n    }
             <Appbar.Header>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={storage?.name ?? allStorage.name} />
-                <Appbar.Action icon="pencil-outline" onPress={handleEditPress} />
+                {
+                    (storage.id !== allStorage.id)
+                    && <Appbar.Action icon="pencil-outline" onPress={handleEditPress} />
+                }
                 <Menu
                     anchor={<Appbar.Action icon="dots-vertical" onPress={() => setMenuVisible(true)} />}
                     anchorPosition="bottom"

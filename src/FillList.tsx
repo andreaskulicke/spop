@@ -12,6 +12,7 @@ export function FillList(props: {
 
     const recentlyUsed = items.items
         .filter(x => ((props.storageId === allStorage.id) || x.storages.find(x => x.storageId === props.storageId)) && !x.wanted);
+
     return (
         <View>
             {
@@ -23,8 +24,7 @@ export function FillList(props: {
                 (recentlyUsed.length > 0)
                 && <List.Section title="Zuletzt verwendet">
                     {
-                        recentlyUsed
-                            .map(x => <FillListItem key={x.id} item={x} showStorage={props.storageId === allStorage.id} />)
+                        recentlyUsed.map(x => <FillListItem key={x.id} item={x} showStorage={props.storageId === allStorage.id} />)
                     }
                 </List.Section>
             }

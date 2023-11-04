@@ -10,6 +10,8 @@ export function ShoppingList(props: {
 }) {
     const items = useAppSelector(state => state.items);
 
+    const recentlyUsed = items.items
+        .filter(x => ((props.shop.id === allShop.id) || x.shops.find(x => x.shopId === props.shop.id)) && !x.wanted);
     return (
         <View>
             {
@@ -17,13 +19,14 @@ export function ShoppingList(props: {
                     .filter(x => ((props.shop.id === allShop.id) || x.shops.find(x => x.shopId === props.shop.id)) && x.wanted)
                     .map(x => <ShoppingListItem key={x.id} item={x} showShops={props.shop.id === allShop.id} />)
             }
-            <List.Section title="Zuletzt verwendet">
-                {
-                    items.items
-                        .filter(x => ((props.shop.id === allShop.id) || x.shops.find(x => x.shopId === props.shop.id)) && !x.wanted)
-                        .map(x => <ShoppingListItem key={x.id} item={x} showShops={props.shop.id === allShop.id} />)
-                }
-            </List.Section>
+            {
+                (recentlyUsed.length > 0)
+                && <List.Section title="Zuletzt verwendet">
+                    {
+                        recentlyUsed.map(x => <ShoppingListItem key={x.id} item={x} showShops={props.shop.id === allShop.id} />)
+                    }
+                </List.Section>
+            }
         </View>
     );
 }

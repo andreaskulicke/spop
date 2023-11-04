@@ -28,7 +28,10 @@ export function ShoppingScreen(props: {
             <Appbar.Header>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={shop?.name ?? allShop.name} />
-                <Appbar.Action icon="pencil-outline" onPress={handleEditPress} />
+                {
+                    (shop.id !== allShop.id)
+                    && <Appbar.Action icon="pencil-outline" onPress={handleEditPress} />
+                }
                 <Menu
                     anchor={<Appbar.Action icon="dots-vertical" onPress={() => setMenuVisible(true)} />}
                     anchorPosition="bottom"
