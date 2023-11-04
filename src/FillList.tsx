@@ -11,12 +11,12 @@ export function FillList(props: {
     const items = useAppSelector(state => state.items);
 
     const recentlyUsed = items.items
-        .filter(x => ((props.storageId === allStorage.id) || x.storages.find(x => x.storageId === props.storageId)) && !x.checked);
+        .filter(x => ((props.storageId === allStorage.id) || x.storages.find(x => x.storageId === props.storageId)) && !x.wanted);
     return (
         <View>
             {
                 items.items
-                    .filter(x => ((props.storageId === allStorage.id) || x.storages.find(x => x.storageId === props.storageId)) && x.checked)
+                    .filter(x => ((props.storageId === allStorage.id) || x.storages.find(x => x.storageId === props.storageId)) && x.wanted)
                     .map(x => <FillListItem key={x.id} item={x} showStorage={props.storageId === allStorage.id} />)
             }
             {

@@ -13,6 +13,11 @@ export function ShoppingScreen(props: {
     const [menuVisible, setMenuVisible] = useState(false);
     const shop = useAppSelector(selectActiveShop);
 
+    function handleEditPress(): void {
+        setMenuVisible(false);
+        props.navigation.navigate("Shop", { id: shop.id });
+    }
+
     function handleSettingsPress(): void {
         setMenuVisible(false);
         props.navigation.navigate("Settings");
@@ -23,6 +28,7 @@ export function ShoppingScreen(props: {
             <Appbar.Header>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={shop?.name ?? allShop.name} />
+                <Appbar.Action icon="pencil-outline" onPress={handleEditPress} />
                 <Menu
                     anchor={<Appbar.Action icon="dots-vertical" onPress={() => setMenuVisible(true)} />}
                     anchorPosition="bottom"

@@ -20,7 +20,7 @@ export function ShoppingListItem(props: {
     }
 
     function handlePress(): void {
-        dispatch(checkItem({ itemId: props.item.id, check: !props.item.checked }));
+        dispatch(checkItem({ itemId: props.item.id, check: !props.item.wanted }));
     }
 
     function handleItemPress(): void {
@@ -47,7 +47,7 @@ export function ShoppingListItem(props: {
                             onChange={handleAmountChange} />
                         <Checkbox
                             {...p}
-                            status={props.item.checked ? "checked" : "unchecked"}
+                            status={props.item.wanted ? "unchecked" : "checked"}
                             onPress={handlePress} />
                     </View>
                 )}

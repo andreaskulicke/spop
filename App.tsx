@@ -12,6 +12,8 @@ import { useColorScheme } from 'react-native';
 import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import merge from 'deepmerge';
+import { StorageScreen } from './src/StorageScreen';
+import { ShopScreen } from './src/ShopScreen';
 
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
     reactNavigationLight: NavigationDefaultTheme,
@@ -25,6 +27,8 @@ export type RootStackParamList = {
     Home: undefined;
     Item: { id: string };
     Settings: undefined;
+    Shop: { id: string };
+    Storage: { id: string };
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -78,6 +82,16 @@ function AppWithStore() {
                     <RootStack.Screen
                         component={SettingsScreen}
                         name="Settings"
+                    />
+                    <RootStack.Screen
+                        component={ShopScreen}
+                        name="Shop"
+                        options={{ headerShown: false }}
+                    />
+                    <RootStack.Screen
+                        component={StorageScreen}
+                        name="Storage"
+                        options={{ headerShown: false }}
                     />
                 </RootStack.Navigator>
             </NavigationContainer>

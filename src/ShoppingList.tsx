@@ -14,13 +14,13 @@ export function ShoppingList(props: {
         <View>
             {
                 items.items
-                    .filter(x => ((props.shop.id === allShop.id) || x.shops.find(x => x.shopId === props.shop.id)) && x.checked)
+                    .filter(x => ((props.shop.id === allShop.id) || x.shops.find(x => x.shopId === props.shop.id)) && x.wanted)
                     .map(x => <ShoppingListItem key={x.id} item={x} showShops={props.shop.id === allShop.id} />)
             }
             <List.Section title="Zuletzt verwendet">
                 {
                     items.items
-                        .filter(x => ((props.shop.id === allShop.id) || x.shops.find(x => x.shopId === props.shop.id)) && !x.checked)
+                        .filter(x => ((props.shop.id === allShop.id) || x.shops.find(x => x.shopId === props.shop.id)) && !x.wanted)
                         .map(x => <ShoppingListItem key={x.id} item={x} showShops={props.shop.id === allShop.id} />)
                 }
             </List.Section>

@@ -6,7 +6,7 @@ export interface ItemState {
     id: string;
     name: string;
     amount?: string;
-    checked?: boolean;
+    wanted?: boolean;
     shops: { shopId: string; }[];
     storages: { storageId: string; }[];
 }
@@ -54,7 +54,7 @@ export const itemsSlice = createSlice({
             const item = state.items.find(x => x.id === action.payload.item.id);
             if (item) {
                 item.amount = action.payload.item.amount;
-                item.checked = true;
+                item.wanted = true;
                 if ((action.payload.storageId !== allStorage.id)
                     && !item.storages.find(x => x.storageId === action.payload.storageId)) {
                     item.storages.push({ storageId: action.payload.storageId });
@@ -82,7 +82,7 @@ export const itemsSlice = createSlice({
             if (index !== -1) {
                 const item = state.items.splice(index, 1)[0];
                 state.items.unshift(item);
-                item.checked = action.payload.check;
+                item.wanted = action.payload.check;
             }
         },
         deleteItem: (state, action: PayloadAction<string>) => {

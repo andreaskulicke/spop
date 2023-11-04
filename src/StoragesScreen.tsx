@@ -1,11 +1,12 @@
 import { SafeAreaView, ScrollView } from "react-native";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { Appbar, Avatar, List, Menu, Surface, Text, useTheme } from "react-native-paper";
+import { Appbar, Avatar, Divider, List, Menu, Surface, Text, useTheme } from "react-native-paper";
 import { useState } from "react";
-import { allStorage, setActiveStorage } from "./store/storagesSlice";
+import { addStorage, allStorage, setActiveStorage } from "./store/storagesSlice";
 import { NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { StoragesStackParamList } from "./StoragesNavigationScreen";
+import uuid from 'react-native-uuid';
 
 export function StoragesScreen(props: {
     navigation: NavigationProp<RootStackParamList & StoragesStackParamList>;
@@ -25,16 +26,26 @@ export function StoragesScreen(props: {
         props.navigation.navigate("Settings");
     }
 
+    function handleAddStoragePress(): void {
+        setMenuVisible(false);
+        const id = uuid.v4() as string;
+        dispatch(addStorage(id));
+        props.navigation.navigate("Storage", { id });
+    }
+
     function handleStoragePress(id: string): void {
         dispatch(setActiveStorage(id));
         props.navigation.navigate("Fill");
+    }
+
+    function handleStorageLongPress(id: string): void {
     }
 
     return (
         <SafeAreaView style={{ height: "100%" }}>
             <Appbar.Header>
                 <Appbar.Content title="Storages" />
-                <Appbar.Action icon="plus" />
+                <Appbar.Action icon="plus" onPress={handleAddStoragePress} />
                 <Menu
                     anchor={<Appbar.Action icon="dots-vertical" onPress={handleDotsPress} />}
                     anchorPosition="bottom"
@@ -44,16 +55,25 @@ export function StoragesScreen(props: {
                     <Menu.Item leadingIcon="cog-outline" title="Einstellungen" onPress={handleSettingsPress} />
                 </Menu>
             </Appbar.Header>
-            <Surface
-                style={{ margin: 8 }}
-            >
-                <List.Item
-                    left={p => <List.Icon {...p} icon="check-all" />}
-                    title={allStorage.name}
-                    onPress={() => handleStoragePress(allStorage.id)}
-                />
-            </Surface>
-            <List.Section title="Storages">
+            <Divider />
+            <List.Item
+                left={p =>
+                    <Avatar.Icon
+                        {...p}
+                        color={theme.colors.primaryContainer}
+                        icon="check-all"
+                        size={40}
+                    />}
+                right={p =>
+                    <Text {...p} variant="labelMedium">
+                        {items.items.filter(i => i.wanted).length}
+                    </Text>
+                }
+                title={allStorage.name}
+                onPress={() => handleStoragePress(allStorage.id)}
+            />
+            <Divider />
+            <List.Section>
                 <ScrollView keyboardShouldPersistTaps="always">
                     {
                         storages.storages.map(x => <List.Item
@@ -62,15 +82,17 @@ export function StoragesScreen(props: {
                             left={p =>
                                 <Avatar.Text
                                     {...p}
-                                    color={theme.colors.primaryContainer} label={x.name.substring(0, 1)}
+                                    color={theme.colors.primaryContainer}
+                                    label={x.name.substring(0, 1)}
                                     size={40}
                                 />}
                             right={p =>
                                 <Text {...p} variant="labelMedium">
-                                    {items.items.filter(i => i.storages.find(s => s.storageId === x.id)).length}
+                                    {items.items.filter(i => i.wanted && i.storages.find(s => s.storageId === x.id)).length}
                                 </Text>
                             }
                             onPress={() => handleStoragePress(x.id)}
+                            onLongPress={() => handleStorageLongPress(x.id)}
                         />)
                     }
                 </ScrollView>

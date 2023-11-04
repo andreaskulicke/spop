@@ -21,7 +21,7 @@ export function FillListItem(props: {
     }
 
     function handleCheckPress(): void {
-        dispatch(checkItem({ itemId: props.item.id, check: !props.item.checked }));
+        dispatch(checkItem({ itemId: props.item.id, check: !props.item.wanted }));
     }
 
     function handleItemPress(): void {
@@ -50,7 +50,7 @@ export function FillListItem(props: {
                         onChange={handleAmountChange} />
                     <IconButton
                         {...p}
-                        icon={props.item.checked ? "minus" : "plus"}
+                        icon={props.item.wanted ? "minus" : "plus"}
                         onPress={handleCheckPress}
                     />
                 </View>
