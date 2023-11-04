@@ -1,6 +1,6 @@
 import { SafeAreaView, ScrollView } from "react-native";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { Appbar, Avatar, List, Menu, Surface, useTheme } from "react-native-paper";
+import { Appbar, Avatar, List, Menu, Surface, Text, useTheme } from "react-native-paper";
 import { useState } from "react";
 import { allStorage, setActiveStorage } from "./store/storagesSlice";
 import { NavigationProp } from "@react-navigation/native";
@@ -11,6 +11,7 @@ export function StoragesScreen(props: {
     navigation: NavigationProp<RootStackParamList & StoragesStackParamList>;
 }) {
     const [menuVisible, setMenuVisible] = useState(false);
+    const items = useAppSelector(state => state.items);
     const storages = useAppSelector(state => state.storages);
     const dispatch = useAppDispatch();
     const theme = useTheme();
@@ -58,7 +59,17 @@ export function StoragesScreen(props: {
                         storages.storages.map(x => <List.Item
                             key={x.id}
                             title={x.name}
-                            left={p => <Avatar.Text {...p} color={theme.colors.primaryContainer} label={x.name.substring(0, 1)} size={40} />}
+                            left={p =>
+                                <Avatar.Text
+                                    {...p}
+                                    color={theme.colors.primaryContainer} label={x.name.substring(0, 1)}
+                                    size={40}
+                                />}
+                            right={p =>
+                                <Text {...p} variant="labelMedium">
+                                    {items.items.filter(i => i.storages.find(s => s.storageId === x.id)).length}
+                                </Text>
+                            }
                             onPress={() => handleStoragePress(x.id)}
                         />)
                     }
