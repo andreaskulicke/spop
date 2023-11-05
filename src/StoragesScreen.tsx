@@ -1,12 +1,13 @@
 import { SafeAreaView, ScrollView } from "react-native";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { Appbar, Avatar, Divider, List, Menu, Surface, Text, useTheme } from "react-native-paper";
+import { Appbar, Avatar, Divider, List, Menu, Text, useTheme } from "react-native-paper";
 import { useState } from "react";
 import { addStorage, allStorage, setActiveStorage } from "./store/storagesSlice";
 import { NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { StoragesStackParamList } from "./StoragesNavigationScreen";
 import uuid from 'react-native-uuid';
+import { AvatarText } from "./AvatarText";
 
 export function StoragesScreen(props: {
     navigation: NavigationProp<RootStackParamList & StoragesStackParamList>;
@@ -79,13 +80,7 @@ export function StoragesScreen(props: {
                         storages.storages.map(x => <List.Item
                             key={x.id}
                             title={x.name}
-                            left={p =>
-                                <Avatar.Text
-                                    {...p}
-                                    color={theme.colors.primaryContainer}
-                                    label={x.name.substring(0, 1)}
-                                    size={40}
-                                />}
+                            left={p => <AvatarText {...p} label={x.name} />}
                             right={p =>
                                 <Text {...p} variant="labelMedium">
                                     {items.items.filter(i => i.wanted && i.storages.find(s => s.storageId === x.id)).length}

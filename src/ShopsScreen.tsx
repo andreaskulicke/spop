@@ -7,6 +7,7 @@ import { RootStackParamList } from "../App";
 import { ShopsStackParamList } from "./ShopsNavigationScreen";
 import { addShop, allShop, setActiveShop } from "./store/shopsSlice";
 import uuid from 'react-native-uuid';
+import { AvatarText } from "./AvatarText";
 
 export function ShopsScreen(props: {
     navigation: NavigationProp<RootStackParamList & ShopsStackParamList>;
@@ -76,13 +77,7 @@ export function ShopsScreen(props: {
                         shops.shops.map(x => <List.Item
                             key={x.id}
                             title={x.name}
-                            left={p =>
-                                <Avatar.Text
-                                    {...p}
-                                    color={theme.colors.primaryContainer}
-                                    label={x.name.substring(0, 1)}
-                                    size={40}
-                                />}
+                            left={p => <AvatarText {...p} label={x.name} />}
                             right={p =>
                                 <Text {...p} variant="labelMedium">
                                     {items.items.filter(i => i.wanted && i.shops.find(s => s.shopId === x.id)).length}

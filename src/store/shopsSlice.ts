@@ -5,11 +5,24 @@ export interface ShopState {
     id: string;
     name: string;
     active?: boolean;
+    categories: ShopCategory[];
+}
+
+export interface ShopCategory {
+    id: string;
+    name: string;
 }
 
 export interface ShopsState {
     shops: ShopState[];
 }
+
+const defaultCategories: ShopCategory[] = [
+    {
+        id: "vegetables",
+        name: "Gemüse",
+    },
+];
 
 // Define the initial state using that type
 const initialState: ShopsState = {
@@ -17,22 +30,27 @@ const initialState: ShopsState = {
         {
             id: "polster",
             name: "Polster",
+            categories: defaultCategories,
         },
         {
             id: "aldi",
             name: "Aldi",
+            categories: defaultCategories,
         },
         {
             id: "rewe",
             name: "Rewe",
+            categories: defaultCategories,
         },
         {
             id: "edeka",
             name: "Edeka",
+            categories: defaultCategories,
         },
         {
             id: "rossmann",
             name: "Rossmann",
+            categories: defaultCategories,
         },
     ],
 }
@@ -45,6 +63,7 @@ export const shopsSlice = createSlice({
             state.shops.push({
                 id: action.payload,
                 name: "Neu",
+                categories: defaultCategories,
             });
         },
         deleteShop: (state, action: PayloadAction<string>) => {

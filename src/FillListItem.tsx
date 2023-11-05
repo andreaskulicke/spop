@@ -1,11 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
-import { Avatar, Icon, IconButton, List, Text, useTheme } from 'react-native-paper';
+import { IconButton, List, useTheme } from 'react-native-paper';
 import { ItemState, setItemAmount, checkItem } from './store/itemsSlice';
 import { ColoredTextInput } from './ColoredTextInput';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
+import { AvatarText } from './AvatarText';
 
 export function FillListItem(props: {
     item: ItemState;
@@ -40,9 +41,7 @@ export function FillListItem(props: {
         <List.Item
             description={description ? description : undefined}
             title={props.item.name}
-            left={p =>
-                <Avatar.Text {...p} color={theme.colors.primaryContainer} label={props.item.name.substring(0, 1)} size={40} />
-            }
+            left={p => <AvatarText {...p} label={props.item.name} />}
             right={p =>
                 <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
                     <ColoredTextInput
