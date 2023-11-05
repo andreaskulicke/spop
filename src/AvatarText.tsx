@@ -2,7 +2,7 @@ import { Avatar, useTheme } from "react-native-paper";
 import { Style } from "react-native-paper/lib/typescript/components/List/utils";
 
 export function AvatarText(props: {
-    style: Style;
+    style?: Style;
     label: string;
 }) {
     const theme = useTheme();

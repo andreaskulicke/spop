@@ -1,18 +1,23 @@
 import React, { useState } from "react";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
-import { Appbar, Card, Checkbox, IconButton, List, TextInput, TouchableRipple, useTheme } from "react-native-paper";
+import { Appbar, Card, Checkbox, IconButton, List, Menu, TextInput, TouchableRipple } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RootStackParamList } from "../App";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { checkItem, deleteItem, selectItem, setItemAmount, setItemName, toggleItemShop, toggleItemStorage } from "./store/itemsSlice";
-import { Keyboard, ScrollView } from "react-native";
+import { checkItem, deleteItem, selectItem, setItemAmount, setItemCategory, setItemName, toggleItemShop, toggleItemStorage } from "./store/itemsSlice";
+import { Dimensions, Keyboard, ScrollView, View } from "react-native";
+import { AvatarText } from "./AvatarText";
+import uuid from 'react-native-uuid';
+import { addCategory } from "./store/categoriesSlice";
 
 export function ItemScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
     route: RouteProp<RootStackParamList, "Item">;
 }) {
+    const [categoryMenuVisible, setCategoryMenuVisible] = useState(false);
     const [storagesExpanded, setStoragesExpanded] = useState(false);
     const [shopsExpanded, setShopsExpanded] = useState(false);
+    const categories = useAppSelector(state => state.categories);
     const item = useAppSelector(selectItem(props.route.params.id));
     const shops = useAppSelector(state => state.shops);
     const storages = useAppSelector(state => state.storages);
@@ -29,6 +34,17 @@ export function ItemScreen(props: {
 
     function handleNameChange(text: string): void {
         dispatch(setItemName({ itemId: item.id, name: text }));
+    }
+
+    function handleAddCategoryPress(): void {
+        const id = uuid.v4() as string;
+        dispatch(addCategory(id));
+        dispatch(setItemCategory({ itemId: item.id, categoryId: id }));
+        props.navigation.navigate("Category", { id });
+    }
+
+    function handleEditCategoryPress(): void {
+        props.navigation.navigate("Category", { id: item.categoryId })
     }
 
     function handleShopCheck(shopId: string): void {
@@ -70,6 +86,52 @@ export function ItemScreen(props: {
                         value={item.amount}
                         onChangeText={handleAmountChange}
                     />
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                        <View style={{ flexGrow: 1 }}>
+                            <Menu
+                                anchor={
+                                    <TouchableRipple
+                                        onPress={() => setCategoryMenuVisible(true)}
+                                    >
+                                        <TextInput
+                                            editable={false}
+                                            label="Kategorie"
+                                            mode="outlined"
+                                            style={{ margin: 8 }}
+                                            value={categories.find(x => x.id === item.categoryId)?.name}
+                                            right={<TextInput.Icon icon={categoryMenuVisible ? "chevron-up" : "chevron-down"} onPress={() => setCategoryMenuVisible(true)} />}
+                                        />
+                                    </TouchableRipple>
+                                }
+                                anchorPosition="bottom"
+                                style={{ marginLeft: 8, width: Dimensions.get("window").width - 32 }}
+                                visible={categoryMenuVisible}
+                                onDismiss={() => setCategoryMenuVisible(false)}
+                            >
+                                {
+                                    [...categories]
+                                        .sort((x, y) => x.name.localeCompare(y.name))
+                                        .map(x => (
+                                            <Menu.Item
+                                                key={x.id}
+                                                contentStyle={{ marginLeft: 24 }}
+                                                title={x.name}
+                                                leadingIcon={p => <AvatarText {...p} label={x.name} />}
+                                                onPress={() => {
+                                                    setCategoryMenuVisible(false);
+                                                    dispatch(setItemCategory({ itemId: item.id, categoryId: x.id }))
+                                                }}
+                                            />
+                                        ))
+                                }
+                            </Menu>
+                        </View>
+                        {
+                            item.categoryId
+                            && <IconButton icon="pencil-outline" onPress={handleEditCategoryPress} />
+                        }
+                        <IconButton icon="plus-outline" onPress={handleAddCategoryPress} />
+                    </View>
                     <Checkbox.Item
                         label="Will haben?"
                         status={item.wanted ? "checked" : "unchecked"}
@@ -130,6 +192,6 @@ export function ItemScreen(props: {
                     }
                 </Card>
             </ScrollView>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 }

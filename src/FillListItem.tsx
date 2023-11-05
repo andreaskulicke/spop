@@ -49,7 +49,7 @@ export function FillListItem(props: {
                         onChange={handleAmountChange} />
                     <IconButton
                         {...p}
-                        icon={props.item.wanted ? "minus" : "plus"}
+                        icon={props.item.wanted ? "minus-thick" : "plus-outline"}
                         onPress={handleCheckPress}
                     />
                 </View>

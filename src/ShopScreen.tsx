@@ -82,7 +82,7 @@ export function ShopScreen(props: {
                                     }
                                     <IconButton
                                         {...p}
-                                        icon="plus"
+                                        icon="plus-outline"
                                         onPress={handleAddCategoryPress}
                                     />
                                     <IconButton

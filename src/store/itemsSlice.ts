@@ -6,6 +6,7 @@ export interface ItemState {
     id: string;
     name: string;
     amount?: string;
+    categoryId?: string;
     wanted?: boolean;
     shops: { shopId: string; }[];
     storages: { storageId: string; }[];
@@ -77,6 +78,12 @@ export const itemsSlice = createSlice({
                 item.amount = action.payload.amount;
             }
         },
+        setItemCategory: (state, action: PayloadAction<{ itemId: string, categoryId: string }>) => {
+            const item = state.items.find(x => x.id === action.payload.itemId);
+            if (item) {
+                item.categoryId = action.payload.categoryId;
+            }
+        },
         checkItem: (state, action: PayloadAction<{ itemId: string, check: boolean }>) => {
             const index = state.items.findIndex(x => x.id === action.payload.itemId);
             if (index !== -1) {
@@ -136,6 +143,7 @@ export const {
     checkItem,
     deleteItem,
     deleteItems,
+    setItemCategory,
     setItemName,
     setItems,
     toggleItemShop,

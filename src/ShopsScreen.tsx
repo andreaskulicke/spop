@@ -43,7 +43,7 @@ export function ShopsScreen(props: {
         <SafeAreaView style={{ height: "100%" }}>
             <Appbar.Header>
                 <Appbar.Content title="Shops" />
-                <Appbar.Action icon="plus" onPress={handleAddShopPress} />
+                <Appbar.Action icon="plus-outline" onPress={handleAddShopPress} />
                 <Menu
                     anchor={<Appbar.Action icon="dots-vertical" onPress={handleDotsPress} />}
                     anchorPosition="bottom"
