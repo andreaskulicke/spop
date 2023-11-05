@@ -20,7 +20,7 @@ export function FillScreen(props: {
     const dispatch = useAppDispatch();
 
     function handleEditPress(): void {
-        n
+        props.navigation.navigate("Storage", { id: storage.id });
     }
 
     function handleDeleteAllPress(): void {

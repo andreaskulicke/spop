@@ -14,6 +14,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import merge from 'deepmerge';
 import { StorageScreen } from './src/StorageScreen';
 import { ShopScreen } from './src/ShopScreen';
+import { setShops } from './src/store/shopsSlice';
+import { CategoryScreen } from './src/CategoryScreen';
 
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
     reactNavigationLight: NavigationDefaultTheme,
@@ -24,6 +26,7 @@ const CombinedDefaultTheme = merge(MD3LightTheme, LightTheme);
 const CombinedDarkTheme = merge(MD3DarkTheme, DarkTheme);
 
 export type RootStackParamList = {
+    Category: { id: string };
     Home: undefined;
     Item: { id: string };
     Settings: undefined;
@@ -44,6 +47,7 @@ export default function App() {
 function AppWithStore() {
     const colorScheme = useColorScheme();
     const items = useAppSelector(state => state.items);
+    const shops = useAppSelector(state => state.shops);
     const settings = useAppSelector(state => state.settings);
     const dispatch = useAppDispatch();
 
@@ -51,14 +55,18 @@ function AppWithStore() {
         AsyncStorage.getItem("items").then(data => {
             if (data) {
                 dispatch(setItems(JSON.parse(data)));
-                // console.log("get items: " + data)
+            }
+        });
+        AsyncStorage.getItem("shops").then(data => {
+            if (data) {
+                dispatch(setShops(JSON.parse(data)));
             }
         });
     }, []);
 
     useEffect(() => {
         AsyncStorage.setItem("items", JSON.stringify(items));
-        // console.log("set items: " + JSON.stringify(items))
+        AsyncStorage.setItem("shops", JSON.stringify(shops));
     }, [items]);
 
     const theme = ((settings.colorTheme ?? colorScheme) === "dark")
@@ -72,6 +80,12 @@ function AppWithStore() {
                     <RootStack.Screen
                         component={HomeNavigationScreen}
                         name="Home"
+                        options={{ headerShown: false }}
+                    />
+                    
+                    <RootStack.Screen
+                        component={CategoryScreen}
+                        name="Category"
                         options={{ headerShown: false }}
                     />
                     <RootStack.Screen

@@ -1,28 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from './store';
+import { initialState as initialCategoriesState } from './categoriesSlice';
 
 export interface ShopState {
     id: string;
     name: string;
     active?: boolean;
-    categories: ShopCategory[];
-}
-
-export interface ShopCategory {
-    id: string;
-    name: string;
+    /** Category IDs that are present here are shown in the order of this array */
+    categoryIds?: string[];
 }
 
 export interface ShopsState {
     shops: ShopState[];
 }
-
-const defaultCategories: ShopCategory[] = [
-    {
-        id: "vegetables",
-        name: "Gemüse",
-    },
-];
 
 // Define the initial state using that type
 const initialState: ShopsState = {
@@ -30,27 +20,22 @@ const initialState: ShopsState = {
         {
             id: "polster",
             name: "Polster",
-            categories: defaultCategories,
         },
         {
             id: "aldi",
             name: "Aldi",
-            categories: defaultCategories,
         },
         {
             id: "rewe",
             name: "Rewe",
-            categories: defaultCategories,
         },
         {
             id: "edeka",
             name: "Edeka",
-            categories: defaultCategories,
         },
         {
             id: "rossmann",
             name: "Rossmann",
-            categories: defaultCategories,
         },
     ],
 }
@@ -59,11 +44,18 @@ export const shopsSlice = createSlice({
     name: "shops",
     initialState,
     reducers: {
+        setShops: (state, action: PayloadAction<ShopsState>) => {
+            state.shops = action.payload.shops;
+            for (const shop of state.shops) {
+                if (!shop.categoryIds) {
+                    shop.categoryIds = initialCategoriesState.map(x => x.id);
+                }
+            }
+        },
         addShop: (state, action: PayloadAction<string>) => {
             state.shops.push({
                 id: action.payload,
                 name: "Neu",
-                categories: defaultCategories,
             });
         },
         deleteShop: (state, action: PayloadAction<string>) => {
@@ -86,6 +78,18 @@ export const shopsSlice = createSlice({
                 shop.name = action.payload.name;
             }
         },
+        setShopCategoryShow: (state, action: PayloadAction<{ id: string, categoryId: string, show: boolean }>) => {
+            const shop = state.shops.find(x => x.id === action.payload.id);
+            if (shop) {
+                const index = shop.categoryIds.findIndex(x => x === action.payload.categoryId);
+                if (action.payload.show && (index === -1)) {
+                    shop.categoryIds.push(action.payload.categoryId);
+                }
+                else if (!action.payload.show && (index !== -1)) {
+                    shop.categoryIds.splice(index, 1);
+                }
+            }
+        },
     }
 })
 
@@ -93,7 +97,9 @@ export const {
     addShop,
     deleteShop,
     setActiveShop,
+    setShopCategoryShow,
     setShopName,
+    setShops,
 } = shopsSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
