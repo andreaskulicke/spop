@@ -1,20 +1,21 @@
 import { useState } from "react";
-import { SafeAreaView, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { Appbar, Avatar, List, Menu, useTheme, Text, Divider } from "react-native-paper";
 import { NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { ShopsStackParamList } from "./ShopsNavigationScreen";
-import { addShop, allShop, setActiveShop } from "./store/shopsSlice";
+import { ShopState, addShop, allShop, setActiveShop, setShops } from "./store/shopsSlice";
 import uuid from 'react-native-uuid';
 import { AvatarText } from "./AvatarText";
+import DraggableFlatList, { RenderItemParams } from "react-native-draggable-flatlist";
 
 export function ShopsScreen(props: {
     navigation: NavigationProp<RootStackParamList & ShopsStackParamList>;
 }) {
     const [menuVisible, setMenuVisible] = useState(false);
     const items = useAppSelector(state => state.items);
-    const shops = useAppSelector(state => state.shops);
+    const shops = useAppSelector(state => state.shops.shops);
     const dispatch = useAppDispatch();
     const theme = useTheme();
 
@@ -37,6 +38,22 @@ export function ShopsScreen(props: {
     function handleShopPress(id: string): void {
         dispatch(setActiveShop(id));
         props.navigation.navigate("Shopping");
+    }
+
+    function handleRenderItem(params: RenderItemParams<ShopState>): ReactNode {
+        return (
+            <List.Item
+                title={params.item.name}
+                left={p => <AvatarText {...p} label={params.item.name} />}
+                right={p =>
+                    <Text {...p} variant="labelMedium">
+                        {items.items.filter(i => i.wanted && i.shops.find(s => s.shopId === params.item.id)).length}
+                    </Text>
+                }
+                onPress={() => handleShopPress(params.item.id)}
+                onLongPress={() => params.drag()}
+            />
+        );
     }
 
     return (
@@ -72,21 +89,12 @@ export function ShopsScreen(props: {
             />
             <Divider />
             <List.Section>
-                <ScrollView keyboardShouldPersistTaps="always">
-                    {
-                        shops.shops.map(x => <List.Item
-                            key={x.id}
-                            title={x.name}
-                            left={p => <AvatarText {...p} label={x.name} />}
-                            right={p =>
-                                <Text {...p} variant="labelMedium">
-                                    {items.items.filter(i => i.wanted && i.shops.find(s => s.shopId === x.id)).length}
-                                </Text>
-                            }
-                            onPress={() => handleShopPress(x.id)}
-                        />)
-                    }
-                </ScrollView>
+                <DraggableFlatList
+                    data={shops}
+                    keyExtractor={x => x.id}
+                    renderItem={handleRenderItem}
+                    onDragEnd={({ data }) => dispatch(setShops({ shops: data }))}
+                />
             </List.Section>
         </SafeAreaView>
     );

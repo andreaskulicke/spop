@@ -34,6 +34,9 @@ export const categoriesSlice = createSlice({
                 state.splice(index, 1);
             }
         },
+        setCategories: (state, action: PayloadAction<CategoriesState[]>) => {
+            state = action.payload;
+        },
         setCategoryName: (state, action: PayloadAction<{ id: string, name: string }>) => {
             const category = state.find(x => x.id === action.payload.id);
             if (category) {
@@ -46,6 +49,7 @@ export const categoriesSlice = createSlice({
 export const {
     addCategory,
     deleteCategory,
+    setCategories,
     setCategoryName,
 } = categoriesSlice.actions
 

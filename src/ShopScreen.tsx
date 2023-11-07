@@ -1,13 +1,14 @@
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
-import { SafeAreaView, ScrollView, View } from "react-native";
-import { Appbar, Card, IconButton, List, Text, TextInput, TouchableRipple } from "react-native-paper";
+import { SafeAreaView, View } from "react-native";
+import { Appbar, Card, IconButton, List, TextInput, TouchableRipple } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { deleteShop, selectShop, setShopCategoryShow, setShopName } from "./store/shopsSlice";
-import { useState } from "react";
+import { addShopCategory, deleteShop, selectShop, setShopCategories, setShopCategoryShow, setShopName } from "./store/shopsSlice";
+import { ReactNode, useState } from "react";
 import { AvatarText } from "./AvatarText";
 import uuid from 'react-native-uuid';
-import { addCategory } from "./store/categoriesSlice";
+import { CategoriesState, addCategory } from "./store/categoriesSlice";
+import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams } from "react-native-draggable-flatlist";
 
 export function ShopScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -22,6 +23,7 @@ export function ShopScreen(props: {
     function handleAddCategoryPress(): void {
         const id = uuid.v4() as string;
         dispatch(addCategory(id));
+        dispatch(addShopCategory({ id: shop.id, categoryId: id }));
         dispatch(setShopCategoryShow({ id: shop.id, categoryId: id, show: true }));
         props.navigation.navigate("Category", { id });
     }
@@ -35,6 +37,19 @@ export function ShopScreen(props: {
         dispatch(setShopName({ id: shop.id, name: text }));
     }
 
+    function handleRenderItem(params: RenderItemParams<CategoriesState>): ReactNode {
+        return (
+            <List.Item
+                key={params.item.id}
+                title={params.item.name}
+                left={p => <AvatarText {...p} label={params.item.name} />}
+                right={p => <IconButton icon="eye-off-outline" onPress={() => dispatch(setShopCategoryShow({ id: shop.id, categoryId: params.item.id, show: false }))} />}
+                onPress={() => props.navigation.navigate("Category", { id: params.item.id })}
+                onLongPress={() => params.drag()}
+            />
+        );
+    }
+
     const c = new Map(categories.map(x => [x.id, x]));
     const catsShown = shop.categoryIds?.map(x => c.get(x)).filter(x => !!x) ?? categories;
     const catsHidden = categories.filter(x => !catsShown.includes(x));
@@ -46,7 +61,7 @@ export function ShopScreen(props: {
                 <Appbar.Content title={shop?.name ?? "Shop"} />
                 <Appbar.Action icon="trash-can" onPress={handleDeletePress} />
             </Appbar.Header>
-            <ScrollView>
+            <NestableScrollContainer>
                 <Card
                     style={{ margin: 8 }}
                 >
@@ -96,17 +111,12 @@ export function ShopScreen(props: {
                     </TouchableRipple>
                     {
                         categoriesExpanded
-                        && catsShown.map(x => {
-                            return (
-                                <List.Item
-                                    key={x.id}
-                                    title={x.name}
-                                    left={p => <AvatarText {...p} label={x.name} />}
-                                    right={p => <IconButton icon="eye-off-outline" onPress={() => dispatch(setShopCategoryShow({ id: shop.id, categoryId: x.id, show: false }))} />}
-                                    onPress={() => props.navigation.navigate("Category", { id: x.id })}
-                                />
-                            );
-                        })
+                        && <NestableDraggableFlatList
+                            data={catsShown}
+                            keyExtractor={x => x.id}
+                            renderItem={handleRenderItem}
+                            onDragEnd={({ data }) => dispatch(setShopCategories({ id: shop.id, categoryIds: [...data.map(x => x.id), ...catsHidden.map(x => x.id)] }))}
+                        />
                     }
                     {
                         categoriesExpanded && showAllCategories && (catsHidden.length > 0)
@@ -127,7 +137,7 @@ export function ShopScreen(props: {
                         </List.Section>
                     }
                 </Card>
-            </ScrollView>
+            </NestableScrollContainer>
         </SafeAreaView>
     );
 }

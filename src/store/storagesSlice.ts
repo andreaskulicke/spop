@@ -15,23 +15,23 @@ export interface StoragesState {
 const initialState: StoragesState = {
     storages: [
         {
-            id: "Kü1",
+            id: "pantry",
             name: "Speisekammer",
         },
         {
-            id: "Kü2",
+            id: "fridge",
             name: "Kühlschrank",
         },
         {
-            id: "Keller1",
+            id: "storageroom",
             name: "Abstellraum",
         },
         {
-            id: "Keller2",
+            id: "freezer",
             name: "Tiefkühlschrank",
         },
         {
-            id: "Wasch",
+            id: "laundry",
             name: "Waschküche",
         },
     ],

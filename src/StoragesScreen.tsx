@@ -1,20 +1,22 @@
-import { SafeAreaView, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { Appbar, Avatar, Divider, List, Menu, Text, useTheme } from "react-native-paper";
-import { useState } from "react";
-import { addStorage, allStorage, setActiveStorage } from "./store/storagesSlice";
+import { ReactNode, useState } from "react";
+import { StorageState, addStorage, allStorage, setActiveStorage, setStorages } from "./store/storagesSlice";
 import { NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { StoragesStackParamList } from "./StoragesNavigationScreen";
 import uuid from 'react-native-uuid';
 import { AvatarText } from "./AvatarText";
+import DraggableFlatList from "react-native-draggable-flatlist";
+import { RenderItemParams } from "react-native-draggable-flatlist/lib/typescript/types";
 
 export function StoragesScreen(props: {
     navigation: NavigationProp<RootStackParamList & StoragesStackParamList>;
 }) {
     const [menuVisible, setMenuVisible] = useState(false);
     const items = useAppSelector(state => state.items);
-    const storages = useAppSelector(state => state.storages);
+    const storages = useAppSelector(state => state.storages.storages);
     const dispatch = useAppDispatch();
     const theme = useTheme();
 
@@ -38,7 +40,20 @@ export function StoragesScreen(props: {
         props.navigation.navigate("Fill");
     }
 
-    function handleStorageLongPress(id: string): void {
+    function handleRenderItem(params: RenderItemParams<StorageState>): ReactNode {
+        return (
+            <List.Item
+                title={params.item.name}
+                left={p => <AvatarText {...p} label={params.item.name} />}
+                right={p =>
+                    <Text {...p} variant="labelMedium">
+                        {items.items.filter(i => i.wanted && i.storages.find(s => s.storageId === params.item.id)).length}
+                    </Text>
+                }
+                onPress={() => handleStoragePress(params.item.id)}
+                onLongPress={() => params.drag()}
+            />
+        );
     }
 
     return (
@@ -74,23 +89,15 @@ export function StoragesScreen(props: {
             />
             <Divider />
             <List.Section>
-                <ScrollView keyboardShouldPersistTaps="always">
-                    {
-                        storages.storages.map(x => <List.Item
-                            key={x.id}
-                            title={x.name}
-                            left={p => <AvatarText {...p} label={x.name} />}
-                            right={p =>
-                                <Text {...p} variant="labelMedium">
-                                    {items.items.filter(i => i.wanted && i.storages.find(s => s.storageId === x.id)).length}
-                                </Text>
-                            }
-                            onPress={() => handleStoragePress(x.id)}
-                            onLongPress={() => handleStorageLongPress(x.id)}
-                        />)
-                    }
-                </ScrollView>
+                <DraggableFlatList
+                    data={storages}
+                    keyExtractor={x => x.id}
+                    renderItem={handleRenderItem}
+                    onDragEnd={({ data }) => dispatch(setStorages({ storages: data }))}
+                />
             </List.Section>
         </SafeAreaView>
     );
 }
+
+

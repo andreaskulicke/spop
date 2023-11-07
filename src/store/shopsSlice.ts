@@ -78,6 +78,19 @@ export const shopsSlice = createSlice({
                 shop.name = action.payload.name;
             }
         },
+        // Categories
+        addShopCategory: (state, action: PayloadAction<{ id: string, categoryId: string }>) => {
+            const shop = state.shops.find(x => x.id === action.payload.id);
+            if (shop) {
+                shop.categoryIds.push(action.payload.categoryId);
+            }
+        },
+        setShopCategories: (state, action: PayloadAction<{ id: string, categoryIds: string[] }>) => {
+            const shop = state.shops.find(x => x.id === action.payload.id);
+            if (shop) {
+                shop.categoryIds = action.payload.categoryIds.filter(x => !!x);
+            }
+        },
         setShopCategoryShow: (state, action: PayloadAction<{ id: string, categoryId: string, show: boolean }>) => {
             const shop = state.shops.find(x => x.id === action.payload.id);
             if (shop) {
@@ -95,8 +108,10 @@ export const shopsSlice = createSlice({
 
 export const {
     addShop,
+    addShopCategory,
     deleteShop,
     setActiveShop,
+    setShopCategories,
     setShopCategoryShow,
     setShopName,
     setShops,
