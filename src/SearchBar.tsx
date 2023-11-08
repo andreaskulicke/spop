@@ -4,7 +4,7 @@ import { Searchbar } from 'react-native-paper';
 export function SearchBar(props: {
     text?: string;
     onChange?: (text: string, name: string, amount: string) => void;
-    onEndEditing?: () => void;
+    onSubmitEditing?: () => void;
 }) {
     const [searchQuery, setSearchQuery] = useState(props.text ?? "");
 
@@ -34,7 +34,7 @@ export function SearchBar(props: {
             style={{ margin: 8 }}
             value={searchQuery}
             onChangeText={handleSearchChangeText}
-            onEndEditing={props.onEndEditing}
+            onSubmitEditing={props.onSubmitEditing}
         />
     );
 }

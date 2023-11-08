@@ -46,9 +46,12 @@ export function FillScreen(props: {
     }
 
     function handlePress(item: ItemState): void {
-        dispatch(addItem({ item: { ...item, amount: filter?.amount }, storageId: storage.id }));
-        setFilter(undefined);
-        setNewItem(v => ({ ...v, id: uuid.v4() as string }))
+        console.log("handlePress")
+        if (item?.name) {
+            dispatch(addItem({ item: { ...item, amount: filter?.amount }, storageId: storage.id }));
+            setFilter(undefined);
+            setNewItem(v => ({ ...v, id: uuid.v4() as string }))
+        }
     }
 
     function handleIconPress(name: string, amount: string | undefined): void {
@@ -90,7 +93,7 @@ export function FillScreen(props: {
             <SearchBar
                 text={filter?.text}
                 onChange={handleSearchChange}
-                onEndEditing={() => handlePress(newItem)}
+                onSubmitEditing={() => handlePress(newItem)}
             />
             <ScrollView keyboardShouldPersistTaps={filter ? "always" : "never"}>
                 {
