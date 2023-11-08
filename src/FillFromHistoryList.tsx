@@ -11,10 +11,20 @@ export function FillFromHistoryList(props: {
 }) {
     const items = useAppSelector(state => state.items);
 
+    function transformToSearchName(name: string): string {
+        return name.toLowerCase()
+            .replace("ä", "a")
+            .replace("ö", "o")
+            .replace("ü", "u")
+            .replace("ß", "s");
+    }
+
+    const itemName = transformToSearchName(props.item.name);
+
     return (
         <View>
             {
-                props.item.name && !items.items.find(x => x.name.toLowerCase() === props.item.name.toLowerCase())
+                props.item.name && !items.items.find(x => transformToSearchName(x.name) === itemName)
                 && <FillFromHistoryListItem
                     item={props.item}
                     onPress={props.onPress}
@@ -22,7 +32,7 @@ export function FillFromHistoryList(props: {
             }
             {
                 items.items
-                    .filter(x => x.name.toLowerCase().includes(props.item.name.toLowerCase()))
+                    .filter(x => transformToSearchName(x.name).includes(itemName))
                     .map(x => <FillFromHistoryListItem
                         key={x.id}
                         item={{ ...x, amount: props.item.amount }}
