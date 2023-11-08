@@ -80,6 +80,7 @@ function AppWithStore() {
     }, []);
 
     useEffect(() => {
+        // console.log("items: " + JSON.stringify(items));
         AsyncStorage.setItem("categories", JSON.stringify(categories));
         AsyncStorage.setItem("items", JSON.stringify(items));
         AsyncStorage.setItem("shops", JSON.stringify(shops));

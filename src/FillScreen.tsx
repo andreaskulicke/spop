@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView } from 'react-native';
 import { SearchBar } from './SearchBar';
-import { ItemState, addItem, deleteItems, setItems } from './store/itemsSlice';
+import { ItemState, addItem, deleteItems } from './store/itemsSlice';
 import { FillFromHistoryList } from './FillFromHistoryList';
 import { FillList } from './FillList';
 import { Appbar, Divider, Menu } from 'react-native-paper';
@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from './store/hooks';
 import { NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
 import { allStorage, selectActiveStorage } from './store/storagesSlice';
+import uuid from 'react-native-uuid';
 
 export function FillScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -19,6 +20,14 @@ export function FillScreen(props: {
     const storage = useAppSelector(selectActiveStorage);
     const dispatch = useAppDispatch();
 
+    const [newItem, setNewItem] = useState<ItemState>({
+        id: uuid.v4() as string,
+        name: "",
+        amount: "",
+        shops: [],
+        storages: (storage.id === allStorage.id) ? [] : [{ storageId: storage.id }],
+    });
+
     function handleEditPress(): void {
         props.navigation.navigate("Storage", { id: storage.id });
     }
@@ -28,7 +37,6 @@ export function FillScreen(props: {
         const itemsToDelete = items.items
             .filter(x => (storage.id === allStorage.id) || x.storages.find(x => x.storageId === storage.id))
             .map(x => x.id);
-
         dispatch(deleteItems(itemsToDelete));
     }
 
@@ -40,6 +48,7 @@ export function FillScreen(props: {
     function handlePress(item: ItemState): void {
         dispatch(addItem({ item: { ...item, amount: filter?.amount }, storageId: storage.id }));
         setFilter(undefined);
+        setNewItem(v => ({ ...v, id: uuid.v4() as string }))
     }
 
     function handleIconPress(name: string, amount: string | undefined): void {
@@ -49,6 +58,14 @@ export function FillScreen(props: {
     function handleSearchChange(text: string, name: string, amount: string): void {
         setFilter({ text, name, amount });
     }
+
+    useEffect(() => {
+        setNewItem(v => ({
+            ...v,
+            name: filter?.name ?? filter?.text ?? "",
+            amount: filter?.amount ?? "",
+        }));
+    }, [filter]);
 
     return (
         <SafeAreaView style={{ height: "100%" }}>
@@ -73,6 +90,7 @@ export function FillScreen(props: {
             <SearchBar
                 text={filter?.text}
                 onChange={handleSearchChange}
+                onEndEditing={() => handlePress(newItem)}
             />
             <ScrollView keyboardShouldPersistTaps={filter ? "always" : "never"}>
                 {
@@ -81,9 +99,7 @@ export function FillScreen(props: {
                             storageId={storage.id}
                         />
                         : <FillFromHistoryList
-                            storageId={storage.id}
-                            text={filter?.name ?? filter?.text}
-                            amount={filter?.amount}
+                            item={newItem}
                             onPress={handlePress}
                             onIconPress={handleIconPress}
                         />

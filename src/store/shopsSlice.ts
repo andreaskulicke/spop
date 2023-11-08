@@ -44,6 +44,9 @@ export const shopsSlice = createSlice({
     name: "shops",
     initialState,
     reducers: {
+        resetShops: (state, action: PayloadAction<void>) => {
+            state.shops = initialState.shops;
+        },
         setShops: (state, action: PayloadAction<ShopsState>) => {
             state.shops = action.payload.shops;
             for (const shop of state.shops) {
@@ -110,6 +113,7 @@ export const {
     addShop,
     addShopCategory,
     deleteShop,
+    resetShops,
     setActiveShop,
     setShopCategories,
     setShopCategoryShow,

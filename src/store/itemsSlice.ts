@@ -39,6 +39,9 @@ export const itemsSlice = createSlice({
     name: "items",
     initialState,
     reducers: {
+        resetItems: (state, action: PayloadAction<void>) => {
+            state.items = initialState.items;
+        },
         setItems: (state, action: PayloadAction<ItemsState>) => {
             state.items = action.payload.items;
             for (const item of state.items) {
@@ -51,7 +54,6 @@ export const itemsSlice = createSlice({
             }
         },
         addItem: (state, action: PayloadAction<{ item: ItemState, storageId: string }>) => {
-            // console.log("addItem:" + JSON.stringify(action.payload.item));
             const item = state.items.find(x => x.id === action.payload.item.id);
             if (item) {
                 item.amount = action.payload.item.amount;
@@ -61,15 +63,15 @@ export const itemsSlice = createSlice({
                     item.storages.push({ storageId: action.payload.storageId });
                 }
             } else {
-                const newItem = {
+                const newItem: ItemState = {
                     ...action.payload.item,
-                    checked: true,
+                    wanted: true,
                 };
                 if ((action.payload.storageId !== allStorage.id)
                     && !newItem.storages.find(x => x.storageId === action.payload.storageId)) {
                     newItem.storages.push({ storageId: action.payload.storageId });
                 }
-                state.items.push(newItem);
+                state.items.unshift(newItem);
             }
         },
         setItemAmount: (state, action: PayloadAction<{ itemId: string, amount: string }>) => {
@@ -143,6 +145,7 @@ export const {
     checkItem,
     deleteItem,
     deleteItems,
+    resetItems,
     setItemCategory,
     setItemName,
     setItems,

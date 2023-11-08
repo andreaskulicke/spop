@@ -53,6 +53,9 @@ export const storagesSlice = createSlice({
                 state.storages.splice(index, 1);
             }
         },
+        resetStorages: (state, action: PayloadAction<void>) => {
+            state.storages = initialState.storages;
+        },
         setStorages: (state, action: PayloadAction<StoragesState>) => {
             state.storages = action.payload.storages;
         },
@@ -76,6 +79,7 @@ export const storagesSlice = createSlice({
 export const {
     addStorage,
     deleteStorage,
+    resetStorages,
     setActiveStorage,
     setStorageName,
     setStorages,

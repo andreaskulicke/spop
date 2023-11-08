@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { SafeAreaView } from "react-native";
+import { ReactNode, useState } from "react";
+import { SafeAreaView, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { Appbar, Avatar, List, Menu, useTheme, Text, Divider } from "react-native-paper";
+import { Appbar, Avatar, List, Menu, useTheme, Text, Divider, Badge, Tooltip } from "react-native-paper";
 import { NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { ShopsStackParamList } from "./ShopsNavigationScreen";
@@ -79,10 +79,18 @@ export function ShopsScreen(props: {
                         icon="check-all"
                         size={40}
                     />}
-                right={p =>
-                    <Text {...p} variant="labelMedium">
-                        {items.items.filter(i => i.wanted).length}
-                    </Text>
+                right={p => {
+                    const count = items.items.filter(i => i.wanted).length;
+                    const unassignedCount = items.items.filter(i => i.wanted && ((i.shops?.length ?? 0) === 0)).length;
+                    return <View style={{ flexDirection: "row", alignItems: "center" }}>
+                        <Tooltip title="Gewünschte Dinge und ohne Shop">
+                            <Text {...p} variant="labelMedium" style={{ paddingLeft: 16, paddingVertical: 12 }}>
+                                {count}
+                            </Text>
+                        </Tooltip>
+                        <Badge visible={unassignedCount > 0} style={{ position: "absolute", top: 0, right: -20 }}>{unassignedCount}</Badge>
+                    </View>;
+                }
                 }
                 title={allShop.name}
                 onPress={() => handleShopPress(allShop.id)}

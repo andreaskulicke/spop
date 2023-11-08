@@ -34,6 +34,9 @@ export const categoriesSlice = createSlice({
                 state.splice(index, 1);
             }
         },
+        resetCategories: (state, action: PayloadAction<void>) => {
+            state = initialState;
+        },
         setCategories: (state, action: PayloadAction<CategoriesState[]>) => {
             state = action.payload;
         },
@@ -49,6 +52,7 @@ export const categoriesSlice = createSlice({
 export const {
     addCategory,
     deleteCategory,
+    resetCategories,
     setCategories,
     setCategoryName,
 } = categoriesSlice.actions

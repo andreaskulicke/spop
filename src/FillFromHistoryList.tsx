@@ -1,15 +1,11 @@
-import { allStorage } from './store/storagesSlice';
 import { FillFromHistoryListItem } from './FillFromHistoryListItem';
 import { ItemState } from './store/itemsSlice';
 import { useAppSelector } from './store/hooks';
 import { View } from 'react-native';
 import React from 'react';
-import uuid from 'react-native-uuid';
 
 export function FillFromHistoryList(props: {
-    storageId: string;
-    text: string;
-    amount?: string;
+    item: ItemState;
     onPress?: (item: ItemState) => void;
     onIconPress?: (name: string, amount: string | undefined) => void;
 }) {
@@ -18,24 +14,18 @@ export function FillFromHistoryList(props: {
     return (
         <View>
             {
-                props.text && !items.items.find(x => x.name.toLowerCase() === props.text.toLowerCase())
+                props.item.name && !items.items.find(x => x.name.toLowerCase() === props.item.name.toLowerCase())
                 && <FillFromHistoryListItem
-                    item={{
-                        id: uuid.v4() as string,
-                        name: props.text,
-                        amount: props.amount,
-                        shops: [],
-                        storages: (props.storageId === allStorage.id) ? [] : [{ storageId: props.storageId }],
-                    }}
+                    item={props.item}
                     onPress={props.onPress}
                     onIconPress={props.onIconPress} />
             }
             {
                 items.items
-                    .filter(x => x.name.toLowerCase().includes(props.text.toLowerCase()))
+                    .filter(x => x.name.toLowerCase().includes(props.item.name.toLowerCase()))
                     .map(x => <FillFromHistoryListItem
                         key={x.id}
-                        item={{ ...x, amount: props.amount }}
+                        item={{ ...x, amount: props.item.amount }}
                         onPress={props.onPress}
                         onIconPress={props.onIconPress} />)
             }

@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
 import { Searchbar } from 'react-native-paper';
 
-export interface SearchBarProps {
+export function SearchBar(props: {
     text?: string;
     onChange?: (text: string, name: string, amount: string) => void;
-}
-
-export function SearchBar(props: SearchBarProps) {
+    onEndEditing?: () => void;
+}) {
     const [searchQuery, setSearchQuery] = useState(props.text ?? "");
 
     function handleSearchChangeText(text: string) {
         const t = text.trimStart();
         const m = t.match("^(?<pre>\\d+[^ ]*)? *(?<name>.*?) *(?<post>\\d+[^ ]*)? *$");
         if (m) {
-            console.log("name='" + m.groups["name"] + "'")
-            console.log("pre='" + m.groups["pre"] + "'")
-            console.log("post='" + m.groups["post"] + "'")
+            // console.log("name='" + m.groups["name"] + "'")
+            // console.log("pre='" + m.groups["pre"] + "'")
+            // console.log("post='" + m.groups["post"] + "'")
             const name = m.groups["name"] + ((m.groups["pre"] && m.groups.post) ? ` ${m.groups["post"]}` : "")
             props.onChange(t, name, m.groups["pre"] ?? m.groups["post"]);
         } else {
@@ -35,6 +34,7 @@ export function SearchBar(props: SearchBarProps) {
             style={{ margin: 8 }}
             value={searchQuery}
             onChangeText={handleSearchChangeText}
+            onEndEditing={props.onEndEditing}
         />
     );
 }
