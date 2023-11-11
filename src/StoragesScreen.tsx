@@ -2,21 +2,20 @@ import { SafeAreaView, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { Appbar, Avatar, Badge, Divider, List, Menu, Text, Tooltip, useTheme } from "react-native-paper";
 import { ReactNode, useState } from "react";
-import { StorageState, addStorage, allStorage, setActiveStorage, setStorages } from "./store/storagesSlice";
 import { NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { StoragesStackParamList } from "./StoragesNavigationScreen";
 import uuid from 'react-native-uuid';
 import { AvatarText } from "./AvatarText";
-import DraggableFlatList from "react-native-draggable-flatlist";
-import { RenderItemParams } from "react-native-draggable-flatlist/lib/typescript/types";
+import DraggableFlatList, { RenderItemParams } from "react-native-draggable-flatlist";
+import { addStorage, setActiveStorage, allStorage, setStorages, Storage } from "./store/dataSlice";
 
 export function StoragesScreen(props: {
     navigation: NavigationProp<RootStackParamList & StoragesStackParamList>;
 }) {
     const [menuVisible, setMenuVisible] = useState(false);
-    const items = useAppSelector(state => state.items);
-    const storages = useAppSelector(state => state.storages.storages);
+    const items = useAppSelector(state => state.data);
+    const storages = useAppSelector(state => state.data.storages);
     const dispatch = useAppDispatch();
     const theme = useTheme();
 
@@ -40,7 +39,7 @@ export function StoragesScreen(props: {
         props.navigation.navigate("Fill");
     }
 
-    function handleRenderItem(params: RenderItemParams<StorageState>): ReactNode {
+    function handleRenderItem(params: RenderItemParams<Storage>): ReactNode {
         return (
             <List.Item
                 title={params.item.name}
@@ -102,7 +101,7 @@ export function StoragesScreen(props: {
                     data={storages}
                     keyExtractor={x => x.id}
                     renderItem={handleRenderItem}
-                    onDragEnd={({ data }) => dispatch(setStorages({ storages: data }))}
+                    onDragEnd={({ data }) => dispatch(setStorages(data))}
                 />
             </List.Section>
         </SafeAreaView>

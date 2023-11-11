@@ -4,7 +4,7 @@ import { ItemScreen } from './src/ItemScreen';
 import { NavigationContainer, DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationDefaultTheme } from '@react-navigation/native';
 import { PaperProvider, MD3DarkTheme, MD3LightTheme, adaptNavigationTheme } from 'react-native-paper';
 import { Provider } from 'react-redux';
-import { setItems } from './src/store/itemsSlice';
+import { setCategories, setItems, setShops, setStorages } from './src/store/dataSlice';
 import { SettingsScreen } from './src/SettingsScreen';
 import { store } from './src/store/store';
 import { useAppDispatch, useAppSelector } from './src/store/hooks';
@@ -14,11 +14,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import merge from 'deepmerge';
 import { StorageScreen } from './src/StorageScreen';
 import { ShopScreen } from './src/ShopScreen';
-import { setShops } from './src/store/shopsSlice';
 import { CategoryScreen } from './src/CategoryScreen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { setStorages } from './src/store/storagesSlice';
-import { setCategories } from './src/store/categoriesSlice';
 
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
     reactNavigationLight: NavigationDefaultTheme,
@@ -49,11 +46,11 @@ export default function App() {
 
 function AppWithStore() {
     const colorScheme = useColorScheme();
-    const categories = useAppSelector(state => state.categories);
-    const items = useAppSelector(state => state.items);
-    const shops = useAppSelector(state => state.shops);
+    const categories = useAppSelector(state => state.data.categories);
+    const items = useAppSelector(state => state.data.items);
+    const shops = useAppSelector(state => state.data.shops);
     const settings = useAppSelector(state => state.settings);
-    const storages = useAppSelector(state => state.storages);
+    const storages = useAppSelector(state => state.data.storages);
     const dispatch = useAppDispatch();
 
     useEffect(() => {

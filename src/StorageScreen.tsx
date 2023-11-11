@@ -3,7 +3,7 @@ import { RootStackParamList } from "../App";
 import { SafeAreaView, ScrollView } from "react-native";
 import { Appbar, Card, TextInput } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { deleteStorage, selectStorage, setStorageName } from "./store/storagesSlice";
+import { selectStorage, deleteStorage, setStorageName } from "./store/dataSlice";
 
 export function StorageScreen(props: {
     navigation: NavigationProp<RootStackParamList>;

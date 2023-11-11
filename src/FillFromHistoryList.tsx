@@ -1,15 +1,15 @@
 import { FillFromHistoryListItem } from './FillFromHistoryListItem';
-import { ItemState } from './store/itemsSlice';
+import { Item } from './store/dataSlice';
 import { useAppSelector } from './store/hooks';
 import { View } from 'react-native';
 import React from 'react';
 
 export function FillFromHistoryList(props: {
-    item: ItemState;
-    onPress?: (item: ItemState) => void;
+    item: Item;
+    onPress?: (item: Item) => void;
     onIconPress?: (name: string, amount: string | undefined) => void;
 }) {
-    const items = useAppSelector(state => state.items);
+    const items = useAppSelector(state => state.data);
 
     function transformToSearchName(name: string): string {
         return name.toLowerCase()

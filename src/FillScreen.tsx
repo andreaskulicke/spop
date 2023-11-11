@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView } from 'react-native';
 import { SearchBar } from './SearchBar';
-import { ItemState, addItem, deleteItems } from './store/itemsSlice';
+import { Item, addItem, allStorage, deleteItems, selectActiveStorage } from './store/dataSlice';
 import { FillFromHistoryList } from './FillFromHistoryList';
 import { FillList } from './FillList';
 import { Appbar, Divider, Menu } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
-import { allStorage, selectActiveStorage } from './store/storagesSlice';
 import uuid from 'react-native-uuid';
 
 export function FillScreen(props: {
@@ -16,11 +15,11 @@ export function FillScreen(props: {
 }) {
     const [filter, setFilter] = useState<{ text: string; name?: string; amount?: string }>();
     const [menuVisible, setMenuVisible] = useState(false);
-    const items = useAppSelector(state => state.items);
+    const items = useAppSelector(state => state.data);
     const storage = useAppSelector(selectActiveStorage);
     const dispatch = useAppDispatch();
 
-    const [newItem, setNewItem] = useState<ItemState>({
+    const [newItem, setNewItem] = useState<Item>({
         id: uuid.v4() as string,
         name: "",
         amount: "",
@@ -45,7 +44,7 @@ export function FillScreen(props: {
         props.navigation.navigate("Settings");
     }
 
-    function handlePress(item: ItemState): void {
+    function handlePress(item: Item): void {
         console.log("handlePress")
         if (item?.name) {
             dispatch(addItem({ item: { ...item, amount: filter?.amount }, storageId: storage.id }));

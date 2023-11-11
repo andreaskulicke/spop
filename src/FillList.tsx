@@ -3,12 +3,12 @@ import { View } from 'react-native';
 import { useAppSelector } from './store/hooks';
 import { List } from 'react-native-paper';
 import { FillListItem } from './FillListItem';
-import { allStorage } from './store/storagesSlice';
+import { allStorage } from './store/dataSlice';
 
 export function FillList(props: {
     storageId: string;
 }) {
-    const items = useAppSelector(state => state.items);
+    const items = useAppSelector(state => state.data);
 
     const recentlyUsed = items.items
         .filter(x => ((props.storageId === allStorage.id) || x.storages.find(x => x.storageId === props.storageId)) && !x.wanted);

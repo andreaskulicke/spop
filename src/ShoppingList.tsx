@@ -1,15 +1,15 @@
 import React from 'react';
 import { View } from 'react-native';
 import { List } from 'react-native-paper';
-import { ShopState, allShop } from './store/shopsSlice';
 import { useAppSelector } from './store/hooks';
 import { ShoppingListItem } from './ShoppingListItem';
+import { Shop, allShop } from './store/dataSlice';
 
 export function ShoppingList(props: {
-    shop: ShopState;
+    shop: Shop;
 }) {
-    const categories = useAppSelector(state => state.categories);
-    const items = useAppSelector(state => state.items);
+    const categories = useAppSelector(state => state.data.categories);
+    const items = useAppSelector(state => state.data);
 
     const c = new Map(categories.map(x => [x.id, x]));
     let cats = [undefined].concat(props.shop.categoryIds?.filter(x => !!x).map(x => c.get(x)) ?? categories);

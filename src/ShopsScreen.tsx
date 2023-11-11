@@ -5,17 +5,17 @@ import { Appbar, Avatar, List, Menu, useTheme, Text, Divider, Badge, Tooltip } f
 import { NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { ShopsStackParamList } from "./ShopsNavigationScreen";
-import { ShopState, addShop, allShop, setActiveShop, setShops } from "./store/shopsSlice";
 import uuid from 'react-native-uuid';
 import { AvatarText } from "./AvatarText";
 import DraggableFlatList, { RenderItemParams } from "react-native-draggable-flatlist";
+import { addShop, setActiveShop, allShop, setShops, Shop } from "./store/dataSlice";
 
 export function ShopsScreen(props: {
     navigation: NavigationProp<RootStackParamList & ShopsStackParamList>;
 }) {
     const [menuVisible, setMenuVisible] = useState(false);
-    const items = useAppSelector(state => state.items);
-    const shops = useAppSelector(state => state.shops.shops);
+    const items = useAppSelector(state => state.data.items);
+    const shops = useAppSelector(state => state.data.shops);
     const dispatch = useAppDispatch();
     const theme = useTheme();
 
@@ -40,14 +40,14 @@ export function ShopsScreen(props: {
         props.navigation.navigate("Shopping");
     }
 
-    function handleRenderItem(params: RenderItemParams<ShopState>): ReactNode {
+    function handleRenderItem(params: RenderItemParams<Shop>): ReactNode {
         return (
             <List.Item
                 title={params.item.name}
                 left={p => <AvatarText {...p} label={params.item.name} />}
                 right={p =>
                     <Text {...p} variant="labelMedium">
-                        {items.items.filter(i => i.wanted && i.shops.find(s => s.shopId === params.item.id)).length}
+                        {items.filter(i => i.wanted && i.shops.find(s => s.shopId === params.item.id)).length}
                     </Text>
                 }
                 onPress={() => handleShopPress(params.item.id)}
@@ -80,8 +80,8 @@ export function ShopsScreen(props: {
                         size={40}
                     />}
                 right={p => {
-                    const count = items.items.filter(i => i.wanted).length;
-                    const unassignedCount = items.items.filter(i => i.wanted && ((i.shops?.length ?? 0) === 0)).length;
+                    const count = items.filter(i => i.wanted).length;
+                    const unassignedCount = items.filter(i => i.wanted && ((i.shops?.length ?? 0) === 0)).length;
                     return <View style={{ flexDirection: "row", alignItems: "center" }}>
                         <Tooltip title="Gewünschte Dinge und ohne Shop">
                             <Text {...p} variant="labelMedium" style={{ paddingLeft: 16, paddingVertical: 12 }}>
@@ -101,7 +101,7 @@ export function ShopsScreen(props: {
                     data={shops}
                     keyExtractor={x => x.id}
                     renderItem={handleRenderItem}
-                    onDragEnd={({ data }) => dispatch(setShops({ shops: data }))}
+                    onDragEnd={({ data }) => dispatch(setShops(data))}
                 />
             </List.Section>
         </SafeAreaView>

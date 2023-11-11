@@ -4,12 +4,10 @@ import { Appbar, Card, Checkbox, IconButton, List, Menu, TextInput, TouchableRip
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RootStackParamList } from "../App";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { checkItem, deleteItem, selectItem, setItemAmount, setItemCategory, setItemName, setItemStorage, toggleItemShop } from "./store/itemsSlice";
+import { addCategory, addStorage, checkItem, deleteItem, selectItem, setItemAmount, setItemCategory, setItemName, setItemStorage, toggleItemShop } from "./store/dataSlice";
 import { Dimensions, Keyboard, ScrollView, View } from "react-native";
 import { AvatarText } from "./AvatarText";
 import uuid from 'react-native-uuid';
-import { addCategory } from "./store/categoriesSlice";
-import { addStorage } from "./store/storagesSlice";
 
 export function ItemScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -18,10 +16,10 @@ export function ItemScreen(props: {
     const [categoryMenuVisible, setCategoryMenuVisible] = useState(false);
     const [storagesExpanded, setStoragesExpanded] = useState(false);
     const [shopsExpanded, setShopsExpanded] = useState(false);
-    const categories = useAppSelector(state => state.categories);
+    const categories = useAppSelector(state => state.data.categories);
     const item = useAppSelector(selectItem(props.route.params.id));
-    const shops = useAppSelector(state => state.shops);
-    const storages = useAppSelector(state => state.storages);
+    const shops = useAppSelector(state => state.data.shops);
+    const storages = useAppSelector(state => state.data.storages);
     const dispatch = useAppDispatch();
 
     function handleDeletePress(): void {
@@ -155,7 +153,7 @@ export function ItemScreen(props: {
                     >
                         <Card.Title
                             title="Storages"
-                            subtitle={storages.storages.filter(x => item.storages.find(y => y.storageId === x.id)).map(x => x.name).join()}
+                            subtitle={storages.filter(x => item.storages.find(y => y.storageId === x.id)).map(x => x.name).join()}
                             right={p =>
                                 <View style={{ flexDirection: "row" }}>
                                     <IconButton
@@ -174,7 +172,7 @@ export function ItemScreen(props: {
                     </TouchableRipple>
                     {
                         storagesExpanded
-                        && storages.storages.map(s => {
+                        && storages.map(s => {
                             const checked = item.storages.find(x => x.storageId === s.id);
                             return <List.Item
                                 key={s.id}
@@ -197,7 +195,7 @@ export function ItemScreen(props: {
                     >
                         <Card.Title
                             title="Shops"
-                            subtitle={shops.shops.filter(x => item.shops.find(y => y.shopId === x.id)).map(x => x.name).join()}
+                            subtitle={shops.filter(x => item.shops.find(y => y.shopId === x.id)).map(x => x.name).join()}
                             right={p =>
                                 <View style={{ flexDirection: "row" }}>
                                     <IconButton
@@ -211,7 +209,7 @@ export function ItemScreen(props: {
                     </TouchableRipple>
                     {
                         shopsExpanded
-                        && shops.shops.map(s =>
+                        && shops.map(s =>
                             <List.Item
                                 key={s.id}
                                 title={s.name}

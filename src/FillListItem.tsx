@@ -2,17 +2,17 @@ import React from 'react';
 import { View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { IconButton, List, useTheme } from 'react-native-paper';
-import { ItemState, setItemAmount, checkItem } from './store/itemsSlice';
+import { Item, setItemAmount, checkItem } from './store/dataSlice';
 import { ColoredTextInput } from './ColoredTextInput';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
 import { AvatarText } from './AvatarText';
 
 export function FillListItem(props: {
-    item: ItemState;
+    item: Item;
     showStorage?: boolean;
 }) {
-    const storages = useAppSelector(state => state.storages);
+    const storages = useAppSelector(state => state.data.storages);
     const dispatch = useAppDispatch();
     const theme = useTheme();
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -32,7 +32,7 @@ export function FillListItem(props: {
     let description = "";
     if (props.showStorage) {
         description = props.item.storages
-            .map(x => storages.storages.find(s => s.id === x.storageId)?.name)
+            .map(x => storages.find(s => s.id === x.storageId)?.name)
             .filter(x => !!x)
             .join();
     }

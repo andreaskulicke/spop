@@ -3,7 +3,7 @@ import { RootStackParamList } from "../App";
 import { SafeAreaView, ScrollView } from "react-native";
 import { Appbar, Card, TextInput } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { deleteCategory, selectCategory, setCategoryName } from "./store/categoriesSlice";
+import { deleteCategory, selectCategory, setCategoryName } from "./store/dataSlice";
 
 export function CategoryScreen(props: {
     navigation: NavigationProp<RootStackParamList>;

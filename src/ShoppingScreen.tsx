@@ -3,9 +3,9 @@ import { NavigationProp } from '@react-navigation/native';
 import { SafeAreaView, ScrollView } from 'react-native';
 import { Appbar, Menu } from 'react-native-paper';
 import { RootStackParamList } from '../App';
-import { allShop, selectActiveShop } from './store/shopsSlice';
 import { useAppSelector } from './store/hooks';
 import { ShoppingList } from './ShoppingList';
+import { selectActiveShop, allShop } from './store/dataSlice';
 
 export function ShoppingScreen(props: {
     navigation: NavigationProp<RootStackParamList>;

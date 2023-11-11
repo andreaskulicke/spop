@@ -1,11 +1,11 @@
 import { TouchableOpacity, View } from 'react-native';
 import { List, Text } from 'react-native-paper';
 import React from 'react';
-import { ItemState } from './store/itemsSlice';
+import { Item } from './store/dataSlice';
 
 export function FillFromHistoryListItem(props: {
-    item: ItemState;
-    onPress?: (item: ItemState) => void;
+    item: Item;
+    onPress?: (item: Item) => void;
     onIconPress?: (name: string, amount: string | undefined) => void;
 }) {
     function handlePress(): void {

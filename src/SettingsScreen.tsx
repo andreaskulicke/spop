@@ -2,10 +2,7 @@ import { SafeAreaView, ScrollView } from "react-native";
 import { Button, Card, List, RadioButton } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { setColorTheme } from "./store/settingsSlice";
-import { resetItems } from "./store/itemsSlice";
-import { resetCategories } from "./store/categoriesSlice";
-import { resetShops } from "./store/shopsSlice";
-import { resetStorages } from "./store/storagesSlice";
+import { resetCategories, resetItems, resetShops, resetStorages } from "./store/dataSlice";
 
 export function SettingsScreen() {
     const settings = useAppSelector(state => state.settings);

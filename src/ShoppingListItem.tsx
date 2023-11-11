@@ -2,16 +2,16 @@ import React from 'react';
 import { View } from 'react-native';
 import { List, Checkbox, Text } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from './store/hooks';
-import { ItemState, checkItem, setItemAmount } from './store/itemsSlice';
+import { Item, checkItem, setItemAmount } from './store/dataSlice';
 import { ColoredTextInput } from './ColoredTextInput';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
 
 export function ShoppingListItem(props: {
-    item: ItemState;
+    item: Item;
     showShops?: boolean;
 }) {
-    const shops = useAppSelector(state => state.shops);
+    const shops = useAppSelector(state => state.data.shops);
     const dispatch = useAppDispatch();
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
@@ -30,7 +30,7 @@ export function ShoppingListItem(props: {
     let description = "";
     if (props.showShops) {
         description = props.item.shops
-            .map(x => shops.shops.find(s => s.id === x.shopId)?.name)
+            .map(x => shops.find(s => s.id === x.shopId)?.name)
             .filter(x => !!x)
             .join();
     }

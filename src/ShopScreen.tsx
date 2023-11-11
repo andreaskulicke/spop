@@ -3,12 +3,11 @@ import { RootStackParamList } from "../App";
 import { SafeAreaView, View } from "react-native";
 import { Appbar, Card, IconButton, List, TextInput, TouchableRipple } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { addShopCategory, deleteShop, selectShop, setShopCategories, setShopCategoryShow, setShopName } from "./store/shopsSlice";
 import { ReactNode, useState } from "react";
 import { AvatarText } from "./AvatarText";
 import uuid from 'react-native-uuid';
-import { CategoriesState, addCategory } from "./store/categoriesSlice";
 import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams } from "react-native-draggable-flatlist";
+import { selectShop, addCategory, addShopCategory, setShopCategoryShow, deleteShop, setShopName, setShopCategories, Category } from "./store/dataSlice";
 
 export function ShopScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -16,7 +15,7 @@ export function ShopScreen(props: {
 }) {
     const [categoriesExpanded, setCategoriesExpanded] = useState(false);
     const [showAllCategories, setShowAllCategories] = useState(false);
-    const categories = useAppSelector(state => state.categories);
+    const categories = useAppSelector(state => state.data.categories);
     const shop = useAppSelector(selectShop(props.route.params.id));
     const dispatch = useAppDispatch();
 
@@ -37,7 +36,7 @@ export function ShopScreen(props: {
         dispatch(setShopName({ id: shop.id, name: text }));
     }
 
-    function handleRenderItem(params: RenderItemParams<CategoriesState>): ReactNode {
+    function handleRenderItem(params: RenderItemParams<Category>): ReactNode {
         return (
             <List.Item
                 key={params.item.id}
