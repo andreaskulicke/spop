@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView } from 'react-native';
 import { SearchBar } from './SearchBar';
-import { Item, addItem, allStorage, deleteItems, selectActiveStorage } from './store/dataSlice';
+import { Item, addItem, allStorage, deleteItems, selectStorage } from './store/dataSlice';
 import { FillFromHistoryList } from './FillFromHistoryList';
 import { FillList } from './FillList';
 import { Appbar, Divider, Menu } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from './store/hooks';
-import { NavigationProp } from '@react-navigation/native';
+import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
 import uuid from 'react-native-uuid';
+import { StoragesStackParamList } from './StoragesNavigationScreen';
 
 export function FillScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
+    route: RouteProp<StoragesStackParamList, "Fill">;
 }) {
     const [filter, setFilter] = useState<{ text: string; name?: string; amount?: string }>();
     const [menuVisible, setMenuVisible] = useState(false);
     const items = useAppSelector(state => state.data);
-    const storage = useAppSelector(selectActiveStorage);
+    const storage = useAppSelector(selectStorage(props.route.params.storageId));
     const dispatch = useAppDispatch();
 
     const [newItem, setNewItem] = useState<Item>({

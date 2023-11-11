@@ -4,7 +4,7 @@ import { ShoppingScreen } from "./ShoppingScreen";
 
 export type ShopsStackParamList = {
     Shops: undefined;
-    Shopping: undefined;
+    Shopping: { id: string };
 };
 
 const Stack = createNativeStackNavigator<ShopsStackParamList>();

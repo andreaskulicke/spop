@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { NavigationProp } from '@react-navigation/native';
+import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { SafeAreaView, ScrollView } from 'react-native';
 import { Appbar, Menu } from 'react-native-paper';
 import { RootStackParamList } from '../App';
 import { useAppSelector } from './store/hooks';
 import { ShoppingList } from './ShoppingList';
-import { selectActiveShop, allShop } from './store/dataSlice';
+import { allShop, selectShop } from './store/dataSlice';
+import { ShopsStackParamList } from './ShopsNavigationScreen';
 
 export function ShoppingScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
+    route: RouteProp<ShopsStackParamList, "Shopping">;
 }) {
     const [menuVisible, setMenuVisible] = useState(false);
-    const shop = useAppSelector(selectActiveShop);
+    const shop = useAppSelector(selectShop(props.route.params.id));
 
     function handleEditPress(): void {
         setMenuVisible(false);

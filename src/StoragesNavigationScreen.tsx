@@ -4,7 +4,7 @@ import { StoragesScreen } from "./StoragesScreen";
 
 export type StoragesStackParamList = {
     Storages: undefined;
-    Fill: undefined;
+    Fill: { storageId: string };
 };
 
 const Stack = createNativeStackNavigator<StoragesStackParamList>();

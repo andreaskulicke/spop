@@ -8,7 +8,7 @@ import { ShopsStackParamList } from "./ShopsNavigationScreen";
 import uuid from 'react-native-uuid';
 import { AvatarText } from "./AvatarText";
 import DraggableFlatList, { RenderItemParams } from "react-native-draggable-flatlist";
-import { addShop, setActiveShop, allShop, setShops, Shop } from "./store/dataSlice";
+import { addShop, allShop, setShops, Shop } from "./store/dataSlice";
 
 export function ShopsScreen(props: {
     navigation: NavigationProp<RootStackParamList & ShopsStackParamList>;
@@ -36,8 +36,7 @@ export function ShopsScreen(props: {
     }
 
     function handleShopPress(id: string): void {
-        dispatch(setActiveShop(id));
-        props.navigation.navigate("Shopping");
+        props.navigation.navigate("Shopping", { id });
     }
 
     function handleRenderItem(params: RenderItemParams<Shop>): ReactNode {

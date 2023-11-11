@@ -8,7 +8,7 @@ import { StoragesStackParamList } from "./StoragesNavigationScreen";
 import uuid from 'react-native-uuid';
 import { AvatarText } from "./AvatarText";
 import DraggableFlatList, { RenderItemParams } from "react-native-draggable-flatlist";
-import { addStorage, setActiveStorage, allStorage, setStorages, Storage } from "./store/dataSlice";
+import { addStorage, allStorage, setStorages, Storage } from "./store/dataSlice";
 
 export function StoragesScreen(props: {
     navigation: NavigationProp<RootStackParamList & StoragesStackParamList>;
@@ -35,8 +35,7 @@ export function StoragesScreen(props: {
     }
 
     function handleStoragePress(id: string): void {
-        dispatch(setActiveStorage(id));
-        props.navigation.navigate("Fill");
+        props.navigation.navigate("Fill", { storageId: id });
     }
 
     function handleRenderItem(params: RenderItemParams<Storage>): ReactNode {
@@ -78,19 +77,18 @@ export function StoragesScreen(props: {
                         icon="check-all"
                         size={40}
                     />}
-                right={p =>
-                    {
-                        const count = items.items.filter(i => i.wanted).length;
-                        const unassignedCount = items.items.filter(i => i.wanted && ((i.storages?.length ?? 0) === 0)).length;
-                        return <View style={{ flexDirection: "row", alignItems: "center" }}>
-                            <Tooltip title="Gewünschte Dinge und ohne Storage">
-                                <Text {...p} variant="labelMedium" style={{ paddingLeft: 16, paddingVertical: 12 }}>
-                                    {count}
-                                </Text>
-                            </Tooltip>
-                            <Badge visible={unassignedCount > 0} style={{ position: "absolute", top: 0, right: -20 }}>{unassignedCount}</Badge>
-                        </View>;
-                    }
+                right={p => {
+                    const count = items.items.filter(i => i.wanted).length;
+                    const unassignedCount = items.items.filter(i => i.wanted && ((i.storages?.length ?? 0) === 0)).length;
+                    return <View style={{ flexDirection: "row", alignItems: "center" }}>
+                        <Tooltip title="Gewünschte Dinge und ohne Storage">
+                            <Text {...p} variant="labelMedium" style={{ paddingLeft: 16, paddingVertical: 12 }}>
+                                {count}
+                            </Text>
+                        </Tooltip>
+                        <Badge visible={unassignedCount > 0} style={{ position: "absolute", top: 0, right: -20 }}>{unassignedCount}</Badge>
+                    </View>;
+                }
                 }
                 title={allStorage.name}
                 onPress={() => handleStoragePress(allStorage.id)}

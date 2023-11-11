@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from './store';
-import { act } from 'react-test-renderer';
 
 export interface Category {
     id: string;
@@ -20,7 +19,6 @@ export interface Item {
 export interface Shop {
     id: string;
     name: string;
-    active?: boolean;
     /** Category IDs that are present here are shown in the order of this array */
     categoryIds?: string[];
 }
@@ -28,7 +26,6 @@ export interface Shop {
 export interface Storage {
     id: string;
     name: string;
-    active?: boolean;
 }
 
 export interface Data {
@@ -277,15 +274,6 @@ export const itemsSlice = createSlice({
         setShops: (state, action: PayloadAction<Shop[]>) => {
             state.shops = action.payload;
         },
-        setActiveShop: (state, action: PayloadAction<string>) => {
-            const shopId = action.payload;
-            for (const shop of state.shops) {
-                shop.active = false;
-                if (shop.id === shopId) {
-                    shop.active = true;
-                }
-            }
-        },
         setShopName: (state, action: PayloadAction<{ shopId: string, name: string }>) => {
             const shop = state.shops.find(x => x.id === action.payload.shopId);
             if (shop) {
@@ -354,15 +342,6 @@ export const itemsSlice = createSlice({
                 storage.name = action.payload.name;
             }
         },
-        setActiveStorage: (state, action: PayloadAction<string>) => {
-            const storageId = action.payload;
-            for (const storage of state.storages) {
-                storage.active = false;
-                if (storage.id === storageId) {
-                    storage.active = true;
-                }
-            }
-        },
     }
 })
 
@@ -394,7 +373,6 @@ export const {
     addShopCategory,
     deleteShop,
     resetShops,
-    setActiveShop,
     setShopCategories,
     setShopCategoryShow,
     setShopName,
@@ -404,7 +382,6 @@ export const {
     addStorage,
     deleteStorage,
     resetStorages,
-    setActiveStorage,
     setStorageName,
     setStorages,
 } = itemsSlice.actions
@@ -442,16 +419,8 @@ export const allShop: Shop = {
 export function selectShop(id: string): (state: RootState) => Shop | undefined {
     return (state: RootState) => {
         const item = state.data.shops.find(x => x.id === id);
-        return item;
+        return item ?? allShop;
     };
-}
-
-export function selectActiveShop(state: RootState): Shop {
-    let shop = state.data.shops.find(x => x.active);
-    if (!shop) {
-        shop = allShop;
-    }
-    return shop;
 }
 
 // Storages
@@ -464,14 +433,6 @@ export const allStorage: Storage = {
 export function selectStorage(id: string): (state: RootState) => Storage | undefined {
     return (state: RootState) => {
         const item = state.data.storages.find(x => x.id === id);
-        return item;
+        return item ?? allStorage;
     };
-}
-
-export function selectActiveStorage(state: RootState): Storage {
-    let storage = state.data.storages.find(x => x.active);
-    if (!storage) {
-        storage = allStorage;
-    }
-    return storage;
 }
