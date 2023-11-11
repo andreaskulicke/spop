@@ -106,7 +106,15 @@ const initialState: Data = {
             name: "Waschküche",
         },
     ],
+}
 
+function initializeShopCategoryIds(data: Data, shop: Shop) {
+    if (!shop.categoryIds) {
+        var currentCategories = new Set(data.categories.map(x => x.id));
+        shop.categoryIds = initialState.categories
+            .filter(x => currentCategories.has(x.id))
+            .map(x => x.id);
+    }
 }
 
 export const itemsSlice = createSlice({
@@ -134,7 +142,7 @@ export const itemsSlice = createSlice({
                 state.shops.forEach(shop => {
                     const index = shop.categoryIds?.findIndex(x => x === categoryId) ?? -1;
                     if (index !== -1) {
-                        shop.categoryIds.splice(index, 1);
+                        shop.categoryIds?.splice(index, 1);
                     }
                 });
             }
@@ -284,9 +292,10 @@ export const itemsSlice = createSlice({
         addShopCategory: (state, action: PayloadAction<{ shopId: string, categoryId: string }>) => {
             const shop = state.shops.find(x => x.id === action.payload.shopId);
             if (shop) {
-                const index = shop.categoryIds.findIndex(x => x === action.payload.categoryId);
+                initializeShopCategoryIds(state, shop);
+                const index = shop.categoryIds?.findIndex(x => x === action.payload.categoryId) ?? -1;
                 if (index === -1) {
-                    shop.categoryIds.push(action.payload.categoryId);
+                    shop.categoryIds?.push(action.payload.categoryId);
                 }
             }
         },
@@ -299,12 +308,13 @@ export const itemsSlice = createSlice({
         setShopCategoryShow: (state, action: PayloadAction<{ shopId: string, categoryId: string, show: boolean }>) => {
             const shop = state.shops.find(x => x.id === action.payload.shopId);
             if (shop) {
-                const categoryIndex = shop.categoryIds.findIndex(x => x === action.payload.categoryId);
+                initializeShopCategoryIds(state, shop);
+                const categoryIndex = shop.categoryIds?.findIndex(x => x === action.payload.categoryId) ?? -1;
                 if (action.payload.show && (categoryIndex === -1)) {
-                    shop.categoryIds.push(action.payload.categoryId);
+                    shop.categoryIds?.push(action.payload.categoryId);
                 }
                 else if (!action.payload.show && (categoryIndex !== -1)) {
-                    shop.categoryIds.splice(categoryIndex, 1);
+                    shop.categoryIds?.splice(categoryIndex, 1);
                 }
             }
         },
