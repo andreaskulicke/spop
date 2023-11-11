@@ -4,7 +4,7 @@ import { ItemScreen } from './src/ItemScreen';
 import { NavigationContainer, DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationDefaultTheme } from '@react-navigation/native';
 import { PaperProvider, MD3DarkTheme, MD3LightTheme, adaptNavigationTheme } from 'react-native-paper';
 import { Provider } from 'react-redux';
-import { setCategories, setItems, setShops, setStorages } from './src/store/dataSlice';
+import { setCategories, setData, setItems, setShops, setStorages } from './src/store/dataSlice';
 import { SettingsScreen } from './src/SettingsScreen';
 import { store } from './src/store/store';
 import { useAppDispatch, useAppSelector } from './src/store/hooks';
@@ -16,6 +16,7 @@ import { StorageScreen } from './src/StorageScreen';
 import { ShopScreen } from './src/ShopScreen';
 import { CategoryScreen } from './src/CategoryScreen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { setSettings } from './src/store/settingsSlice';
 
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
     reactNavigationLight: NavigationDefaultTheme,
@@ -46,45 +47,31 @@ export default function App() {
 
 function AppWithStore() {
     const colorScheme = useColorScheme();
-    const categories = useAppSelector(state => state.data.categories);
-    const items = useAppSelector(state => state.data.items);
-    const shops = useAppSelector(state => state.data.shops);
+    const data = useAppSelector(state => state.data);
     const settings = useAppSelector(state => state.settings);
-    const storages = useAppSelector(state => state.data.storages);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        AsyncStorage.getItem("categories").then(data => {
+        console.log("data: restoring...")
+        AsyncStorage.getItem("data").then(data => {
             if (data) {
-                dispatch(setCategories(JSON.parse(data)));
+                dispatch(setData(JSON.parse(data)));
             }
         });
-        AsyncStorage.getItem("items").then(data => {
+        AsyncStorage.getItem("settings").then(data => {
             if (data) {
-                dispatch(setItems(JSON.parse(data)));
-            }
-        });
-        AsyncStorage.getItem("shops").then(data => {
-            if (data) {
-                dispatch(setShops(JSON.parse(data)));
-            }
-        });
-        AsyncStorage.getItem("storages").then(data => {
-            if (data) {
-                dispatch(setStorages(JSON.parse(data)));
+                dispatch(setSettings(JSON.parse(data)));
             }
         });
     }, []);
 
     useEffect(() => {
-        // console.log("items: " + JSON.stringify(items));
-        AsyncStorage.setItem("categories", JSON.stringify(categories));
-        AsyncStorage.setItem("items", JSON.stringify(items));
-        AsyncStorage.setItem("shops", JSON.stringify(shops));
-        AsyncStorage.setItem("storages", JSON.stringify(storages));
-    }, [categories, items, shops, storages]);
+        console.log("data: storing...")
+        AsyncStorage.setItem("data", JSON.stringify(data));
+        AsyncStorage.setItem("settings", JSON.stringify(settings));
+    }, [data, settings]);
 
-    const theme = ((settings.colorTheme ?? colorScheme) === "dark")
+    const theme = ((settings.display.colorTheme ?? colorScheme) === "dark")
         ? CombinedDarkTheme
         : CombinedDefaultTheme;
 

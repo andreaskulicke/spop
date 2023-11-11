@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from './store';
+import { act } from 'react-test-renderer';
 
 export interface Category {
     id: string;
@@ -115,47 +116,46 @@ export const itemsSlice = createSlice({
     name: "items",
     initialState,
     reducers: {
+        setData: (state, action: PayloadAction<Data>) => {
+            state = action.payload;
+        },
+
         // Categories
         addCategory: (state, action: PayloadAction<string>) => {
+            const categoryId = action.payload;
             state.categories.push({
-                id: action.payload,
+                id: categoryId,
                 name: "Neu",
             });
         },
         deleteCategory: (state, action: PayloadAction<string>) => {
-            const index = state.categories.findIndex(x => x.id === action.payload);
+            const categoryId = action.payload;
+            const index = state.categories.findIndex(x => x.id === categoryId);
             if (index !== -1) {
                 state.categories.splice(index, 1);
+                state.items.filter(item => item.categoryId === categoryId).forEach(item => item.categoryId = undefined);
+                state.shops.forEach(shop => {
+                    const index = shop.categoryIds?.findIndex(x => x === categoryId) ?? -1;
+                    if (index !== -1) {
+                        shop.categoryIds.splice(index, 1);
+                    }
+                });
             }
         },
-        resetCategories: (state, action: PayloadAction<void>) => {
-            state = initialState;
+        resetCategories: (state) => {
+            state.categories = initialState.categories;
         },
         setCategories: (state, action: PayloadAction<Category[]>) => {
             state.categories = action.payload;
         },
-        setCategoryName: (state, action: PayloadAction<{ id: string, name: string }>) => {
-            const category = state.categories.find(x => x.id === action.payload.id);
+        setCategoryName: (state, action: PayloadAction<{ categoryId: string, name: string }>) => {
+            const category = state.categories.find(x => x.id === action.payload.categoryId);
             if (category) {
                 category.name = action.payload.name;
             }
         },
 
         // Items
-        resetItems: (state, action: PayloadAction<void>) => {
-            state.items = initialState.items;
-        },
-        setItems: (state, action: PayloadAction<Data>) => {
-            state.items = action.payload.items;
-            for (const item of state.items) {
-                if (!item.shops) {
-                    item.shops = [];
-                }
-                if (!item.storages) {
-                    item.storages = [];
-                }
-            }
-        },
         addItem: (state, action: PayloadAction<{ item: Item, storageId: string }>) => {
             const item = state.items.find(x => x.id === action.payload.item.id);
             if (item) {
@@ -177,6 +177,29 @@ export const itemsSlice = createSlice({
                 state.items.unshift(newItem);
             }
         },
+        deleteItem: (state, action: PayloadAction<string>) => {
+            const itemId = action.payload;
+            const index = state.items.findIndex(x => x.id === itemId);
+            if (index !== -1) {
+                state.items.splice(index, 1);
+            }
+        },
+        deleteItems: (state, action: PayloadAction<string[]>) => {
+            const itemIds = action.payload;
+            for (const item of state.items) {
+                const index = itemIds.findIndex(x => x === item.id);
+                if (index !== -1) {
+                    state.items.splice(index, 1);
+                }
+            }
+        },
+        resetItems: (state) => {
+            state.items = initialState.items;
+        },
+        setItems: (state, action: PayloadAction<Item[]>) => {
+            state.items = action.payload;
+        },
+
         setItemAmount: (state, action: PayloadAction<{ itemId: string, amount: string }>) => {
             const item = state.items.find(x => x.id === action.payload.itemId);
             if (item) {
@@ -189,41 +212,20 @@ export const itemsSlice = createSlice({
                 item.categoryId = action.payload.categoryId;
             }
         },
-        checkItem: (state, action: PayloadAction<{ itemId: string, check: boolean }>) => {
-            const index = state.items.findIndex(x => x.id === action.payload.itemId);
-            if (index !== -1) {
-                const item = state.items.splice(index, 1)[0];
-                state.items.unshift(item);
-                item.wanted = action.payload.check;
-            }
-        },
-        deleteItem: (state, action: PayloadAction<string>) => {
-            const index = state.items.findIndex(x => x.id === action.payload);
-            if (index !== -1) {
-                state.items.splice(index, 1);
-            }
-        },
-        deleteItems: (state, action: PayloadAction<string[]>) => {
-            for (const item of state.items) {
-                const index = action.payload.findIndex(x => x === item.id);
-                if (index !== -1) {
-                    state.items.splice(index, 1);
-                }
-            }
-        },
         setItemName: (state, action: PayloadAction<{ itemId: string, name: string }>) => {
             const item = state.items.find(x => x.id === action.payload.itemId);
             if (item) {
                 item.name = action.payload.name;
             }
         },
-        toggleItemShop: (state, action: PayloadAction<{ itemId: string, shopId: string }>) => {
+        setItemShop: (state, action: PayloadAction<{ itemId: string, shopId: string, checked: boolean }>) => {
             const item = state.items.find(x => x.id === action.payload.itemId);
             if (item) {
                 const shopIndex = item.shops.findIndex(x => x.shopId === action.payload.shopId);
-                if (shopIndex === -1) {
+                if (action.payload.checked && (shopIndex === -1)) {
                     item.shops.push({ shopId: action.payload.shopId });
-                } else {
+                }
+                else if (!action.payload.checked && (shopIndex !== -1)) {
                     item.shops.splice(shopIndex, 1);
                 }
             }
@@ -231,29 +233,25 @@ export const itemsSlice = createSlice({
         setItemStorage: (state, action: PayloadAction<{ itemId: string, storageId: string, checked: boolean }>) => {
             const item = state.items.find(x => x.id === action.payload.itemId);
             if (item) {
-                const index = item.storages.findIndex(x => x.storageId === action.payload.storageId);
-                if (action.payload.checked && (index === -1)) {
+                const storageIndex = item.storages.findIndex(x => x.storageId === action.payload.storageId);
+                if (action.payload.checked && (storageIndex === -1)) {
                     item.storages.push({ storageId: action.payload.storageId });
                 }
-                else if (!action.payload.checked && (index !== -1)) {
-                    item.storages.splice(index, 1);
+                else if (!action.payload.checked && (storageIndex !== -1)) {
+                    item.storages.splice(storageIndex, 1);
                 }
-
+            }
+        },
+        setItemWanted: (state, action: PayloadAction<{ itemId: string, wanted: boolean }>) => {
+            const index = state.items.findIndex(x => x.id === action.payload.itemId);
+            if (index !== -1) {
+                const item = state.items.splice(index, 1)[0];
+                state.items.unshift(item);
+                item.wanted = action.payload.wanted;
             }
         },
 
         // Shops
-        resetShops: (state, action: PayloadAction<void>) => {
-            state.shops = initialState.shops;
-        },
-        setShops: (state, action: PayloadAction<Shop[]>) => {
-            state.shops = action.payload;
-            for (const shop of state.shops) {
-                if (!shop.categoryIds) {
-                    shop.categoryIds = initialState.categories.map(x => x.id);
-                }
-            }
-        },
         addShop: (state, action: PayloadAction<string>) => {
             state.shops.push({
                 id: action.payload,
@@ -261,62 +259,87 @@ export const itemsSlice = createSlice({
             });
         },
         deleteShop: (state, action: PayloadAction<string>) => {
-            const index = state.shops.findIndex(x => x.id === action.payload);
+            const shopId = action.payload;
+            const index = state.shops.findIndex(x => x.id === shopId);
             if (index !== -1) {
                 state.shops.splice(index, 1);
+                state.items.forEach(item => {
+                    const index = item.shops.findIndex(x => x.shopId === shopId);
+                    if (index !== -1) {
+                        item.shops.splice(index, 1);
+                    }
+                })
             }
         },
+        resetShops: (state) => {
+            state.shops = initialState.shops;
+        },
+        setShops: (state, action: PayloadAction<Shop[]>) => {
+            state.shops = action.payload;
+        },
         setActiveShop: (state, action: PayloadAction<string>) => {
+            const shopId = action.payload;
             for (const shop of state.shops) {
                 shop.active = false;
-                if (shop.id === action.payload) {
+                if (shop.id === shopId) {
                     shop.active = true;
                 }
             }
         },
-        setShopName: (state, action: PayloadAction<{ id: string, name: string }>) => {
-            const shop = state.shops.find(x => x.id === action.payload.id);
+        setShopName: (state, action: PayloadAction<{ shopId: string, name: string }>) => {
+            const shop = state.shops.find(x => x.id === action.payload.shopId);
             if (shop) {
                 shop.name = action.payload.name;
             }
         },
         // Shops - Categories
-        addShopCategory: (state, action: PayloadAction<{ id: string, categoryId: string }>) => {
-            const shop = state.shops.find(x => x.id === action.payload.id);
+        addShopCategory: (state, action: PayloadAction<{ shopId: string, categoryId: string }>) => {
+            const shop = state.shops.find(x => x.id === action.payload.shopId);
             if (shop) {
-                shop.categoryIds.push(action.payload.categoryId);
+                const index = shop.categoryIds.findIndex(x => x === action.payload.categoryId);
+                if (index === -1) {
+                    shop.categoryIds.push(action.payload.categoryId);
+                }
             }
         },
-        setShopCategories: (state, action: PayloadAction<{ id: string, categoryIds: string[] }>) => {
-            const shop = state.shops.find(x => x.id === action.payload.id);
+        setShopCategories: (state, action: PayloadAction<{ shopId: string, categoryIds: string[] }>) => {
+            const shop = state.shops.find(x => x.id === action.payload.shopId);
             if (shop) {
                 shop.categoryIds = action.payload.categoryIds.filter(x => !!x);
             }
         },
-        setShopCategoryShow: (state, action: PayloadAction<{ id: string, categoryId: string, show: boolean }>) => {
-            const shop = state.shops.find(x => x.id === action.payload.id);
+        setShopCategoryShow: (state, action: PayloadAction<{ shopId: string, categoryId: string, show: boolean }>) => {
+            const shop = state.shops.find(x => x.id === action.payload.shopId);
             if (shop) {
-                const index = shop.categoryIds.findIndex(x => x === action.payload.categoryId);
-                if (action.payload.show && (index === -1)) {
+                const categoryIndex = shop.categoryIds.findIndex(x => x === action.payload.categoryId);
+                if (action.payload.show && (categoryIndex === -1)) {
                     shop.categoryIds.push(action.payload.categoryId);
                 }
-                else if (!action.payload.show && (index !== -1)) {
-                    shop.categoryIds.splice(index, 1);
+                else if (!action.payload.show && (categoryIndex !== -1)) {
+                    shop.categoryIds.splice(categoryIndex, 1);
                 }
             }
         },
 
         // Storages
         addStorage: (state, action: PayloadAction<string>) => {
+            const storageId = action.payload;
             state.storages.push({
-                id: action.payload,
+                id: storageId,
                 name: "Neu",
             });
         },
         deleteStorage: (state, action: PayloadAction<string>) => {
-            const index = state.storages.findIndex(x => x.id === action.payload);
+            const storageId = action.payload;
+            const index = state.storages.findIndex(x => x.id === storageId);
             if (index !== -1) {
                 state.storages.splice(index, 1);
+                state.items.forEach(item => {
+                    const index = item.storages.findIndex(x => x.storageId === storageId);
+                    if (index !== -1) {
+                        item.storages.splice(index, 1);
+                    }
+                })
             }
         },
         resetStorages: (state, action: PayloadAction<void>) => {
@@ -325,16 +348,17 @@ export const itemsSlice = createSlice({
         setStorages: (state, action: PayloadAction<Storage[]>) => {
             state.storages = action.payload;
         },
-        setStorageName: (state, action: PayloadAction<{ id: string, name: string }>) => {
-            const storage = state.storages.find(x => x.id === action.payload.id);
+        setStorageName: (state, action: PayloadAction<{ storageId: string, name: string }>) => {
+            const storage = state.storages.find(x => x.id === action.payload.storageId);
             if (storage) {
                 storage.name = action.payload.name;
             }
         },
         setActiveStorage: (state, action: PayloadAction<string>) => {
+            const storageId = action.payload;
             for (const storage of state.storages) {
                 storage.active = false;
-                if (storage.id === action.payload) {
+                if (storage.id === storageId) {
                     storage.active = true;
                 }
             }
@@ -343,6 +367,8 @@ export const itemsSlice = createSlice({
 })
 
 export const {
+    setData,
+
     // Categories
     addCategory,
     deleteCategory,
@@ -352,16 +378,16 @@ export const {
 
     // Items
     addItem,
-    setItemAmount,
-    checkItem,
     deleteItem,
     deleteItems,
     resetItems,
+    setItemAmount,
     setItemCategory,
     setItemName,
-    setItemStorage,
     setItems,
-    toggleItemShop,
+    setItemShop,
+    setItemStorage,
+    setItemWanted,
 
     // Shops
     addShop,

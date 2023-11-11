@@ -21,7 +21,7 @@ export function CategoryScreen(props: {
 
     function handleNameChange(text: string): void {
         if (category) {
-            dispatch(setCategoryName({ id: category.id, name: text }));
+            dispatch(setCategoryName({ categoryId: category.id, name: text }));
         }
     }
 

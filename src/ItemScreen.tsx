@@ -4,7 +4,7 @@ import { Appbar, Card, Checkbox, IconButton, List, Menu, TextInput, TouchableRip
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RootStackParamList } from "../App";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { addCategory, addStorage, checkItem, deleteItem, selectItem, setItemAmount, setItemCategory, setItemName, setItemStorage, toggleItemShop } from "./store/dataSlice";
+import { addCategory, addStorage, setItemWanted, deleteItem, selectItem, setItemAmount, setItemCategory, setItemName, setItemStorage, setItemShop } from "./store/dataSlice";
 import { Dimensions, Keyboard, ScrollView, View } from "react-native";
 import { AvatarText } from "./AvatarText";
 import uuid from 'react-native-uuid';
@@ -53,8 +53,8 @@ export function ItemScreen(props: {
         props.navigation.navigate("Category", { id: item.categoryId })
     }
 
-    function handleShopCheck(shopId: string): void {
-        dispatch(toggleItemShop({ itemId: item.id, shopId: shopId }));
+    function handleShopCheck(shopId: string, checked: boolean): void {
+        dispatch(setItemShop({ itemId: item.id, shopId: shopId, checked: checked }));
     }
 
     function handleStorageCheck(storageId: string, checked: boolean): void {
@@ -63,7 +63,7 @@ export function ItemScreen(props: {
 
     function handleCheckPress(): void {
         Keyboard.dismiss();
-        dispatch(checkItem({ itemId: item.id, check: !item.wanted }))
+        dispatch(setItemWanted({ itemId: item.id, wanted: !item.wanted }))
     }
 
     return (
@@ -213,11 +213,13 @@ export function ItemScreen(props: {
                             <List.Item
                                 key={s.id}
                                 title={s.name}
-                                right={p => <Checkbox
-                                    {...p}
-                                    status={item.shops.find(x => x.shopId === s.id) ? "checked" : "unchecked"}
-                                    onPress={() => handleShopCheck(s.id)}
-                                />}
+                                right={p => {
+                                    const checked = item.shops.find(x => x.shopId === s.id);
+                                    return <Checkbox
+                                        {...p}
+                                        status={checked ? "checked" : "unchecked"}
+                                        onPress={() => handleShopCheck(s.id, !checked)} />;
+                                }}
                             />)
                     }
                 </Card>

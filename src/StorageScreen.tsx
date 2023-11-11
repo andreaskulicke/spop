@@ -18,7 +18,7 @@ export function StorageScreen(props: {
     }
 
     function handleNameChange(text: string): void {
-        dispatch(setStorageName({ id: storage.id, name: text }));
+        dispatch(setStorageName({ storageId: storage.id, name: text }));
     }
 
     return (

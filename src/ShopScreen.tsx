@@ -22,8 +22,8 @@ export function ShopScreen(props: {
     function handleAddCategoryPress(): void {
         const id = uuid.v4() as string;
         dispatch(addCategory(id));
-        dispatch(addShopCategory({ id: shop.id, categoryId: id }));
-        dispatch(setShopCategoryShow({ id: shop.id, categoryId: id, show: true }));
+        dispatch(addShopCategory({ shopId: shop.id, categoryId: id }));
+        dispatch(setShopCategoryShow({ shopId: shop.id, categoryId: id, show: true }));
         props.navigation.navigate("Category", { id });
     }
 
@@ -33,7 +33,7 @@ export function ShopScreen(props: {
     }
 
     function handleNameChange(text: string): void {
-        dispatch(setShopName({ id: shop.id, name: text }));
+        dispatch(setShopName({ shopId: shop.id, name: text }));
     }
 
     function handleRenderItem(params: RenderItemParams<Category>): ReactNode {
@@ -42,7 +42,7 @@ export function ShopScreen(props: {
                 key={params.item.id}
                 title={params.item.name}
                 left={p => <AvatarText {...p} label={params.item.name} />}
-                right={p => <IconButton icon="eye-off-outline" onPress={() => dispatch(setShopCategoryShow({ id: shop.id, categoryId: params.item.id, show: false }))} />}
+                right={p => <IconButton icon="eye-off-outline" onPress={() => dispatch(setShopCategoryShow({ shopId: shop.id, categoryId: params.item.id, show: false }))} />}
                 onPress={() => props.navigation.navigate("Category", { id: params.item.id })}
                 onLongPress={() => params.drag()}
             />
@@ -114,7 +114,7 @@ export function ShopScreen(props: {
                             data={catsShown}
                             keyExtractor={x => x.id}
                             renderItem={handleRenderItem}
-                            onDragEnd={({ data }) => dispatch(setShopCategories({ id: shop.id, categoryIds: [...data.map(x => x.id), ...catsHidden.map(x => x.id)] }))}
+                            onDragEnd={({ data }) => dispatch(setShopCategories({ shopId: shop.id, categoryIds: [...data.map(x => x.id), ...catsHidden.map(x => x.id)] }))}
                         />
                     }
                     {
@@ -127,7 +127,7 @@ export function ShopScreen(props: {
                                             key={x.id}
                                             title={x.name}
                                             left={p => <AvatarText {...p} label={x.name} />}
-                                            right={p => <IconButton icon="eye-outline" onPress={() => dispatch(setShopCategoryShow({ id: shop.id, categoryId: x.id, show: true }))} />}
+                                            right={p => <IconButton icon="eye-outline" onPress={() => dispatch(setShopCategoryShow({ shopId: shop.id, categoryId: x.id, show: true }))} />}
                                             onPress={() => props.navigation.navigate("Category", { id: x.id })}
                                         />
                                     );

@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { IconButton, List, useTheme } from 'react-native-paper';
-import { Item, setItemAmount, checkItem } from './store/dataSlice';
+import { Item, setItemAmount, setItemWanted } from './store/dataSlice';
 import { ColoredTextInput } from './ColoredTextInput';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
@@ -22,7 +22,7 @@ export function FillListItem(props: {
     }
 
     function handleCheckPress(): void {
-        dispatch(checkItem({ itemId: props.item.id, check: !props.item.wanted }));
+        dispatch(setItemWanted({ itemId: props.item.id, wanted: !props.item.wanted }));
     }
 
     function handleItemPress(): void {

@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { List, Checkbox, Text } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from './store/hooks';
-import { Item, checkItem, setItemAmount } from './store/dataSlice';
+import { Item, setItemWanted, setItemAmount } from './store/dataSlice';
 import { ColoredTextInput } from './ColoredTextInput';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
@@ -20,7 +20,7 @@ export function ShoppingListItem(props: {
     }
 
     function handlePress(): void {
-        dispatch(checkItem({ itemId: props.item.id, check: !props.item.wanted }));
+        dispatch(setItemWanted({ itemId: props.item.id, wanted: !props.item.wanted }));
     }
 
     function handleItemPress(): void {
