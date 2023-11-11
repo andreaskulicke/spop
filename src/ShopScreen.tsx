@@ -70,6 +70,7 @@ export function ShopScreen(props: {
                     <TextInput
                         label="Name"
                         mode="outlined"
+                        selectTextOnFocus
                         style={{ margin: 8 }}
                         value={shop.name}
                         onChangeText={handleNameChange}

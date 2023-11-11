@@ -40,8 +40,9 @@ export function CategoryScreen(props: {
                     <TextInput
                         label="Name"
                         mode="outlined"
+                        selectTextOnFocus
                         style={{ margin: 8 }}
-                        value={category.name}
+                        value={category?.name ?? ""}
                         onChangeText={handleNameChange}
                     />
                 </Card>

@@ -5,6 +5,7 @@ import { Appbar, Card, TextInput, Text } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { selectStorage, deleteStorage, setStorageName, setStorageDefaultCategory } from "./store/dataSlice";
 import { CategoryMenu } from "./CategoryMenu";
+import { useEffect, useRef } from "react";
 
 export function StorageScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -40,6 +41,7 @@ export function StorageScreen(props: {
                     <TextInput
                         label="Name"
                         mode="outlined"
+                        selectTextOnFocus
                         style={{ margin: 8 }}
                         value={storage.name}
                         onChangeText={handleNameChange}

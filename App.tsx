@@ -32,7 +32,7 @@ export type RootStackParamList = {
     Item: { id: string };
     Settings: undefined;
     Shop: { id: string };
-    Storage: { id: string };
+    Storage: { id: string, new?: boolean };
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();

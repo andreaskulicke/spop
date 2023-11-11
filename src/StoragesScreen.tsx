@@ -31,7 +31,7 @@ export function StoragesScreen(props: {
     function handleAddStoragePress(): void {
         const id = uuid.v4() as string;
         dispatch(addStorage(id));
-        props.navigation.navigate("Storage", { id });
+        props.navigation.navigate("Storage", { id, new: true });
     }
 
     function handleStoragePress(id: string): void {

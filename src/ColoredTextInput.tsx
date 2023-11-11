@@ -3,7 +3,7 @@ import { NativeSyntheticEvent, TextInput, TextInputFocusEventData } from 'react-
 import { useTheme } from 'react-native-paper';
 
 export function ColoredTextInput(props: {
-    value: string;
+    value: string | undefined;
     onChange?: (text: string) => void;
 }) {
     const theme = useTheme();
@@ -12,7 +12,7 @@ export function ColoredTextInput(props: {
 
     function handleBlur(e: NativeSyntheticEvent<TextInputFocusEventData>): void {
         setBackgroundColor(theme.colors.elevation.level0);
-        props.onChange?.(value);
+        props.onChange?.(value ?? "");
     }
 
     function handleChangeText(text: string): void {

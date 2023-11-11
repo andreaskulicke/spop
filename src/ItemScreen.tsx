@@ -37,7 +37,7 @@ export function ItemScreen(props: {
         const id = uuid.v4() as string;
         dispatch(addStorage(id));
         dispatch(setItemStorage({ itemId: item.id, storageId: id, checked: true }));
-        props.navigation.navigate("Storage", { id });
+        props.navigation.navigate("Storage", { id, new: true });
     }
 
     function handleShopCheck(shopId: string, checked: boolean): void {
@@ -68,6 +68,7 @@ export function ItemScreen(props: {
                     <TextInput
                         label="Name"
                         mode="outlined"
+                        selectTextOnFocus
                         style={{ margin: 8 }}
                         value={item.name}
                         onChangeText={handleNameChange}
@@ -75,13 +76,13 @@ export function ItemScreen(props: {
                     <TextInput
                         label="Menge"
                         mode="outlined"
+                        selectTextOnFocus
                         style={{ margin: 8 }}
                         value={item.amount}
                         onChangeText={handleAmountChange}
                     />
                     <CategoryMenu
                         categoryId={item.categoryId}
-                        itemId={item.id}
                         onSetCategory={categoryId => dispatch(setItemCategory({ itemId: item.id, categoryId: categoryId }))}
                     />
                     <Checkbox.Item
