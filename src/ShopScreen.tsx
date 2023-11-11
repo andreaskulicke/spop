@@ -1,12 +1,12 @@
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { SafeAreaView, View } from "react-native";
-import { Appbar, Card, IconButton, List, TextInput, TouchableRipple } from "react-native-paper";
+import { Appbar, Card, IconButton, List, TextInput, TouchableRipple, Text } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { ReactNode, useState } from "react";
 import { AvatarText } from "./AvatarText";
 import uuid from 'react-native-uuid';
-import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams } from "react-native-draggable-flatlist";
+import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 import { selectShop, addCategory, addShopCategory, setShopCategoryShow, deleteShop, setShopName, setShopCategories, Category } from "./store/dataSlice";
 
 export function ShopScreen(props: {
@@ -38,14 +38,16 @@ export function ShopScreen(props: {
 
     function handleRenderItem(params: RenderItemParams<Category>): ReactNode {
         return (
-            <List.Item
-                key={params.item.id}
-                title={params.item.name}
-                left={p => <AvatarText {...p} label={params.item.name} />}
-                right={p => <IconButton icon="eye-off-outline" onPress={() => dispatch(setShopCategoryShow({ shopId: shop.id, categoryId: params.item.id, show: false }))} />}
-                onPress={() => props.navigation.navigate("Category", { id: params.item.id })}
-                onLongPress={() => params.drag()}
-            />
+            <ScaleDecorator>
+                <List.Item
+                    key={params.item.id}
+                    title={p => <Text {...p}>{params.item.name}</Text>}
+                    left={p => <AvatarText {...p} label={params.item.name} />}
+                    right={p => <IconButton icon="eye-off-outline" onPress={() => dispatch(setShopCategoryShow({ shopId: shop.id, categoryId: params.item.id, show: false }))} />}
+                    onPress={() => props.navigation.navigate("Category", { id: params.item.id })}
+                    onLongPress={() => params.drag()}
+                />
+            </ScaleDecorator>
         );
     }
 

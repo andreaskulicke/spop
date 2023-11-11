@@ -1,6 +1,8 @@
 import { Avatar, useTheme } from "react-native-paper";
 import { Style } from "react-native-paper/lib/typescript/components/List/utils";
 
+export const avatarSize = 32;
+
 export function AvatarText(props: {
     style?: Style;
     label: string;
@@ -12,7 +14,7 @@ export function AvatarText(props: {
             style={props.style}
             color={theme.colors.primaryContainer}
             label={props.label.substring(0, 2).toUpperCase()}
-            size={40}
+            size={avatarSize}
         />
     );
 }

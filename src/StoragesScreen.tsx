@@ -6,8 +6,8 @@ import { NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { StoragesStackParamList } from "./StoragesNavigationScreen";
 import uuid from 'react-native-uuid';
-import { AvatarText } from "./AvatarText";
-import DraggableFlatList, { RenderItemParams } from "react-native-draggable-flatlist";
+import { AvatarText, avatarSize } from "./AvatarText";
+import DraggableFlatList, { RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 import { addStorage, allStorage, setStorages, Storage } from "./store/dataSlice";
 
 export function StoragesScreen(props: {
@@ -39,18 +39,25 @@ export function StoragesScreen(props: {
     }
 
     function handleRenderItem(params: RenderItemParams<Storage>): ReactNode {
+        const count = items.items.filter(i => i.wanted && i.storages.find(s => s.storageId === params.item.id)).length;
         return (
-            <List.Item
-                title={params.item.name}
-                left={p => <AvatarText {...p} label={params.item.name} />}
-                right={p =>
-                    <Text {...p} variant="labelMedium">
-                        {items.items.filter(i => i.wanted && i.storages.find(s => s.storageId === params.item.id)).length}
-                    </Text>
-                }
-                onPress={() => handleStoragePress(params.item.id)}
-                onLongPress={() => params.drag()}
-            />
+            <ScaleDecorator>
+                <List.Item
+                    title={p =>
+                        <Text {...p} style={{ fontWeight: (count > 0) ? "bold" : "normal" }}>
+                            {params.item.name}
+                        </Text>
+                    }
+                    left={p => <AvatarText {...p} label={params.item.name} />}
+                    right={p =>
+                        <Text {...p} variant="labelMedium">
+                            {count}
+                        </Text>
+                    }
+                    onPress={() => handleStoragePress(params.item.id)}
+                    onLongPress={() => params.drag()}
+                />
+            </ScaleDecorator>
         );
     }
 
@@ -75,7 +82,7 @@ export function StoragesScreen(props: {
                         {...p}
                         color={theme.colors.primaryContainer}
                         icon="check-all"
-                        size={40}
+                        size={avatarSize}
                     />}
                 right={p => {
                     const count = items.items.filter(i => i.wanted).length;
@@ -90,7 +97,7 @@ export function StoragesScreen(props: {
                     </View>;
                 }
                 }
-                title={allStorage.name}
+                title={p => <Text {...p}>{allStorage.name}</Text>}
                 onPress={() => handleStoragePress(allStorage.id)}
             />
             <Divider />

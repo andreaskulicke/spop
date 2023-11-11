@@ -365,7 +365,7 @@ export const allShop: Shop = {
     name: "Alle",
 }
 
-export function selectShop(id: string): (state: RootState) => Shop | undefined {
+export function selectShop(id: string): (state: RootState) => Shop {
     return (state: RootState) => {
         const item = state.data.shops.find(x => x.id === id);
         return item ?? allShop;
@@ -379,7 +379,7 @@ export const allStorage: Storage = {
     name: "Alle",
 }
 
-export function selectStorage(id: string): (state: RootState) => Storage | undefined {
+export function selectStorage(id: string): (state: RootState) => Storage {
     return (state: RootState) => {
         const item = state.data.storages.find(x => x.id === id);
         return item ?? allStorage;

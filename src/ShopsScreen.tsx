@@ -6,8 +6,8 @@ import { NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { ShopsStackParamList } from "./ShopsNavigationScreen";
 import uuid from 'react-native-uuid';
-import { AvatarText } from "./AvatarText";
-import DraggableFlatList, { RenderItemParams } from "react-native-draggable-flatlist";
+import { AvatarText, avatarSize } from "./AvatarText";
+import DraggableFlatList, { RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 import { addShop, allShop, setShops, Shop } from "./store/dataSlice";
 
 export function ShopsScreen(props: {
@@ -40,18 +40,25 @@ export function ShopsScreen(props: {
     }
 
     function handleRenderItem(params: RenderItemParams<Shop>): ReactNode {
+        const count = items.filter(i => i.wanted && i.shops.find(s => s.shopId === params.item.id)).length;
         return (
-            <List.Item
-                title={params.item.name}
-                left={p => <AvatarText {...p} label={params.item.name} />}
-                right={p =>
-                    <Text {...p} variant="labelMedium">
-                        {items.filter(i => i.wanted && i.shops.find(s => s.shopId === params.item.id)).length}
-                    </Text>
-                }
-                onPress={() => handleShopPress(params.item.id)}
-                onLongPress={() => params.drag()}
-            />
+            <ScaleDecorator>
+                <List.Item
+                    title={p =>
+                        <Text {...p} style={{ fontWeight: (count > 0) ? "bold" : "normal" }}>
+                            {params.item.name}
+                        </Text>
+                    }
+                    left={p => <AvatarText {...p} label={params.item.name} />}
+                    right={p =>
+                        <Text {...p} variant="labelMedium">
+                            {count}
+                        </Text>
+                    }
+                    onPress={() => handleShopPress(params.item.id)}
+                    onLongPress={() => params.drag()}
+                />
+            </ScaleDecorator>
         );
     }
 
@@ -76,7 +83,7 @@ export function ShopsScreen(props: {
                         {...p}
                         color={theme.colors.primaryContainer}
                         icon="check-all"
-                        size={40}
+                        size={avatarSize}
                     />}
                 right={p => {
                     const count = items.filter(i => i.wanted).length;
@@ -91,7 +98,7 @@ export function ShopsScreen(props: {
                     </View>;
                 }
                 }
-                title={allShop.name}
+                title={p => <Text {...p}>{allShop.name}</Text>}
                 onPress={() => handleShopPress(allShop.id)}
             />
             <Divider />
