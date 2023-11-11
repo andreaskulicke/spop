@@ -49,7 +49,7 @@ export function FillScreen(props: {
     function handlePress(item: Item): void {
         console.log("handlePress")
         if (item?.name) {
-            dispatch(addItem({ item: { ...item, amount: filter?.amount }, storageId: storage.id }));
+            dispatch(addItem({ item: { ...item, amount: filter?.amount }, storage: storage }));
             setFilter(undefined);
             setNewItem(v => ({ ...v, id: uuid.v4() as string }))
         }

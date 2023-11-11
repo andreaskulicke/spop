@@ -5,7 +5,8 @@
     },
     {
         "id": "fridge",
-        "name": "Kühlschrank"
+        "name": "Kühlschrank",
+        "defaultCategoryId": "fridge"
     },
     {
         "id": "storageroom",
@@ -13,10 +14,12 @@
     },
     {
         "id": "freezer",
-        "name": "Tiefkühlschrank"
+        "name": "Tiefkühlschrank",
+        "defaultCategoryId": "freezer"
     },
     {
         "id": "laundry",
-        "name": "Waschküche"
+        "name": "Waschküche",
+        "defaultCategoryId": "household"
     }
 ]

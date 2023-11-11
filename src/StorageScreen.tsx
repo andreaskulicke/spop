@@ -1,14 +1,18 @@
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { SafeAreaView, ScrollView } from "react-native";
-import { Appbar, Card, TextInput } from "react-native-paper";
+import { Appbar, Card, TextInput, Text } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { selectStorage, deleteStorage, setStorageName } from "./store/dataSlice";
+import { selectStorage, deleteStorage, setStorageName, setStorageDefaultCategory } from "./store/dataSlice";
+import { CategoryMenu } from "./CategoryMenu";
 
 export function StorageScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
     route: RouteProp<RootStackParamList, "Storage">;
 }) {
+    // Just register on category change in case the default category gets deleted via edit from here.
+    // Re-render would be missing otherwise.
+    const categories = useAppSelector(state => state.data.categories);
     const storage = useAppSelector(selectStorage(props.route.params.id));
     const dispatch = useAppDispatch();
 
@@ -32,13 +36,17 @@ export function StorageScreen(props: {
                 <Card
                     style={{ margin: 8 }}
                 >
-                    <Card.Title title="Allgemein" />
+                    <Card.Title title={<Text>{"Allgemein"}</Text>} />
                     <TextInput
                         label="Name"
                         mode="outlined"
                         style={{ margin: 8 }}
                         value={storage.name}
                         onChangeText={handleNameChange}
+                    />
+                    <CategoryMenu
+                        categoryId={storage.defaultCategoryId}
+                        onSetCategory={categoryId => dispatch(setStorageDefaultCategory({ storageId: storage.id, categoryId }))}
                     />
                 </Card>
             </ScrollView>

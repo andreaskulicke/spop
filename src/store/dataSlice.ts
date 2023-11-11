@@ -30,6 +30,7 @@ export interface Shop {
 export interface Storage {
     id: string;
     name: string;
+    defaultCategoryId?: string;
 }
 
 export interface Data {
@@ -84,6 +85,7 @@ export const itemsSlice = createSlice({
                         shop.categoryIds?.splice(index, 1);
                     }
                 });
+                state.storages.filter(storage => storage.defaultCategoryId === categoryId).forEach(storage => storage.defaultCategoryId = undefined);
             }
         },
         resetCategories: (state) => {
@@ -100,23 +102,25 @@ export const itemsSlice = createSlice({
         },
 
         // Items
-        addItem: (state, action: PayloadAction<{ item: Item, storageId: string }>) => {
+        addItem: (state, action: PayloadAction<{ item: Item, storage: Storage }>) => {
             const item = state.items.find(x => x.id === action.payload.item.id);
             if (item) {
                 item.amount = action.payload.item.amount;
+                item.categoryId = item.categoryId ?? action.payload.storage.defaultCategoryId;
                 item.wanted = true;
-                if ((action.payload.storageId !== allStorage.id)
-                    && !item.storages.find(x => x.storageId === action.payload.storageId)) {
-                    item.storages.push({ storageId: action.payload.storageId });
+                if ((action.payload.storage.id !== allStorage.id)
+                    && !item.storages.find(x => x.storageId === action.payload.storage.id)) {
+                    item.storages.push({ storageId: action.payload.storage.id });
                 }
             } else {
                 const newItem: Item = {
                     ...action.payload.item,
+                    categoryId: action.payload.item.categoryId ?? action.payload.storage.defaultCategoryId,
                     wanted: true,
                 };
-                if ((action.payload.storageId !== allStorage.id)
-                    && !newItem.storages.find(x => x.storageId === action.payload.storageId)) {
-                    newItem.storages.push({ storageId: action.payload.storageId });
+                if ((action.payload.storage.id !== allStorage.id)
+                    && !newItem.storages.find(x => x.storageId === action.payload.storage.id)) {
+                    newItem.storages.push({ storageId: action.payload.storage.id });
                 }
                 state.items.unshift(newItem);
             }
@@ -285,6 +289,12 @@ export const itemsSlice = createSlice({
         setStorages: (state, action: PayloadAction<Storage[]>) => {
             state.storages = action.payload;
         },
+        setStorageDefaultCategory: (state, action: PayloadAction<{ storageId: string, categoryId: string }>) => {
+            const storage = state.storages.find(x => x.id === action.payload.storageId);
+            if (storage) {
+                storage.defaultCategoryId = action.payload.categoryId;
+            }
+        },
         setStorageName: (state, action: PayloadAction<{ storageId: string, name: string }>) => {
             const storage = state.storages.find(x => x.id === action.payload.storageId);
             if (storage) {
@@ -331,6 +341,7 @@ export const {
     addStorage,
     deleteStorage,
     resetStorages,
+    setStorageDefaultCategory,
     setStorageName,
     setStorages,
 } = itemsSlice.actions

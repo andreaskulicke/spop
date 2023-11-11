@@ -1,23 +1,21 @@
-import React, { useState } from "react";
+import { addStorage, setItemWanted, deleteItem, selectItem, setItemAmount, setItemName, setItemStorage, setItemShop, setItemCategory } from "./store/dataSlice";
+import { Appbar, Card, Checkbox, IconButton, List, TextInput, TouchableRipple } from "react-native-paper";
+import { CategoryMenu } from "./CategoryMenu";
+import { Keyboard, ScrollView, View } from "react-native";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
-import { Appbar, Card, Checkbox, IconButton, List, Menu, TextInput, TouchableRipple } from "react-native-paper";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { RootStackParamList } from "../App";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { addCategory, addStorage, setItemWanted, deleteItem, selectItem, setItemAmount, setItemCategory, setItemName, setItemStorage, setItemShop } from "./store/dataSlice";
-import { Dimensions, Keyboard, ScrollView, View } from "react-native";
-import { AvatarText } from "./AvatarText";
+import React, { useState } from "react";
 import uuid from 'react-native-uuid';
 
 export function ItemScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
     route: RouteProp<RootStackParamList, "Item">;
 }) {
-    const [categoryMenuVisible, setCategoryMenuVisible] = useState(false);
     const [storagesExpanded, setStoragesExpanded] = useState(false);
     const [shopsExpanded, setShopsExpanded] = useState(false);
-    const categories = useAppSelector(state => state.data.categories);
-    const item = useAppSelector(selectItem(props.route.params.id));
+    const item = useAppSelector(selectItem(props.route.params.id))!;
     const shops = useAppSelector(state => state.data.shops);
     const storages = useAppSelector(state => state.data.storages);
     const dispatch = useAppDispatch();
@@ -35,22 +33,11 @@ export function ItemScreen(props: {
         dispatch(setItemName({ itemId: item.id, name: text }));
     }
 
-    function handleAddCategoryPress(): void {
-        const id = uuid.v4() as string;
-        dispatch(addCategory(id));
-        dispatch(setItemCategory({ itemId: item.id, categoryId: id }));
-        props.navigation.navigate("Category", { id });
-    }
-
     function handleAddStoragePress(): void {
         const id = uuid.v4() as string;
         dispatch(addStorage(id));
         dispatch(setItemStorage({ itemId: item.id, storageId: id, checked: true }));
         props.navigation.navigate("Storage", { id });
-    }
-
-    function handleEditCategoryPress(): void {
-        props.navigation.navigate("Category", { id: item.categoryId })
     }
 
     function handleShopCheck(shopId: string, checked: boolean): void {
@@ -92,52 +79,11 @@ export function ItemScreen(props: {
                         value={item.amount}
                         onChangeText={handleAmountChange}
                     />
-                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <View style={{ flexGrow: 1 }}>
-                            <Menu
-                                anchor={
-                                    <TouchableRipple
-                                        onPress={() => setCategoryMenuVisible(true)}
-                                    >
-                                        <TextInput
-                                            editable={false}
-                                            label="Kategorie"
-                                            mode="outlined"
-                                            style={{ margin: 8 }}
-                                            value={categories.find(x => x.id === item.categoryId)?.name}
-                                            right={<TextInput.Icon icon={categoryMenuVisible ? "chevron-up" : "chevron-down"} onPress={() => setCategoryMenuVisible(true)} />}
-                                        />
-                                    </TouchableRipple>
-                                }
-                                anchorPosition="bottom"
-                                style={{ marginLeft: 8, width: Dimensions.get("window").width - 32 }}
-                                visible={categoryMenuVisible}
-                                onDismiss={() => setCategoryMenuVisible(false)}
-                            >
-                                {
-                                    [...categories]
-                                        .sort((x, y) => x.name.localeCompare(y.name))
-                                        .map(x => (
-                                            <Menu.Item
-                                                key={x.id}
-                                                contentStyle={{ marginLeft: 24 }}
-                                                title={x.name}
-                                                leadingIcon={p => <AvatarText {...p} label={x.name} />}
-                                                onPress={() => {
-                                                    setCategoryMenuVisible(false);
-                                                    dispatch(setItemCategory({ itemId: item.id, categoryId: x.id }))
-                                                }}
-                                            />
-                                        ))
-                                }
-                            </Menu>
-                        </View>
-                        {
-                            item.categoryId
-                            && <IconButton icon="pencil-outline" onPress={handleEditCategoryPress} />
-                        }
-                        <IconButton icon="plus-outline" onPress={handleAddCategoryPress} />
-                    </View>
+                    <CategoryMenu
+                        categoryId={item.categoryId}
+                        itemId={item.id}
+                        onSetCategory={categoryId => dispatch(setItemCategory({ itemId: item.id, categoryId: categoryId }))}
+                    />
                     <Checkbox.Item
                         label="Will haben?"
                         status={item.wanted ? "checked" : "unchecked"}

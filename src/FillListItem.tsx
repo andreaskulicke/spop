@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
-import { IconButton, List, useTheme } from 'react-native-paper';
+import { IconButton, List } from 'react-native-paper';
 import { Item, setItemAmount, setItemWanted } from './store/dataSlice';
 import { ColoredTextInput } from './ColoredTextInput';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
@@ -14,7 +14,6 @@ export function FillListItem(props: {
 }) {
     const storages = useAppSelector(state => state.data.storages);
     const dispatch = useAppDispatch();
-    const theme = useTheme();
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     function handleAmountChange(text: string): void {
