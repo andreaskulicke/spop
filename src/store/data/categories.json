@@ -1,0 +1,66 @@
+[
+    {
+        "id": "fruits_vegetables",
+        "name": "Object & Gemüse"
+    },
+    {
+        "id": "nuts",
+        "name": "Nüsse"
+    },
+    {
+        "id": "meat",
+        "name": "Fleisch"
+    },
+    {
+        "id": "sweets",
+        "name": "Süßigkeiten"
+    },
+    {
+        "id": "backing",
+        "name": "Backen"
+    },
+    {
+        "id": "fridge",
+        "name": "Kühltheke"
+    },
+    {
+        "id": "cereals",
+        "name": "Müsli"
+    },
+    {
+        "id": "coffee_tea",
+        "name": "Kaffee & Tee"
+    },
+    {
+        "id": "noodles",
+        "name": "Nudeln"
+    },
+    {
+        "id": "sauces",
+        "name": "Saucen"
+    },
+    {
+        "id": "spices",
+        "name": "Gewürze"
+    },
+    {
+        "id": "tins",
+        "name": "Konserven",
+    },
+    {
+        "id": "household",
+        "name": "Haushalt"
+    },
+    {
+        "id": "freezer",
+        "name": "Tiefkühltheke"
+    },
+    {
+        "id": "drinks",
+        "name": "Getränke"
+    },
+    {
+        "id": "misc",
+        "name": "Sonstiges"
+    }
+]

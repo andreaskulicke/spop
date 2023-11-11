@@ -1,0 +1,19 @@
+[
+    {
+        "id": "Gurken",
+        "name": "Gurken",
+        "amount": "2",
+        "shops": [],
+        "storages": [
+            {
+                "storageId": "fridge"
+            }
+        ]
+    },
+    {
+        "id": "Tomaten",
+        "name": "Tomaten",
+        "shops": [],
+        "storages": []
+    }
+]

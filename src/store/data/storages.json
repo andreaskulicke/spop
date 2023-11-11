@@ -1,0 +1,22 @@
+[
+    {
+        "id": "pantry",
+        "name": "Speisekammer"
+    },
+    {
+        "id": "fridge",
+        "name": "Kühlschrank"
+    },
+    {
+        "id": "storageroom",
+        "name": "Vorratsraum"
+    },
+    {
+        "id": "freezer",
+        "name": "Tiefkühlschrank"
+    },
+    {
+        "id": "laundry",
+        "name": "Waschküche"
+    }
+]

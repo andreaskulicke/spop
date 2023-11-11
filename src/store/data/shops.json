@@ -1,0 +1,26 @@
+[
+    {
+        "id": "fruitmarket",
+        "name": "Lohhofer Obstmarkt"
+    },
+    {
+        "id": "polster",
+        "name": "Polster"
+    },
+    {
+        "id": "aldi",
+        "name": "Aldi"
+    },
+    {
+        "id": "rewe",
+        "name": "Rewe"
+    },
+    {
+        "id": "edeka",
+        "name": "Edeka"
+    },
+    {
+        "id": "rossmann",
+        "name": "Rossmann"
+    }
+]

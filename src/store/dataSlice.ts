@@ -1,5 +1,9 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './store';
+import categoriesJson from "./data/categories.json";
+import itemsJson from "./data/items.json";
+import shopsJson from "./data/shops.json";
+import storagesJson from "./data/storages.json";
 
 export interface Category {
     id: string;
@@ -37,75 +41,10 @@ export interface Data {
 
 // Define the initial state using that type
 const initialState: Data = {
-    categories: [
-        {
-            id: "vegetables",
-            name: "Gemüse",
-        },
-        {
-            id: "sweets",
-            name: "Süßigkeiten",
-        },
-    ],
-    items: [
-        {
-            id: "Gurken",
-            name: "Gurken",
-            amount: "2 Teile",
-            shops: [],
-            storages: [{ storageId: "fridge" }],
-        },
-        {
-            id: "Tomaten",
-            name: "Tomaten",
-            shops: [],
-            storages: [],
-        },
-    ],
-    shops: [
-        {
-            id: "polster",
-            name: "Polster",
-        },
-        {
-            id: "aldi",
-            name: "Aldi",
-        },
-        {
-            id: "rewe",
-            name: "Rewe",
-        },
-        {
-            id: "edeka",
-            name: "Edeka",
-        },
-        {
-            id: "rossmann",
-            name: "Rossmann",
-        },
-    ],
-    storages: [
-        {
-            id: "pantry",
-            name: "Speisekammer",
-        },
-        {
-            id: "fridge",
-            name: "Kühlschrank",
-        },
-        {
-            id: "storageroom",
-            name: "Abstellraum",
-        },
-        {
-            id: "freezer",
-            name: "Tiefkühlschrank",
-        },
-        {
-            id: "laundry",
-            name: "Waschküche",
-        },
-    ],
+    categories: categoriesJson,
+    items: itemsJson,
+    shops: shopsJson,
+    storages: storagesJson,
 }
 
 function initializeShopCategoryIds(data: Data, shop: Shop) {
