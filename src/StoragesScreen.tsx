@@ -1,6 +1,6 @@
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { Appbar, Avatar, Divider, List, Menu, Text, useTheme } from "react-native-paper";
+import { Appbar, Avatar, Badge, Divider, List, Menu, Text, Tooltip, useTheme } from "react-native-paper";
 import { ReactNode, useState } from "react";
 import { StorageState, addStorage, allStorage, setActiveStorage, setStorages } from "./store/storagesSlice";
 import { NavigationProp } from "@react-navigation/native";
@@ -80,9 +80,18 @@ export function StoragesScreen(props: {
                         size={40}
                     />}
                 right={p =>
-                    <Text {...p} variant="labelMedium">
-                        {items.items.filter(i => i.wanted).length}
-                    </Text>
+                    {
+                        const count = items.items.filter(i => i.wanted).length;
+                        const unassignedCount = items.items.filter(i => i.wanted && ((i.storages?.length ?? 0) === 0)).length;
+                        return <View style={{ flexDirection: "row", alignItems: "center" }}>
+                            <Tooltip title="Gewünschte Dinge und ohne Storage">
+                                <Text {...p} variant="labelMedium" style={{ paddingLeft: 16, paddingVertical: 12 }}>
+                                    {count}
+                                </Text>
+                            </Tooltip>
+                            <Badge visible={unassignedCount > 0} style={{ position: "absolute", top: 0, right: -20 }}>{unassignedCount}</Badge>
+                        </View>;
+                    }
                 }
                 title={allStorage.name}
                 onPress={() => handleStoragePress(allStorage.id)}
