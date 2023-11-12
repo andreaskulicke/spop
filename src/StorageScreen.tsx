@@ -48,6 +48,7 @@ export function StorageScreen(props: {
                     />
                     <CategoryMenu
                         categoryId={storage.defaultCategoryId}
+                        title="Standart Kategorie"
                         onSetCategory={categoryId => dispatch(setStorageDefaultCategory({ storageId: storage.id, categoryId }))}
                     />
                 </Card>

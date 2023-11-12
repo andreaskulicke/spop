@@ -10,6 +10,7 @@ import uuid from 'react-native-uuid';
 
 export function CategoryMenu(props: {
     categoryId: string | undefined;
+    title?: string;
     onSetCategory: (categoryId: string) => void;
 }) {
     const [categoryMenuVisible, setCategoryMenuVisible] = useState(false);
@@ -39,7 +40,7 @@ export function CategoryMenu(props: {
                     >
                         <TextInput
                             editable={false}
-                            label="Kategorie"
+                            label={props.title ?? "Kategorie"}
                             mode="outlined"
                             style={{ margin: 8 }}
                             value={categories.find(x => x.id === props.categoryId)?.name}
