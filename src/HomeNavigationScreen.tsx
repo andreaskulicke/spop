@@ -1,5 +1,5 @@
 import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
-import { Icon, MD3Colors } from 'react-native-paper';
+import { Icon } from 'react-native-paper';
 import { StoragesNavigationScreen } from './StoragesNavigationScreen';
 import { ShopsNavigationScreen } from './ShopsNavigationScreen';
 
@@ -17,7 +17,7 @@ export function HomeNavigationScreen() {
                 component={StoragesNavigationScreen}
                 name="StoragesEntry"
                 options={{
-                    tabBarIcon: () => <Icon color={MD3Colors.primary0} size={24} source="home-plus" />,
+                    tabBarIcon: p => <Icon {...p} size={24} source="home-plus" />,
                     tabBarLabel: "Storages",
                 }}
             />
@@ -25,7 +25,7 @@ export function HomeNavigationScreen() {
                 component={ShopsNavigationScreen}
                 name="ShopsEntry"
                 options={{
-                    tabBarIcon: () => <Icon color={MD3Colors.primary0} size={24} source="cart" />,
+                    tabBarIcon: p => <Icon {...p} size={24} source="cart" />,
                     tabBarLabel: "Shops",
                 }}
             />

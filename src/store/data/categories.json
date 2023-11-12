@@ -1,7 +1,7 @@
 [
     {
         "id": "fruits_vegetables",
-        "name": "Object & Gemüse"
+        "name": "Obst & Gemüse"
     },
     {
         "id": "nuts",
@@ -45,7 +45,7 @@
     },
     {
         "id": "tins",
-        "name": "Konserven",
+        "name": "Konserven"
     },
     {
         "id": "household",

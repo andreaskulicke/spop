@@ -73,7 +73,7 @@ export function FillScreen(props: {
 
     return (
         <SafeAreaView style={{ height: "100%" }}>
-            <Appbar.Header>
+            <Appbar.Header elevated>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={storage?.name ?? allStorage.name} />
                 {

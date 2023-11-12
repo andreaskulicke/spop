@@ -63,7 +63,7 @@ export function StoragesScreen(props: {
 
     return (
         <SafeAreaView style={{ height: "100%" }}>
-            <Appbar.Header>
+            <Appbar.Header elevated>
                 <Appbar.Content title="Storages" />
                 <Appbar.Action icon="plus-outline" onPress={handleAddStoragePress} />
                 <Menu

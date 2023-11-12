@@ -27,7 +27,7 @@ export function StorageScreen(props: {
 
     return (
         <SafeAreaView style={{ height: "100%" }}>
-            <Appbar.Header>
+            <Appbar.Header elevated>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={storage?.name ?? "Storage"} />
                 <Appbar.Action icon="trash-can" onPress={handleDeletePress} />

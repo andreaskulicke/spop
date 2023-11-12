@@ -1,10 +1,9 @@
 import { addStorage, setItemWanted, deleteItem, selectItem, setItemAmount, setItemName, setItemStorage, setItemShop, setItemCategory, addShop } from "./store/dataSlice";
 import { Appbar, Card, Checkbox, IconButton, List, TextInput, TouchableRipple } from "react-native-paper";
 import { CategoryMenu } from "./CategoryMenu";
-import { Keyboard, ScrollView, View } from "react-native";
+import { Keyboard, SafeAreaView, ScrollView, View } from "react-native";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import React, { useState } from "react";
 import uuid from 'react-native-uuid';
@@ -62,7 +61,7 @@ export function ItemScreen(props: {
 
     return (
         <SafeAreaView style={{ height: "100%" }}>
-            <Appbar.Header statusBarHeight={0}>
+            <Appbar.Header elevated>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={item?.name ?? "Item"} />
                 <Appbar.Action icon="trash-can" onPress={handleDeletePress} />
