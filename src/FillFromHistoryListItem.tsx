@@ -1,7 +1,7 @@
-import { TouchableOpacity, View } from 'react-native';
-import { List, Text } from 'react-native-paper';
-import React from 'react';
 import { Item } from './store/dataSlice';
+import { List, Text } from 'react-native-paper';
+import { TouchableOpacity, View } from 'react-native';
+import React from 'react';
 
 export function FillFromHistoryListItem(props: {
     item: Item;
@@ -9,11 +9,11 @@ export function FillFromHistoryListItem(props: {
     onIconPress?: (name: string, amount: string | undefined) => void;
 }) {
     function handlePress(): void {
-        props.onPress(props.item);
+        props.onPress?.(props.item);
     }
 
     function handleIconPress(): void {
-        props.onIconPress(props.item.name, props.item.amount);
+        props.onIconPress?.(props.item.name, props.item.amount);
     }
 
     return (

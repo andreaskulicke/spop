@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { List, Checkbox } from 'react-native-paper';
+import { List, Checkbox, IconButton } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { Item, setItemWanted, setItemAmount, setItemShop } from './store/dataSlice';
 import { ColoredTextInput } from './ColoredTextInput';
@@ -47,10 +47,18 @@ export function ShoppingListItem(props: {
                         <ColoredTextInput
                             value={props.item.amount}
                             onChange={handleAmountChange} />
-                        <Checkbox
-                            {...p}
-                            status={props.item.wanted ? "unchecked" : "checked"}
-                            onPress={handlePress} />
+                        {
+                            props.item.wanted
+                                ? <Checkbox
+                                    {...p}
+                                    status="unchecked"
+                                    onPress={handlePress} />
+                                : <IconButton
+                                    {...p}
+                                    icon="plus-outline"
+                                    onPress={handlePress}
+                                />
+                        }
                     </View>
                 )}
             onPress={handleItemPress}
