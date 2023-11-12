@@ -45,7 +45,7 @@ export function ShopsScreen(props: {
             <ScaleDecorator>
                 <List.Item
                     title={p =>
-                        <Text {...p} style={{ fontWeight: (count > 0) ? "bold" : "normal" }}>
+                        <Text {...p} variant="bodyLarge" style={{ fontWeight: (count > 0) ? "bold" : "normal" }}>
                             {params.item.name}
                         </Text>
                     }
@@ -78,6 +78,7 @@ export function ShopsScreen(props: {
             </Appbar.Header>
             <Divider />
             <List.Item
+                title={allShop.name}
                 left={p =>
                     <Avatar.Icon
                         {...p}
@@ -98,7 +99,6 @@ export function ShopsScreen(props: {
                     </View>;
                 }
                 }
-                title={p => <Text {...p}>{allShop.name}</Text>}
                 onPress={() => handleShopPress(allShop.id)}
             />
             <Divider />

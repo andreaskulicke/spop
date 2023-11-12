@@ -44,7 +44,7 @@ export function StoragesScreen(props: {
             <ScaleDecorator>
                 <List.Item
                     title={p =>
-                        <Text {...p} style={{ fontWeight: (count > 0) ? "bold" : "normal" }}>
+                        <Text {...p} variant="bodyLarge" style={{ fontWeight: (count > 0) ? "bold" : "normal" }}>
                             {params.item.name}
                         </Text>
                     }
@@ -77,6 +77,7 @@ export function StoragesScreen(props: {
             </Appbar.Header>
             <Divider />
             <List.Item
+                title={allStorage.name}
                 left={p =>
                     <Avatar.Icon
                         {...p}
@@ -97,7 +98,6 @@ export function StoragesScreen(props: {
                     </View>;
                 }
                 }
-                title={p => <Text {...p}>{allStorage.name}</Text>}
                 onPress={() => handleStoragePress(allStorage.id)}
             />
             <Divider />
