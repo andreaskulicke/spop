@@ -1,11 +1,13 @@
 [
     {
         "id": "fruitmarket",
-        "name": "Lohhofer Obstmarkt"
+        "name": "Lohhofer Obstmarkt",
+        "defaultCategory": "fruits_vegetables"
     },
     {
         "id": "polster",
-        "name": "Polster"
+        "name": "Polster",
+        "defaultCategory": "bakery"
     },
     {
         "id": "aldi",
@@ -21,6 +23,7 @@
     },
     {
         "id": "rossmann",
-        "name": "Rossmann"
+        "name": "Rossmann",
+        "defaultCategory": "household"
     }
 ]

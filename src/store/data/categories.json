@@ -8,6 +8,10 @@
         "name": "Nüsse"
     },
     {
+        "id": "bakery",
+        "name": "Backwaren"
+    },
+    {
         "id": "meat",
         "name": "Fleisch"
     },

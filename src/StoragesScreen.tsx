@@ -63,7 +63,7 @@ export function StoragesScreen(props: {
     }
 
     return (
-        <SafeAreaView style={{ height: "100%" }}>
+        <SafeAreaView>
             <Appbar.Header elevated statusBarHeight={0}>
                 <Appbar.Content title="Storages" />
                 <Appbar.Action icon="plus-outline" onPress={handleAddStoragePress} />
@@ -91,7 +91,7 @@ export function StoragesScreen(props: {
                     const unassignedCount = items.items.filter(i => i.wanted && ((i.storages?.length ?? 0) === 0)).length;
                     return <View style={{ flexDirection: "row", alignItems: "center" }}>
                         <Tooltip title="Gewünschte Dinge und ohne Storage">
-                            <Text {...p} variant="labelMedium" style={{ paddingLeft: 16, paddingVertical: 12 }}>
+                            <Text {...p} variant="labelMedium" style={{ paddingLeft: 32, paddingVertical: 12 }}>
                                 {count}
                             </Text>
                         </Tooltip>

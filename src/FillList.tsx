@@ -1,7 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useAppSelector } from './store/hooks';
-import { List } from 'react-native-paper';
 import { FillListItem } from './FillListItem';
 import { allStorage } from './store/dataSlice';
 import { ListSection } from './ListSection';

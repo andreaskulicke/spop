@@ -64,7 +64,7 @@ export function ShopsScreen(props: {
     }
 
     return (
-        <SafeAreaView style={{ height: "100%" }}>
+        <SafeAreaView>
             <Appbar.Header elevated statusBarHeight={0}>
                 <Appbar.Content title="Shops" />
                 <Appbar.Action icon="plus-outline" onPress={handleAddShopPress} />
@@ -92,7 +92,7 @@ export function ShopsScreen(props: {
                     const unassignedCount = items.filter(i => i.wanted && ((i.shops?.length ?? 0) === 0)).length;
                     return <View style={{ flexDirection: "row", alignItems: "center" }}>
                         <Tooltip title="Gewünschte Dinge und ohne Shop">
-                            <Text {...p} variant="labelMedium" style={{ paddingLeft: 16, paddingVertical: 12 }}>
+                            <Text {...p} variant="labelMedium" style={{ paddingLeft: 32, paddingVertical: 12 }}>
                                 {count}
                             </Text>
                         </Tooltip>

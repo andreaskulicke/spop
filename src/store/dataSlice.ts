@@ -23,6 +23,7 @@ export interface Item {
 export interface Shop {
     id: string;
     name: string;
+    defaultCategoryId?: string;
     /** Category IDs that are present here are shown in the order of this array */
     categoryIds?: string[];
 }
@@ -102,27 +103,27 @@ export const itemsSlice = createSlice({
         },
 
         // Items
-        addItem: (state, action: PayloadAction<{ item: Item, storage: Storage }>) => {
-            const item = state.items.find(x => x.id === action.payload.item.id);
+        addItem: (state, action: PayloadAction<{ item: Item, shop?: Shop, storage?: Storage }>) => {
+            let item = state.items.find(x => x.id === action.payload.item.id);
             if (item) {
                 item.amount = action.payload.item.amount;
-                item.categoryId = item.categoryId ?? action.payload.storage.defaultCategoryId;
+                item.categoryId = item.categoryId ?? action.payload.storage?.defaultCategoryId;
                 item.wanted = true;
-                if ((action.payload.storage.id !== allStorage.id)
-                    && !item.storages.find(x => x.storageId === action.payload.storage.id)) {
-                    item.storages.push({ storageId: action.payload.storage.id });
-                }
             } else {
-                const newItem: Item = {
+                item = {
                     ...action.payload.item,
-                    categoryId: action.payload.item.categoryId ?? action.payload.storage.defaultCategoryId,
+                    categoryId: action.payload.item.categoryId ?? action.payload.shop?.defaultCategoryId ?? action.payload.storage?.defaultCategoryId,
                     wanted: true,
                 };
-                if ((action.payload.storage.id !== allStorage.id)
-                    && !newItem.storages.find(x => x.storageId === action.payload.storage.id)) {
-                    newItem.storages.push({ storageId: action.payload.storage.id });
-                }
-                state.items.unshift(newItem);
+                state.items.unshift(item);
+            }
+            if (action.payload.shop && (action.payload.shop.id !== allShop.id)
+                && !item.shops.find(x => x.shopId === action.payload.shop?.id)) {
+                item.shops.push({ shopId: action.payload.shop.id });
+            }
+            if (action.payload.storage && (action.payload.storage.id !== allStorage.id)
+                && !item.storages.find(x => x.storageId === action.payload.storage?.id)) {
+                item.storages.push({ storageId: action.payload.storage.id });
             }
         },
         deleteItem: (state, action: PayloadAction<string>) => {
@@ -226,6 +227,12 @@ export const itemsSlice = createSlice({
         },
         setShops: (state, action: PayloadAction<Shop[]>) => {
             state.shops = action.payload;
+        },
+        setShopDefaultCategory: (state, action: PayloadAction<{ shopId: string, categoryId: string }>) => {
+            const shop = state.shops.find(x => x.id === action.payload.shopId);
+            if (shop) {
+                shop.defaultCategoryId = action.payload.categoryId;
+            }
         },
         setShopName: (state, action: PayloadAction<{ shopId: string, name: string }>) => {
             const shop = state.shops.find(x => x.id === action.payload.shopId);
@@ -336,6 +343,7 @@ export const {
     resetShops,
     setShopCategories,
     setShopCategoryShow,
+    setShopDefaultCategory,
     setShopName,
     setShops,
 

@@ -27,7 +27,7 @@ export function CategoryScreen(props: {
     }
 
     return (
-        <SafeAreaView style={{ height: "100%" }}>
+        <SafeAreaView>
             <Appbar.Header elevated statusBarHeight={0}>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={category?.name ?? "Category"} />

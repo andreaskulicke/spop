@@ -1,34 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { ScrollView } from 'react-native';
-import { SearchBar } from './SearchBar';
-import { Item, addItem, allStorage, deleteItems, selectStorage } from './store/dataSlice';
-import { FillFromHistoryList } from './FillFromHistoryList';
-import { FillList } from './FillList';
 import { Appbar, Divider, Menu } from 'react-native-paper';
-import { useAppDispatch, useAppSelector } from './store/hooks';
+import { FillList } from './FillList';
+import { allStorage, deleteItems, selectStorage } from './store/dataSlice';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
-import uuid from 'react-native-uuid';
-import { StoragesStackParamList } from './StoragesNavigationScreen';
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StoragesStackParamList } from './StoragesNavigationScreen';
+import { useAppDispatch, useAppSelector } from './store/hooks';
+import React, { useState } from 'react';
+import { SearchBarList } from './SearchBarList';
 
 export function FillScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
     route: RouteProp<StoragesStackParamList, "Fill">;
 }) {
-    const [filter, setFilter] = useState<{ text: string; name?: string; amount?: string }>();
     const [menuVisible, setMenuVisible] = useState(false);
     const items = useAppSelector(state => state.data);
     const storage = useAppSelector(selectStorage(props.route.params.storageId));
     const dispatch = useAppDispatch();
-
-    const [newItem, setNewItem] = useState<Item>({
-        id: uuid.v4() as string,
-        name: "",
-        amount: "",
-        shops: [],
-        storages: (storage.id === allStorage.id) ? [] : [{ storageId: storage.id }],
-    });
 
     function handleEditPress(): void {
         props.navigation.navigate("Storage", { id: storage.id });
@@ -47,33 +35,8 @@ export function FillScreen(props: {
         props.navigation.navigate("Settings");
     }
 
-    function handlePress(item: Item): void {
-        console.log("handlePress")
-        if (item?.name) {
-            dispatch(addItem({ item: { ...item, amount: filter?.amount }, storage: storage }));
-            setFilter(undefined);
-            setNewItem(v => ({ ...v, id: uuid.v4() as string }))
-        }
-    }
-
-    function handleIconPress(name: string, amount: string | undefined): void {
-        setFilter({ text: amount ? `${amount} ${name}` : name, name, amount });
-    }
-
-    function handleSearchChange(text: string, name: string, amount: string): void {
-        setFilter({ text, name, amount });
-    }
-
-    useEffect(() => {
-        setNewItem(v => ({
-            ...v,
-            name: filter?.name ?? filter?.text ?? "",
-            amount: filter?.amount ?? "",
-        }));
-    }, [filter]);
-
     return (
-        <SafeAreaView style={{ height: "100%" }}>
+        <SafeAreaView>
             <Appbar.Header elevated statusBarHeight={0}>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={storage?.name ?? allStorage.name} />
@@ -92,24 +55,10 @@ export function FillScreen(props: {
                     <Menu.Item leadingIcon="cog-outline" title="Einstellungen" onPress={handleSettingsPress} />
                 </Menu>
             </Appbar.Header>
-            <SearchBar
-                text={filter?.text}
-                onChange={handleSearchChange}
-                onSubmitEditing={() => handlePress(newItem)}
+            <SearchBarList
+                list={<FillList storageId={storage.id} />}
+                storage={storage}
             />
-            <ScrollView keyboardShouldPersistTaps={filter ? "always" : "never"}>
-                {
-                    !filter
-                        ? <FillList
-                            storageId={storage.id}
-                        />
-                        : <FillFromHistoryList
-                            item={newItem}
-                            onPress={handlePress}
-                            onIconPress={handleIconPress}
-                        />
-                }
-            </ScrollView>
         </SafeAreaView>
     );
 }

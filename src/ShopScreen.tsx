@@ -7,8 +7,9 @@ import { ReactNode, useState } from "react";
 import { AvatarText } from "./AvatarText";
 import uuid from 'react-native-uuid';
 import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
-import { selectShop, addCategory, addShopCategory, setShopCategoryShow, deleteShop, setShopName, setShopCategories, Category } from "./store/dataSlice";
+import { selectShop, addCategory, addShopCategory, setShopCategoryShow, deleteShop, setShopName, setShopCategories, Category, setShopDefaultCategory } from "./store/dataSlice";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { CategoryMenu } from "./CategoryMenu";
 
 export function ShopScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -57,7 +58,7 @@ export function ShopScreen(props: {
     const catsHidden = categories.filter(x => !catsShown.includes(x));
 
     return (
-        <SafeAreaView style={{ height: "100%" }}>
+        <SafeAreaView>
             <Appbar.Header elevated statusBarHeight={0}>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={shop?.name ?? "Shop"} />
@@ -75,6 +76,11 @@ export function ShopScreen(props: {
                         style={{ margin: 8 }}
                         value={shop.name}
                         onChangeText={handleNameChange}
+                    />
+                    <CategoryMenu
+                        categoryId={shop.defaultCategoryId}
+                        title="Standart Kategorie"
+                        onSetCategory={categoryId => dispatch(setShopDefaultCategory({ shopId: shop.id, categoryId }))}
                     />
                 </Card>
                 <Card

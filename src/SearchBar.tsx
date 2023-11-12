@@ -11,20 +11,20 @@ export function SearchBar(props: {
     function handleSearchChangeText(text: string) {
         const t = text.trimStart();
         const m = t.match("^(?<pre>\\d+[^ ]*)? *(?<name>.*?) *(?<post>\\d+[^ ]*)? *$");
-        if (m) {
+        if (m && m.groups) {
             // console.log("name='" + m.groups["name"] + "'")
             // console.log("pre='" + m.groups["pre"] + "'")
             // console.log("post='" + m.groups["post"] + "'")
             const name = m.groups["name"] + ((m.groups["pre"] && m.groups.post) ? ` ${m.groups["post"]}` : "")
-            props.onChange(t, name, m.groups["pre"] ?? m.groups["post"]);
+            props.onChange?.(t, name, m.groups["pre"] ?? m.groups["post"]);
         } else {
-            props.onChange(t, t, "");
+            props.onChange?.(t, t, "");
         }
         setSearchQuery(t);
     }
 
     useEffect(() => {
-        setSearchQuery(props.text);
+        setSearchQuery(props.text ?? "");
     }, [props.text]);
 
     return (

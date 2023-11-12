@@ -42,9 +42,13 @@ export function CategoryMenu(props: {
                             editable={false}
                             label={props.title ?? "Kategorie"}
                             mode="outlined"
-                            style={{ margin: 8 }}
+                            style={{ marginLeft: 8, marginVertical: 8 }}
                             value={categories.find(x => x.id === props.categoryId)?.name}
-                            right={<TextInput.Icon icon={categoryMenuVisible ? "chevron-up" : "chevron-down"} onPress={() => setCategoryMenuVisible(true)} />} />
+                            right={
+                                <TextInput.Icon icon={categoryMenuVisible ? "chevron-up" : "chevron-down"}
+                                    onPress={() => setCategoryMenuVisible(true)}
+                                />}
+                        />
                     </TouchableRipple>}
                     anchorPosition="bottom"
                     style={{ marginLeft: 8, width: Dimensions.get("window").width - 32 }}

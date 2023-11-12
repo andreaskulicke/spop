@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
-import { ScrollView } from 'react-native';
 import { Appbar, Menu } from 'react-native-paper';
 import { RootStackParamList } from '../App';
 import { useAppSelector } from './store/hooks';
@@ -8,6 +7,7 @@ import { ShoppingList } from './ShoppingList';
 import { allShop, selectShop } from './store/dataSlice';
 import { ShopsStackParamList } from './ShopsNavigationScreen';
 import { SafeAreaView } from "react-native-safe-area-context";
+import { SearchBarList } from './SearchBarList';
 
 export function ShoppingScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -27,7 +27,7 @@ export function ShoppingScreen(props: {
     }
 
     return (
-        <SafeAreaView style={{ height: "100%" }}>
+        <SafeAreaView>
             <Appbar.Header elevated statusBarHeight={0}>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={shop?.name ?? allShop.name} />
@@ -44,9 +44,10 @@ export function ShoppingScreen(props: {
                     <Menu.Item leadingIcon="cog-outline" title="Einstellungen" onPress={handleSettingsPress} />
                 </Menu>
             </Appbar.Header>
-            <ScrollView>
-                <ShoppingList shop={shop} />
-            </ScrollView>
+            <SearchBarList
+                list={<ShoppingList shop={shop} />}
+                shop={shop}
+            />
         </SafeAreaView>
     );
 }

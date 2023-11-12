@@ -12,7 +12,7 @@ export function SettingsScreen() {
     const dispatch = useAppDispatch();
 
     return (
-        <SafeAreaView style={{ height: "100%" }}>
+        <SafeAreaView>
             <ScrollView>
                 <Card
                     style={{ margin: 8 }}

@@ -25,7 +25,7 @@ export function FillFromHistoryListItem(props: {
                 >
                     <Text>{props.item.amount}</Text>
                     <TouchableOpacity onPress={handleIconPress}>
-                        <List.Icon {...p} icon="arrow-top-left" />
+                        <List.Icon {...p} icon="arrow-top-left" style={{ padding: 8 }} />
                     </TouchableOpacity>
                 </View>
             }
