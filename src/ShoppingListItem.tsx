@@ -1,14 +1,15 @@
 import React from 'react';
 import { View } from 'react-native';
-import { List, Checkbox, Text } from 'react-native-paper';
+import { List, Checkbox } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from './store/hooks';
-import { Item, setItemWanted, setItemAmount } from './store/dataSlice';
+import { Item, setItemWanted, setItemAmount, setItemShop } from './store/dataSlice';
 import { ColoredTextInput } from './ColoredTextInput';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
 
 export function ShoppingListItem(props: {
     item: Item;
+    shopId: string;
     showShops?: boolean;
 }) {
     const shops = useAppSelector(state => state.data.shops);
@@ -20,6 +21,7 @@ export function ShoppingListItem(props: {
     }
 
     function handlePress(): void {
+        dispatch(setItemShop({ itemId: props.item.id, shopId: props.shopId, checked: true }));
         dispatch(setItemWanted({ itemId: props.item.id, wanted: !props.item.wanted }));
     }
 

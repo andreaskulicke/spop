@@ -167,14 +167,16 @@ export const itemsSlice = createSlice({
             }
         },
         setItemShop: (state, action: PayloadAction<{ itemId: string, shopId: string, checked: boolean }>) => {
-            const item = state.items.find(x => x.id === action.payload.itemId);
-            if (item) {
-                const shopIndex = item.shops.findIndex(x => x.shopId === action.payload.shopId);
-                if (action.payload.checked && (shopIndex === -1)) {
-                    item.shops.push({ shopId: action.payload.shopId });
-                }
-                else if (!action.payload.checked && (shopIndex !== -1)) {
-                    item.shops.splice(shopIndex, 1);
+            if (action.payload.shopId !== allShop.id) {
+                const item = state.items.find(x => x.id === action.payload.itemId);
+                if (item) {
+                    const shopIndex = item.shops.findIndex(x => x.shopId === action.payload.shopId);
+                    if (action.payload.checked && (shopIndex === -1)) {
+                        item.shops.push({ shopId: action.payload.shopId });
+                    }
+                    else if (!action.payload.checked && (shopIndex !== -1)) {
+                        item.shops.splice(shopIndex, 1);
+                    }
                 }
             }
         },
