@@ -4,7 +4,7 @@ import { ItemScreen } from './src/ItemScreen';
 import { NavigationContainer, DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationDefaultTheme } from '@react-navigation/native';
 import { PaperProvider, MD3DarkTheme, MD3LightTheme, adaptNavigationTheme } from 'react-native-paper';
 import { Provider } from 'react-redux';
-import { setCategories, setData, setItems, setShops, setStorages } from './src/store/dataSlice';
+import { setData } from './src/store/dataSlice';
 import { SettingsScreen } from './src/SettingsScreen';
 import { store } from './src/store/store';
 import { useAppDispatch, useAppSelector } from './src/store/hooks';
@@ -45,31 +45,63 @@ export default function App() {
     );
 }
 
+const storeNames = {
+    categories: "categories",
+    items: "items",
+    shops: "shops",
+    storages: "storages",
+    settings: "settings",
+};
+
 function AppWithStore() {
     const colorScheme = useColorScheme();
-    const data = useAppSelector(state => state.data);
+    const categories = useAppSelector(state => state.data.categories);
+    const items = useAppSelector(state => state.data.items);
+    const shops = useAppSelector(state => state.data.shops);
+    const storages = useAppSelector(state => state.data.storages);
     const settings = useAppSelector(state => state.settings);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        console.log("data: restoring...")
-        AsyncStorage.getItem("data").then(data => {
-            if (data) {
-                dispatch(setData(JSON.parse(data)));
-            }
-        });
-        AsyncStorage.getItem("settings").then(data => {
-            if (data) {
-                dispatch(setSettings(JSON.parse(data)));
+        AsyncStorage.multiGet(Object.keys(storeNames), (errors, result) => {
+            console.log(`data: restoring '${Object.keys(storeNames)}'...`);
+            if (result) {
+                const indices = new Map(Object.keys(storeNames).map((x, i) => [x, i]));
+                dispatch(setData({
+                    categories: JSON.parse(result[indices.get(storeNames.categories)!][1] ?? "[]"),
+                    items: JSON.parse(result[indices.get(storeNames.items)!][1] ?? "[]"),
+                    shops: JSON.parse(result[indices.get(storeNames.shops)!][1] ?? "[]"),
+                    storages: JSON.parse(result[indices.get(storeNames.storages)!][1] ?? "[]"),
+                }));
+                dispatch(setSettings(JSON.parse(result[indices.get(storeNames.settings)!][1] ?? "[]")));
             }
         });
     }, []);
 
     useEffect(() => {
-        console.log("data: storing...")
-        AsyncStorage.setItem("data", JSON.stringify(data));
-        AsyncStorage.setItem("settings", JSON.stringify(settings));
-    }, [data, settings]);
+        console.log(`data: storing '${storeNames.categories}'...`)
+        AsyncStorage.setItem(storeNames.categories, JSON.stringify(categories));
+    }, [categories]);
+
+    useEffect(() => {
+        console.log(`data: storing '${storeNames.items}'...`)
+        AsyncStorage.setItem(storeNames.items, JSON.stringify(items));
+    }, [items]);
+
+    useEffect(() => {
+        console.log(`data: storing '${storeNames.shops}'...`)
+        AsyncStorage.setItem(storeNames.shops, JSON.stringify(shops));
+    }, [shops]);
+
+    useEffect(() => {
+        console.log(`data: storing '${storeNames.storages}'...`)
+        AsyncStorage.setItem(storeNames.storages, JSON.stringify(storages));
+    }, [storages]);
+
+    useEffect(() => {
+        console.log(`data: storing '${storeNames.settings}'...`)
+        AsyncStorage.setItem(storeNames.settings, JSON.stringify(settings));
+    }, [settings]);
 
     const theme = ((settings.display.colorTheme ?? colorScheme) === "dark")
         ? CombinedDarkTheme

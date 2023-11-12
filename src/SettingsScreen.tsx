@@ -88,9 +88,15 @@ export function SettingsScreen() {
                     <List.Item
                         title="Alles in AsyncStorage"
                         right={p =>
-                            <Button {...p} mode="outlined" onPress={() => {
-                                AsyncStorage.clear();
-                                dispatch(setData({ ...data }));
+                            <Button {...p} mode="outlined" onPress={async () => {
+                                const keys = await AsyncStorage.getAllKeys();
+                                await AsyncStorage.multiRemove(keys, errors => { })
+                                dispatch(setData({
+                                    categories: [...data.categories],
+                                    items: [...data.items],
+                                    shops: [...data.shops],
+                                    storages: [...data.storages],
+                                }));
                                 dispatch(setSettings({ ...settings }));
                             }}>
                                 Löschen
