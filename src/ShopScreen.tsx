@@ -41,7 +41,7 @@ export function ShopScreen(props: {
             <ScaleDecorator>
                 <List.Item
                     key={params.item.id}
-                    title={p => <Text {...p}>{params.item.name}</Text>}
+                    title={params.item.name}
                     left={p => <AvatarText {...p} label={params.item.name} />}
                     right={p => <IconButton icon="eye-off-outline" onPress={() => dispatch(setShopCategoryShow({ shopId: shop.id, categoryId: params.item.id, show: false }))} />}
                     onPress={() => props.navigation.navigate("Category", { id: params.item.id })}

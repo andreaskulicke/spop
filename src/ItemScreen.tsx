@@ -1,4 +1,4 @@
-import { addStorage, setItemWanted, deleteItem, selectItem, setItemAmount, setItemName, setItemStorage, setItemShop, setItemCategory } from "./store/dataSlice";
+import { addStorage, setItemWanted, deleteItem, selectItem, setItemAmount, setItemName, setItemStorage, setItemShop, setItemCategory, addShop } from "./store/dataSlice";
 import { Appbar, Card, Checkbox, IconButton, List, TextInput, TouchableRipple } from "react-native-paper";
 import { CategoryMenu } from "./CategoryMenu";
 import { Keyboard, ScrollView, View } from "react-native";
@@ -33,11 +33,18 @@ export function ItemScreen(props: {
         dispatch(setItemName({ itemId: item.id, name: text }));
     }
 
+    function handleAddShopPress(): void {
+        const id = uuid.v4() as string;
+        dispatch(addShop(id));
+        dispatch(setItemShop({ itemId: item.id, shopId: id, checked: true }));
+        props.navigation.navigate("Shop", { id });
+    }
+
     function handleAddStoragePress(): void {
         const id = uuid.v4() as string;
         dispatch(addStorage(id));
         dispatch(setItemStorage({ itemId: item.id, storageId: id, checked: true }));
-        props.navigation.navigate("Storage", { id, new: true });
+        props.navigation.navigate("Storage", { id });
     }
 
     function handleShopCheck(shopId: string, checked: boolean): void {
@@ -120,15 +127,16 @@ export function ItemScreen(props: {
                     {
                         storagesExpanded
                         && storages.map(s => {
-                            const checked = item.storages.find(x => x.storageId === s.id);
                             return <List.Item
                                 key={s.id}
                                 title={s.name}
-                                right={p => <Checkbox
-                                    {...p}
-                                    status={checked ? "checked" : "unchecked"}
-                                    onPress={() => handleStorageCheck(s.id, !checked)}
-                                />}
+                                right={p => {
+                                    const checked = item.storages.find(x => x.storageId === s.id);
+                                    return <Checkbox
+                                        {...p}
+                                        status={checked ? "checked" : "unchecked"}
+                                        onPress={() => handleStorageCheck(s.id, !checked)} />;
+                                }}
                                 onPress={() => props.navigation.navigate("Storage", { id: s.id })}
                             />;
                         })
@@ -147,11 +155,17 @@ export function ItemScreen(props: {
                                 <View style={{ flexDirection: "row" }}>
                                     <IconButton
                                         {...p}
+                                        icon="plus-outline"
+                                        onPress={handleAddShopPress}
+                                    />
+                                    <IconButton
+                                        {...p}
                                         icon={shopsExpanded ? "chevron-up" : "chevron-down"}
                                         onPress={() => setShopsExpanded(x => !x)}
                                     />
                                 </View>
                             }
+
                         />
                     </TouchableRipple>
                     {
@@ -167,6 +181,7 @@ export function ItemScreen(props: {
                                         status={checked ? "checked" : "unchecked"}
                                         onPress={() => handleShopCheck(s.id, !checked)} />;
                                 }}
+                                onPress={() => props.navigation.navigate("Shop", { id: s.id })}
                             />)
                     }
                 </Card>
