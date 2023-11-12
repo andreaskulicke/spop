@@ -31,7 +31,11 @@ export function ListSection(props: React.PropsWithChildren<{
     return (
         <View>
             <TouchableOpacity style={{ backgroundColor: theme.colors.secondaryContainer }} onPress={handlePress}>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <View style={{
+                    alignItems: "center",
+                    flexDirection: "row",
+                    height: 52,
+                }}>
                     <View style={{
                         alignItems: "center",
                         flex: 1,
@@ -47,18 +51,17 @@ export function ListSection(props: React.PropsWithChildren<{
                             {props.title}
                         </Text>
                     </View>
-                    <IconButton icon={""} />
                     {
                         (props.collapsed !== undefined)
                         && <IconButton
                             icon={expanded ? "chevron-up" : "chevron-down"}
-                            style={{ marginRight: 24 }} />
+                            style={{ position: "absolute", right: 4 }}
+                        />
                     }
 
                 </View>
             </TouchableOpacity>
-            {expanded
-                && props.children}
+            {expanded && props.children}
         </View>
     );
 }
