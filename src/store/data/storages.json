@@ -9,6 +9,11 @@
         "defaultCategoryId": "fridge"
     },
     {
+        "id": "bath",
+        "name": "Bad",
+        "defaultCategoryId": "household"
+    },
+    {
         "id": "storageroom",
         "name": "Vorratsraum"
     },
