@@ -102,14 +102,12 @@ export function ShopsScreen(props: {
                 onPress={() => handleShopPress(allShop.id)}
             />
             <Divider />
-            <List.Section>
-                <DraggableFlatList
-                    data={shops}
-                    keyExtractor={x => x.id}
-                    renderItem={handleRenderItem}
-                    onDragEnd={({ data }) => dispatch(setShops(data))}
-                />
-            </List.Section>
+            <DraggableFlatList
+                data={shops}
+                keyExtractor={x => x.id}
+                renderItem={handleRenderItem}
+                onDragEnd={({ data }) => dispatch(setShops(data))}
+            />
         </SafeAreaView>
     );
 }

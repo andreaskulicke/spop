@@ -101,14 +101,12 @@ export function StoragesScreen(props: {
                 onPress={() => handleStoragePress(allStorage.id)}
             />
             <Divider />
-            <List.Section>
-                <DraggableFlatList
-                    data={storages}
-                    keyExtractor={x => x.id}
-                    renderItem={handleRenderItem}
-                    onDragEnd={({ data }) => dispatch(setStorages(data))}
-                />
-            </List.Section>
+            <DraggableFlatList
+                data={storages}
+                keyExtractor={x => x.id}
+                renderItem={handleRenderItem}
+                onDragEnd={({ data }) => dispatch(setStorages(data))}
+            />
         </SafeAreaView>
     );
 }

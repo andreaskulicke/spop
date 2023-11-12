@@ -4,6 +4,7 @@ import { useAppSelector } from './store/hooks';
 import { List } from 'react-native-paper';
 import { FillListItem } from './FillListItem';
 import { allStorage } from './store/dataSlice';
+import { ListSection } from './ListSection';
 
 export function FillList(props: {
     storageId: string;
@@ -20,14 +21,11 @@ export function FillList(props: {
                     .filter(x => ((props.storageId === allStorage.id) || x.storages.find(x => x.storageId === props.storageId)) && x.wanted)
                     .map(x => <FillListItem key={x.id} item={x} showStorage={props.storageId === allStorage.id} />)
             }
-            {
-                (recentlyUsed.length > 0)
-                && <List.Section title="Zuletzt verwendet">
-                    {
-                        recentlyUsed.map(x => <FillListItem key={x.id} item={x} showStorage={props.storageId === allStorage.id} />)
-                    }
-                </List.Section>
-            }
+            <ListSection icon="history" title="Zuletzt verwendet">
+                {
+                    recentlyUsed.map(x => <FillListItem key={x.id} item={x} showStorage={props.storageId === allStorage.id} />)
+                }
+            </ListSection>
         </View>
     );
 }

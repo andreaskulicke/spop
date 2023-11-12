@@ -1,9 +1,10 @@
 import React from 'react';
 import { View } from 'react-native';
-import { List } from 'react-native-paper';
 import { useAppSelector } from './store/hooks';
 import { ShoppingListItem } from './ShoppingListItem';
 import { Category, Shop, allShop } from './store/dataSlice';
+import { ListSection } from './ListSection';
+import { CategorySection } from './CategorySection';
 
 export function ShoppingList(props: {
     shop: Shop;
@@ -21,42 +22,36 @@ export function ShoppingList(props: {
 
     return (
         <View>
-            {
-
-            }
-            {
-                cats.map(cat => {
-                    const catItems = items.items
-                        .filter(x => x.wanted)
-                        .filter(x => x.categoryId === cat?.id)
-                        .filter(x => ((props.shop.id === allShop.id) || x.shops.find(x => x.shopId === props.shop.id)));
-                    return (
-                        (catItems.length > 0)
-                        && <List.Section key={cat?.id ?? "_"} title={cat?.name ?? "Unbekannte Kategorie"}>
-                            {
-                                catItems.map(x => <ShoppingListItem key={x.id} item={x} shopId={props.shop.id} showShops={props.shop.id === allShop.id} />)
-                            }
-                        </List.Section>
-                    );
+            <ListSection icon="cart" title="Dinge" collapsed={false}>
+                {
+                    cats.map(cat => {
+                        const catItems = items.items
+                            .filter(x => x.wanted)
+                            .filter(x => x.categoryId === cat?.id)
+                            .filter(x => ((props.shop.id === allShop.id) || x.shops.find(x => x.shopId === props.shop.id)));
+                        return (
+                            <CategorySection key={cat?.id ?? "_"} title={cat?.name ?? "Unbekannte Kategorie"}>
+                                {
+                                    catItems.map(x => <ShoppingListItem key={x.id} item={x} shopId={props.shop.id} showShops={props.shop.id === allShop.id} />)
+                                }
+                            </CategorySection>
+                        );
+                    })
                 }
-                )
-            }
+            </ListSection>
             {
-                (props.shop.id !== allShop.id) && (unassigned.length > 0)
-                && <List.Section title="Ohne Shop">
+                (props.shop.id !== allShop.id)
+                && <ListSection icon="store-off" title="Ohne Shop" collapsed={false}>
                     {
                         unassigned.map(x => <ShoppingListItem key={x.id} item={x} shopId={props.shop.id} />)
                     }
-                </List.Section>
+                </ListSection>
             }
-            {
-                (recentlyUsed.length > 0)
-                && <List.Section title="Zuletzt verwendet">
-                    {
-                        recentlyUsed.map(x => <ShoppingListItem key={x.id} item={x} shopId={props.shop.id} showShops={props.shop.id === allShop.id} />)
-                    }
-                </List.Section>
-            }
+            <ListSection icon="history" title="Zuletzt verwendet" collapsed={false}>
+                {
+                    recentlyUsed.map(x => <ShoppingListItem key={x.id} item={x} shopId={props.shop.id} showShops={props.shop.id === allShop.id} />)
+                }
+            </ListSection>
         </View >
     );
 }

@@ -52,7 +52,7 @@ export function ShopScreen(props: {
     }
 
     const c = new Map(categories.map(x => [x.id, x]));
-    const catsShown = shop.categoryIds?.map(x => c.get(x)).filter(x => !!x) ?? categories;
+    const catsShown = shop.categoryIds?.map(x => c.get(x)!).filter(x => !!x) ?? categories;
     const catsHidden = categories.filter(x => !catsShown.includes(x));
 
     return (
