@@ -1,5 +1,5 @@
 import { ReactNode, useState } from "react";
-import { SafeAreaView, View } from "react-native";
+import { View } from "react-native";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { Appbar, Avatar, List, Menu, useTheme, Text, Divider, Badge, Tooltip } from "react-native-paper";
 import { NavigationProp } from "@react-navigation/native";
@@ -9,6 +9,7 @@ import uuid from 'react-native-uuid';
 import { AvatarText, avatarSize } from "./AvatarText";
 import DraggableFlatList, { RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 import { addShop, allShop, setShops, Shop } from "./store/dataSlice";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export function ShopsScreen(props: {
     navigation: NavigationProp<RootStackParamList & ShopsStackParamList>;
@@ -64,7 +65,7 @@ export function ShopsScreen(props: {
 
     return (
         <SafeAreaView style={{ height: "100%" }}>
-            <Appbar.Header elevated>
+            <Appbar.Header elevated statusBarHeight={0}>
                 <Appbar.Content title="Shops" />
                 <Appbar.Action icon="plus-outline" onPress={handleAddShopPress} />
                 <Menu

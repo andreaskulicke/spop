@@ -1,4 +1,4 @@
-import { SafeAreaView, View } from "react-native";
+import { View } from "react-native";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { Appbar, Avatar, Badge, Divider, List, Menu, Text, Tooltip, useTheme } from "react-native-paper";
 import { ReactNode, useState } from "react";
@@ -9,6 +9,7 @@ import uuid from 'react-native-uuid';
 import { AvatarText, avatarSize } from "./AvatarText";
 import DraggableFlatList, { RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 import { addStorage, allStorage, setStorages, Storage } from "./store/dataSlice";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export function StoragesScreen(props: {
     navigation: NavigationProp<RootStackParamList & StoragesStackParamList>;
@@ -63,7 +64,7 @@ export function StoragesScreen(props: {
 
     return (
         <SafeAreaView style={{ height: "100%" }}>
-            <Appbar.Header elevated>
+            <Appbar.Header elevated statusBarHeight={0}>
                 <Appbar.Content title="Storages" />
                 <Appbar.Action icon="plus-outline" onPress={handleAddStoragePress} />
                 <Menu

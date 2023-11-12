@@ -1,9 +1,10 @@
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
-import { SafeAreaView, ScrollView } from "react-native";
+import { ScrollView } from "react-native";
 import { Appbar, Card, TextInput } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { deleteCategory, selectCategory, setCategoryName } from "./store/dataSlice";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export function CategoryScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -27,7 +28,7 @@ export function CategoryScreen(props: {
 
     return (
         <SafeAreaView style={{ height: "100%" }}>
-            <Appbar.Header elevated>
+            <Appbar.Header elevated statusBarHeight={0}>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={category?.name ?? "Category"} />
                 <Appbar.Action icon="trash-can" onPress={handleDeletePress} />

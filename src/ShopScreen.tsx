@@ -1,6 +1,6 @@
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
-import { SafeAreaView, View } from "react-native";
+import { View } from "react-native";
 import { Appbar, Card, IconButton, List, TextInput, TouchableRipple, Text } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { ReactNode, useState } from "react";
@@ -8,6 +8,7 @@ import { AvatarText } from "./AvatarText";
 import uuid from 'react-native-uuid';
 import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 import { selectShop, addCategory, addShopCategory, setShopCategoryShow, deleteShop, setShopName, setShopCategories, Category } from "./store/dataSlice";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export function ShopScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -57,7 +58,7 @@ export function ShopScreen(props: {
 
     return (
         <SafeAreaView style={{ height: "100%" }}>
-            <Appbar.Header elevated>
+            <Appbar.Header elevated statusBarHeight={0}>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={shop?.name ?? "Shop"} />
                 <Appbar.Action icon="trash-can" onPress={handleDeletePress} />

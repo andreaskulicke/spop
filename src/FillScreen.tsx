@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView } from 'react-native';
+import { ScrollView } from 'react-native';
 import { SearchBar } from './SearchBar';
 import { Item, addItem, allStorage, deleteItems, selectStorage } from './store/dataSlice';
 import { FillFromHistoryList } from './FillFromHistoryList';
@@ -10,6 +10,7 @@ import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
 import uuid from 'react-native-uuid';
 import { StoragesStackParamList } from './StoragesNavigationScreen';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export function FillScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -73,7 +74,7 @@ export function FillScreen(props: {
 
     return (
         <SafeAreaView style={{ height: "100%" }}>
-            <Appbar.Header elevated>
+            <Appbar.Header elevated statusBarHeight={0}>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={storage?.name ?? allStorage.name} />
                 {

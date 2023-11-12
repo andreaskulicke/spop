@@ -1,9 +1,10 @@
-import { SafeAreaView, ScrollView } from "react-native";
+import { ScrollView } from "react-native";
 import { Button, Card, List, RadioButton } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { setColorTheme, setSettings } from "./store/settingsSlice";
 import { resetCategories, resetItems, resetShops, resetStorages, setData } from "./store/dataSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export function SettingsScreen() {
     const data = useAppSelector(state => state.data);
@@ -11,7 +12,7 @@ export function SettingsScreen() {
     const dispatch = useAppDispatch();
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{ height: "100%" }}>
             <ScrollView>
                 <Card
                     style={{ margin: 8 }}
