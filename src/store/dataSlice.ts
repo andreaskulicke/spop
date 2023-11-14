@@ -7,6 +7,7 @@ import storagesJson from "./data/storages.json";
 
 export interface Category {
     id: string;
+    icon: string;
     name: string;
 }
 
@@ -71,6 +72,7 @@ export const itemsSlice = createSlice({
             const categoryId = action.payload;
             state.categories.push({
                 id: categoryId,
+                icon: "dots-horizontal",
                 name: "Neu",
             });
         },
@@ -94,6 +96,12 @@ export const itemsSlice = createSlice({
         },
         setCategories: (state, action: PayloadAction<Category[]>) => {
             state.categories = action.payload;
+        },
+        setCategoryIcon: (state, action: PayloadAction<{ categoryId: string, icon: string }>) => {
+            const category = state.categories.find(x => x.id === action.payload.categoryId);
+            if (category) {
+                category.icon = action.payload.icon;
+            }
         },
         setCategoryName: (state, action: PayloadAction<{ categoryId: string, name: string }>) => {
             const category = state.categories.find(x => x.id === action.payload.categoryId);
@@ -321,6 +329,7 @@ export const {
     deleteCategory,
     resetCategories,
     setCategories,
+    setCategoryIcon,
     setCategoryName,
 
     // Items

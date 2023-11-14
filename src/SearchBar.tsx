@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Searchbar } from 'react-native-paper';
+import { Searchbar, useTheme } from 'react-native-paper';
 
 export function SearchBar(props: {
     text?: string;
     onChange?: (text: string, name: string, amount: string) => void;
     onSubmitEditing?: () => void;
 }) {
+    const theme = useTheme();
     const [searchQuery, setSearchQuery] = useState(props.text ?? "");
 
     function handleSearchChangeText(text: string) {
@@ -29,10 +30,10 @@ export function SearchBar(props: {
 
     return (
         <Searchbar
-            mode="bar"
+            mode="view"
             placeholder="Will haben"
-            style={{ margin: 8 }}
             value={searchQuery}
+            style={{ backgroundColor: theme.colors.elevation.level2 }}
             onChangeText={handleSearchChangeText}
             onSubmitEditing={props.onSubmitEditing}
         />

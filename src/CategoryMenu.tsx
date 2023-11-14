@@ -4,9 +4,9 @@ import { IconButton, Menu, TextInput, TouchableRipple } from "react-native-paper
 import { RootStackParamList } from "../App";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { addCategory } from "./store/dataSlice";
-import { Dimensions, View } from "react-native";
-import { AvatarText } from "./AvatarText";
+import { View } from "react-native";
 import uuid from 'react-native-uuid';
+import { CategoryIcon } from "./CategoryIcon";
 
 export function CategoryMenu(props: {
     categoryId: string | undefined;
@@ -31,48 +31,55 @@ export function CategoryMenu(props: {
         }
     }
 
+    const category = categories.find(x => x.id === props.categoryId);
+
     return (
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-evenly" }}>
+            <CategoryIcon icon={category?.icon} onPress={() => setCategoryMenuVisible(true)} />
             <View style={{ flexGrow: 1 }}>
                 <Menu
-                    anchor={<TouchableRipple
-                        onPress={() => setCategoryMenuVisible(true)}
-                    >
-                        <TextInput
-                            editable={false}
-                            label={props.title ?? "Kategorie"}
-                            mode="outlined"
-                            style={{ marginLeft: 8, marginVertical: 8 }}
-                            value={categories.find(x => x.id === props.categoryId)?.name}
-                            right={
-                                <TextInput.Icon icon={categoryMenuVisible ? "chevron-up" : "chevron-down"}
-                                    onPress={() => setCategoryMenuVisible(true)}
-                                />}
-                        />
-                    </TouchableRipple>}
+                    anchor={
+                        <TouchableRipple
+                            onPress={() => setCategoryMenuVisible(true)}
+                        >
+                            <TextInput
+                                editable={false}
+                                label={props.title ?? "Kategorie"}
+                                mode="outlined"
+                                style={{ marginVertical: 8 }}
+                                value={category?.name}
+                                right={
+                                    <TextInput.Icon icon={categoryMenuVisible ? "chevron-up" : "chevron-down"}
+                                        onPress={() => setCategoryMenuVisible(true)}
+                                    />
+                                }
+                            />
+                        </TouchableRipple>
+                    }
                     anchorPosition="bottom"
-                    style={{ marginLeft: 8, width: Dimensions.get("window").width - 32 }}
                     visible={categoryMenuVisible}
                     onDismiss={() => setCategoryMenuVisible(false)}
                 >
-                    {[...categories]
-                        .sort((x, y) => x.name.localeCompare(y.name))
-                        .map(x => (
-                            <Menu.Item
-                                key={x.id}
-                                contentStyle={{ marginLeft: 24 }}
-                                title={x.name}
-                                leadingIcon={p => <AvatarText {...p} label={x.name} />}
-                                onPress={() => {
-                                    setCategoryMenuVisible(false);
-                                    props.onSetCategory(x.id);
-                                }} />
-                        ))}
+                    {
+                        [...categories]
+                            .sort((x, y) => x.name.localeCompare(y.name))
+                            .map(x => (
+                                <Menu.Item
+                                    key={x.id}
+                                    contentStyle={{ marginLeft: 32 }}
+                                    title={x.name}
+                                    leadingIcon={p => <CategoryIcon {...p} icon={x.icon} selected={x.icon === category?.icon} />}
+                                    onPress={() => {
+                                        setCategoryMenuVisible(false);
+                                        props.onSetCategory(x.id);
+                                    }} />
+                            ))
+                    }
                 </Menu>
             </View>
             {
                 props.categoryId
-                && <IconButton icon="pencil-outline" onPress={handleEditCategoryPress} />
+                && <IconButton icon="pencil-outline" style={{ marginRight: 0 }} onPress={handleEditCategoryPress} />
             }
             <IconButton icon="plus-outline" onPress={handleAddCategoryPress} />
         </View>

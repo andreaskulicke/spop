@@ -3,11 +3,11 @@ import { FillList } from './FillList';
 import { allStorage, deleteItems, selectStorage } from './store/dataSlice';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
-import { SafeAreaView } from "react-native-safe-area-context";
 import { StoragesStackParamList } from './StoragesNavigationScreen';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import React, { useState } from 'react';
 import { SearchBarList } from './SearchBarList';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export function FillScreen(props: {
     navigation: NavigationProp<RootStackParamList>;

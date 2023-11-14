@@ -30,7 +30,7 @@ export function ShoppingList(props: {
                             .filter(x => x.categoryId === cat?.id)
                             .filter(x => ((props.shop.id === allShop.id) || x.shops.find(x => x.shopId === props.shop.id)));
                         return (
-                            <CategorySection key={cat?.id ?? "_"} title={cat?.name ?? "Unbekannte Kategorie"}>
+                            <CategorySection key={cat?.id ?? "_"} icon={cat?.icon} title={cat?.name ?? "Unbekannte Kategorie"}>
                                 {
                                     catItems.map(x => <ShoppingListItem key={x.id} item={x} shopId={props.shop.id} showShops={props.shop.id === allShop.id} />)
                                 }

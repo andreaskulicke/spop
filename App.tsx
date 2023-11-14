@@ -17,6 +17,7 @@ import { ShopScreen } from './src/ShopScreen';
 import { CategoryScreen } from './src/CategoryScreen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { setSettings } from './src/store/settingsSlice';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
     reactNavigationLight: NavigationDefaultTheme,
@@ -110,40 +111,42 @@ function AppWithStore() {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <PaperProvider theme={theme}>
-                <NavigationContainer theme={theme}>
-                    <RootStack.Navigator>
-                        <RootStack.Screen
-                            component={HomeNavigationScreen}
-                            name="Home"
-                            options={{ headerShown: false }}
-                        />
+                <SafeAreaProvider>
+                    <NavigationContainer theme={theme}>
+                        <RootStack.Navigator>
+                            <RootStack.Screen
+                                component={HomeNavigationScreen}
+                                name="Home"
+                                options={{ headerShown: false }}
+                            />
 
-                        <RootStack.Screen
-                            component={CategoryScreen}
-                            name="Category"
-                            options={{ headerShown: false }}
-                        />
-                        <RootStack.Screen
-                            component={ItemScreen}
-                            name="Item"
-                            options={{ headerShown: false }}
-                        />
-                        <RootStack.Screen
-                            component={SettingsScreen}
-                            name="Settings"
-                        />
-                        <RootStack.Screen
-                            component={ShopScreen}
-                            name="Shop"
-                            options={{ headerShown: false }}
-                        />
-                        <RootStack.Screen
-                            component={StorageScreen}
-                            name="Storage"
-                            options={{ headerShown: false }}
-                        />
-                    </RootStack.Navigator>
-                </NavigationContainer>
+                            <RootStack.Screen
+                                component={CategoryScreen}
+                                name="Category"
+                                options={{ headerShown: false }}
+                            />
+                            <RootStack.Screen
+                                component={ItemScreen}
+                                name="Item"
+                                options={{ headerShown: false }}
+                            />
+                            <RootStack.Screen
+                                component={SettingsScreen}
+                                name="Settings"
+                            />
+                            <RootStack.Screen
+                                component={ShopScreen}
+                                name="Shop"
+                                options={{ headerShown: false }}
+                            />
+                            <RootStack.Screen
+                                component={StorageScreen}
+                                name="Storage"
+                                options={{ headerShown: false }}
+                            />
+                        </RootStack.Navigator>
+                    </NavigationContainer>
+                </SafeAreaProvider>
             </PaperProvider>
         </GestureHandlerRootView>
     );

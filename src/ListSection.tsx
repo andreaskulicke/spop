@@ -40,7 +40,7 @@ export function ListSection(props: React.PropsWithChildren<{
                         alignItems: "center",
                         flex: 1,
                         flexDirection: "row",
-                        gap: 4,
+                        gap: 8,
                         justifyContent: "center",
                     }}>
                         {
@@ -55,7 +55,7 @@ export function ListSection(props: React.PropsWithChildren<{
                         (props.collapsed !== undefined)
                         && <IconButton
                             icon={expanded ? "chevron-up" : "chevron-down"}
-                            style={{ position: "absolute", right: 4 }}
+                            style={{ marginLeft: -20 }}
                         />
                     }
 

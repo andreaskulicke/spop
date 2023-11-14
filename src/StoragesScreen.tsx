@@ -69,7 +69,7 @@ export function StoragesScreen(props: {
                 <Appbar.Action icon="plus-outline" onPress={handleAddStoragePress} />
                 <Menu
                     anchor={<Appbar.Action icon="dots-vertical" onPress={handleDotsPress} />}
-                    anchorPosition="bottom"
+                    anchorPosition="top"
                     visible={menuVisible}
                     onDismiss={() => setMenuVisible(false)}
                 >

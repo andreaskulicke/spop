@@ -19,13 +19,13 @@ export function CategorySection(props: React.PropsWithChildren<{
                     alignItems: "center",
                     backgroundColor: theme.colors.tertiaryContainer,
                     flexDirection: "row",
-                    gap: 4,
+                    gap: 8,
                     padding: 16,
                 }}
             >
                 <Icon
                     size={16}
-                    source={props.icon ?? "cart-outline"} />
+                    source={props.icon ?? "dots-horizontal"} />
                 <Text
                     variant="bodyMedium"
                 >
