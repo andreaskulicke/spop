@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { List, Checkbox, IconButton } from 'react-native-paper';
+import { List, Checkbox, IconButton, useTheme } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { Item, setItemWanted, setItemAmount, setItemShop } from './store/dataSlice';
 import { ColoredTextInput } from './ColoredTextInput';

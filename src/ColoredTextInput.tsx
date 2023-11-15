@@ -31,7 +31,7 @@ export function ColoredTextInput(props: {
     return (
         <TextInput
             selectTextOnFocus
-            style={{ backgroundColor: backgroundColor, minWidth: 56, maxWidth: "60%", paddingHorizontal: 8 }}
+            style={{ backgroundColor: backgroundColor, color: theme.colors.onBackground, minWidth: 56, maxWidth: "60%", paddingHorizontal: 8 }}
             textAlign="right"
             value={value}
             onBlur={handleBlur}
