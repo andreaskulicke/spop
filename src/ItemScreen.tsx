@@ -107,7 +107,7 @@ export function ItemScreen(props: {
                     >
                         <Card.Title
                             title="Storages"
-                            subtitle={storages.filter(x => item.storages.find(y => y.storageId === x.id)).map(x => x.name).join()}
+                            subtitle={storages.filter(x => item.storages.find(y => y.storageId === x.id)).map(x => x.name).join(", ")}
                             right={p =>
                                 <View style={{ flexDirection: "row" }}>
                                     <IconButton
@@ -150,7 +150,7 @@ export function ItemScreen(props: {
                     >
                         <Card.Title
                             title="Shops"
-                            subtitle={shops.filter(x => item.shops.find(y => y.shopId === x.id)).map(x => x.name).join()}
+                            subtitle={shops.filter(x => item.shops.find(y => y.shopId === x.id)).map(x => x.name).join(", ")}
                             right={p =>
                                 <View style={{ flexDirection: "row" }}>
                                     <IconButton

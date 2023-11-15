@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { List, Checkbox, IconButton, useTheme } from 'react-native-paper';
+import { List, Checkbox, IconButton, useTheme, Tooltip } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { Item, setItemWanted, setItemAmount, setItemShop } from './store/dataSlice';
 import { ColoredTextInput } from './ColoredTextInput';
@@ -20,6 +20,10 @@ export function ShoppingListItem(props: {
         dispatch(setItemAmount({ itemId: props.item.id, amount: text }));
     }
 
+    function handleAddToShopPress(): void {
+        dispatch(setItemShop({ itemId: props.item.id, shopId: props.shopId, checked: true }));
+    }
+
     function handlePress(): void {
         dispatch(setItemShop({ itemId: props.item.id, shopId: props.shopId, checked: true }));
         dispatch(setItemWanted({ itemId: props.item.id, wanted: !props.item.wanted }));
@@ -34,7 +38,7 @@ export function ShoppingListItem(props: {
         description = props.item.shops
             .map(x => shops.find(s => s.id === x.shopId)?.name)
             .filter(x => !!x)
-            .join();
+            .join(", ");
     }
 
     return (
@@ -43,21 +47,37 @@ export function ShoppingListItem(props: {
             title={props.item.name}
             right={
                 p => (
-                    <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
                         <ColoredTextInput
                             value={props.item.amount}
-                            onChange={handleAmountChange} />
+                            onChange={handleAmountChange}
+                        />
                         {
                             props.item.wanted
-                                ? <Checkbox
+                                ? <Tooltip title="Hab dich">
+                                    <Checkbox
+                                        {...p}
+                                        status="unchecked"
+                                        onPress={handlePress}
+                                    />
+                                </Tooltip>
+                                : <Tooltip title="Will haben">
+                                    <IconButton
+                                        {...p}
+                                        icon="plus-outline"
+                                        onPress={handlePress}
+                                    />
+                                </Tooltip>
+                        }
+                        {
+                            (props.item.shops.length === 0)
+                            && <Tooltip title="Zum Shop hinzufügen">
+                                <IconButton
                                     {...p}
-                                    status="unchecked"
-                                    onPress={handlePress} />
-                                : <IconButton
-                                    {...p}
-                                    icon="plus-outline"
-                                    onPress={handlePress}
+                                    icon="cart-plus"
+                                    onPress={handleAddToShopPress}
                                 />
+                            </Tooltip>
                         }
                     </View>
                 )}

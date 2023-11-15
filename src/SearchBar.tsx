@@ -30,10 +30,10 @@ export function SearchBar(props: {
 
     return (
         <Searchbar
-            mode="view"
+            mode="bar"
             placeholder="Will haben"
             value={searchQuery}
-            style={{ backgroundColor: theme.colors.elevation.level2 }}
+            style={{ backgroundColor: theme.colors.elevation.level2, margin: 4 }}
             onChangeText={handleSearchChangeText}
             onSubmitEditing={props.onSubmitEditing}
         />

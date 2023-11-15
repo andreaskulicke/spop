@@ -11,7 +11,7 @@ export function AvatarText(props: {
 
     return (
         <Avatar.Text
-            style={props.style}
+            style={{ ...props.style, alignSelf: "center" }}
             color={theme.colors.primaryContainer}
             label={props.label.substring(0, 2).toUpperCase()}
             size={avatarSize}

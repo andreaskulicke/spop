@@ -33,7 +33,7 @@ export function FillListItem(props: {
         description = props.item.storages
             .map(x => storages.find(s => s.id === x.storageId)?.name)
             .filter(x => !!x)
-            .join();
+            .join(", ");
     }
 
     return (
@@ -42,7 +42,7 @@ export function FillListItem(props: {
             title={props.item.name}
             left={p => <AvatarText {...p} label={props.item.name} />}
             right={p =>
-                <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
                     <ColoredTextInput
                         value={props.item.amount}
                         onChange={handleAmountChange} />

@@ -17,7 +17,7 @@ export function HomeNavigationScreen() {
                 component={StoragesNavigationScreen}
                 name="StoragesEntry"
                 options={{
-                    tabBarIcon: p => <Icon {...p} size={24} source="home-plus" />,
+                    tabBarIcon: p => <Icon {...p} size={24} source="home-plus-outline" />,
                     tabBarLabel: "Storages",
                 }}
             />
@@ -25,7 +25,7 @@ export function HomeNavigationScreen() {
                 component={ShopsNavigationScreen}
                 name="ShopsEntry"
                 options={{
-                    tabBarIcon: p => <Icon {...p} size={24} source="cart" />,
+                    tabBarIcon: p => <Icon {...p} size={24} source="cart-outline" />,
                     tabBarLabel: "Shops",
                 }}
             />
