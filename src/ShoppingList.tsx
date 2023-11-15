@@ -52,6 +52,6 @@ export function ShoppingList(props: {
                     recentlyUsed.map(x => <ShoppingListItem key={x.id} item={x} shopId={props.shop.id} showShops={props.shop.id === allShop.id} />)
                 }
             </ListSection>
-        </View >
+        </View>
     );
 }

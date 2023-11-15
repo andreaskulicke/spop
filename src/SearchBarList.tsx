@@ -56,14 +56,17 @@ export function SearchBarList(props: {
             <SearchBar
                 text={filter?.text}
                 onChange={handleSearchChange}
-                onSubmitEditing={() => handlePress(newItem)} />
-            <ScrollView keyboardShouldPersistTaps={filter ? "always" : "never"}>
-                {!filter
-                    ? props.list
-                    : <FillFromHistoryList
-                        item={newItem}
-                        onPress={handlePress}
-                        onIconPress={handleIconPress} />}
+                onSubmitEditing={() => handlePress(newItem)}
+            />
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps={filter ? "always" : "never"}>
+                {
+                    !filter
+                        ? props.list
+                        : <FillFromHistoryList
+                            item={newItem}
+                            onPress={handlePress}
+                            onIconPress={handleIconPress} />
+                }
             </ScrollView>
         </View>
     );
