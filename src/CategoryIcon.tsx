@@ -1,11 +1,10 @@
+import { StyleProp, ViewStyle } from "react-native";
 import { IconButton } from "react-native-paper";
-import { Style } from "react-native-paper/lib/typescript/components/List/utils";
-import { IconProps } from "react-native-paper/lib/typescript/components/MaterialCommunityIcon";
 
 export function CategoryIcon(props: {
     icon: string | undefined;
     selected?: boolean;
-    style?: Style;
+    style?: StyleProp<ViewStyle>;
     onPress?: () => void;
 }) {
     return (
@@ -13,7 +12,7 @@ export function CategoryIcon(props: {
             icon={props.icon ?? "dots-horizontal"}
             mode="contained"
             style={{
-                ...props.style,
+                ...props.style as object,
                 ...(props.selected ? {
                     borderWidth: 1,
                 } : {}),

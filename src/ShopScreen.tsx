@@ -10,6 +10,7 @@ import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, S
 import { selectShop, addCategory, addShopCategory, setShopCategoryShow, deleteShop, setShopName, setShopCategories, Category, setShopDefaultCategory } from "./store/dataSlice";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CategoryMenu } from "./CategoryMenu";
+import { CategoryIcon } from "./CategoryIcon";
 
 export function ShopScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -44,7 +45,7 @@ export function ShopScreen(props: {
                 <List.Item
                     key={params.item.id}
                     title={params.item.name}
-                    left={p => <AvatarText {...p} label={params.item.name} />}
+                    left={p => <CategoryIcon {...p} icon={params.item.icon} />}
                     right={p => <IconButton icon="eye-off-outline" onPress={() => dispatch(setShopCategoryShow({ shopId: shop.id, categoryId: params.item.id, show: false }))} />}
                     onPress={() => props.navigation.navigate("Category", { id: params.item.id })}
                     onLongPress={() => params.drag()}

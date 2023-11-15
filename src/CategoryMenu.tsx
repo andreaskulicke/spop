@@ -34,12 +34,13 @@ export function CategoryMenu(props: {
     const category = categories.find(x => x.id === props.categoryId);
 
     return (
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-evenly" }}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
             <CategoryIcon icon={category?.icon} onPress={() => setCategoryMenuVisible(true)} />
-            <View style={{ flexGrow: 1 }}>
+            <View style={{ flexGrow: 1, flexShrink: 1 }}>
                 <Menu
                     anchor={
                         <TouchableRipple
+                            style={{}}
                             onPress={() => setCategoryMenuVisible(true)}
                         >
                             <TextInput
