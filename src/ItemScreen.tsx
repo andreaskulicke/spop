@@ -7,7 +7,7 @@ import { RootStackParamList } from "../App";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import React, { useState } from "react";
 import uuid from 'react-native-uuid';
-import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBarView } from "./StatusBarView";
 
 export function ItemScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -61,8 +61,8 @@ export function ItemScreen(props: {
     }
 
     return (
-        <SafeAreaView>
-            <Appbar.Header elevated statusBarHeight={0}>
+        <StatusBarView>
+            <Appbar.Header elevated>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={item?.name ?? "Item"} />
                 <Appbar.Action icon="trash-can" onPress={handleDeletePress} />
@@ -186,6 +186,6 @@ export function ItemScreen(props: {
                     }
                 </Card>
             </ScrollView>
-        </SafeAreaView >
+        </StatusBarView>
     );
 }

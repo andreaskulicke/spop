@@ -4,9 +4,9 @@ import { ScrollView, View } from "react-native";
 import { Appbar, Card, Portal, TextInput, Dialog } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { deleteCategory, selectCategory, setCategoryIcon, setCategoryName } from "./store/dataSlice";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { CategoryIcon } from "./CategoryIcon";
+import { StatusBarView } from "./StatusBarView";
 
 const categoryIcons = [
     "baguette",
@@ -77,8 +77,8 @@ export function CategoryScreen(props: {
     }
 
     return (
-        <SafeAreaView>
-            <Appbar.Header elevated statusBarHeight={0}>
+        <StatusBarView>
+            <Appbar.Header elevated>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={category?.name ?? "Category"} />
                 <Appbar.Action icon="trash-can" onPress={handleDeletePress} />
@@ -107,7 +107,7 @@ export function CategoryScreen(props: {
                     </View>
                 </Card>
             </ScrollView>
-        </SafeAreaView>
+        </StatusBarView>
     );
 }
 

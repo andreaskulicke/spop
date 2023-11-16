@@ -9,7 +9,7 @@ import uuid from 'react-native-uuid';
 import { AvatarText, avatarSize } from "./AvatarText";
 import DraggableFlatList, { RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 import { addShop, allShop, setShops, Shop } from "./store/dataSlice";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBarView } from "./StatusBarView";
 
 export function ShopsScreen(props: {
     navigation: NavigationProp<RootStackParamList & ShopsStackParamList>;
@@ -64,8 +64,8 @@ export function ShopsScreen(props: {
     }
 
     return (
-        <SafeAreaView>
-            <Appbar.Header elevated statusBarHeight={0}>
+        <StatusBarView>
+            <Appbar.Header elevated>
                 <Appbar.Content title="Shops" />
                 <Appbar.Action icon="plus-outline" onPress={handleAddShopPress} />
                 <Menu
@@ -109,6 +109,6 @@ export function ShopsScreen(props: {
                 renderItem={handleRenderItem}
                 onDragEnd={({ data }) => dispatch(setShops(data))}
             />
-        </SafeAreaView>
+        </StatusBarView>
     );
 }

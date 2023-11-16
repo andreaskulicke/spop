@@ -9,7 +9,7 @@ import uuid from 'react-native-uuid';
 import { AvatarText, avatarSize } from "./AvatarText";
 import DraggableFlatList, { RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 import { addStorage, allStorage, setStorages, Storage } from "./store/dataSlice";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBarView } from "./StatusBarView";
 
 export function StoragesScreen(props: {
     navigation: NavigationProp<RootStackParamList & StoragesStackParamList>;
@@ -63,8 +63,8 @@ export function StoragesScreen(props: {
     }
 
     return (
-        <SafeAreaView>
-            <Appbar.Header elevated statusBarHeight={0}>
+        <StatusBarView>
+            <Appbar.Header elevated>
                 <Appbar.Content title="Storages" />
                 <Appbar.Action icon="plus-outline" onPress={handleAddStoragePress} />
                 <Menu
@@ -108,7 +108,7 @@ export function StoragesScreen(props: {
                 renderItem={handleRenderItem}
                 onDragEnd={({ data }) => dispatch(setStorages(data))}
             />
-        </SafeAreaView>
+        </StatusBarView>
     );
 }
 

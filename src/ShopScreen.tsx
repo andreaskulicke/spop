@@ -8,9 +8,9 @@ import { AvatarText } from "./AvatarText";
 import uuid from 'react-native-uuid';
 import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 import { selectShop, addCategory, addShopCategory, setShopCategoryShow, deleteShop, setShopName, setShopCategories, Category, setShopDefaultCategory } from "./store/dataSlice";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { CategoryMenu } from "./CategoryMenu";
 import { CategoryIcon } from "./CategoryIcon";
+import { StatusBarView } from "./StatusBarView";
 
 export function ShopScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -59,8 +59,8 @@ export function ShopScreen(props: {
     const catsHidden = categories.filter(x => !catsShown.includes(x));
 
     return (
-        <SafeAreaView>
-            <Appbar.Header elevated statusBarHeight={0}>
+        <StatusBarView>
+            <Appbar.Header elevated>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={shop?.name ?? "Shop"} />
                 <Appbar.Action icon="trash-can" onPress={handleDeletePress} />
@@ -148,6 +148,6 @@ export function ShopScreen(props: {
                     }
                 </Card>
             </NestableScrollContainer>
-        </SafeAreaView>
+        </StatusBarView>
     );
 }

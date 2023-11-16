@@ -7,7 +7,7 @@ import { StoragesStackParamList } from './StoragesNavigationScreen';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import React, { useState } from 'react';
 import { SearchBarList } from './SearchBarList';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBarView } from './StatusBarView';
 
 export function FillScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -36,8 +36,8 @@ export function FillScreen(props: {
     }
 
     return (
-        <SafeAreaView>
-            <Appbar.Header elevated statusBarHeight={0}>
+        <StatusBarView>
+            <Appbar.Header elevated>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={storage?.name ?? allStorage.name} />
                 {
@@ -59,6 +59,6 @@ export function FillScreen(props: {
                 list={<FillList storageId={storage.id} />}
                 storage={storage}
             />
-        </SafeAreaView>
+        </StatusBarView>
     );
 }

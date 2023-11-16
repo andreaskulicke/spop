@@ -1,11 +1,11 @@
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { ScrollView } from "react-native";
-import { Appbar, Card, TextInput, Text } from "react-native-paper";
+import { Appbar, Card, TextInput } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { selectStorage, deleteStorage, setStorageName, setStorageDefaultCategory } from "./store/dataSlice";
 import { CategoryMenu } from "./CategoryMenu";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBarView } from "./StatusBarView";
 
 export function StorageScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -27,8 +27,8 @@ export function StorageScreen(props: {
     }
 
     return (
-        <SafeAreaView>
-            <Appbar.Header elevated statusBarHeight={0}>
+        <StatusBarView>
+            <Appbar.Header elevated>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={storage?.name ?? "Storage"} />
                 <Appbar.Action icon="trash-can" onPress={handleDeletePress} />
@@ -53,6 +53,6 @@ export function StorageScreen(props: {
                     />
                 </Card>
             </ScrollView>
-        </SafeAreaView>
+        </StatusBarView>
     );
 }

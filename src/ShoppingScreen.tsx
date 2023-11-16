@@ -6,8 +6,8 @@ import { useAppSelector } from './store/hooks';
 import { ShoppingList } from './ShoppingList';
 import { allShop, selectShop } from './store/dataSlice';
 import { ShopsStackParamList } from './ShopsNavigationScreen';
-import { SafeAreaView } from "react-native-safe-area-context";
 import { SearchBarList } from './SearchBarList';
+import { StatusBarView } from './StatusBarView';
 
 export function ShoppingScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -27,8 +27,8 @@ export function ShoppingScreen(props: {
     }
 
     return (
-        <SafeAreaView>
-            <Appbar.Header elevated statusBarHeight={0}>
+        <StatusBarView>
+            <Appbar.Header elevated>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={shop?.name ?? allShop.name} />
                 {
@@ -48,6 +48,6 @@ export function ShoppingScreen(props: {
                 list={<ShoppingList shop={shop} />}
                 shop={shop}
             />
-        </SafeAreaView>
+        </StatusBarView>
     );
 }
