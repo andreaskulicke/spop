@@ -11,7 +11,7 @@ export function StatusBarView(props: React.PropsWithChildren<{}>) {
     }, [theme]);
 
     return (
-        <SafeAreaView style={{ flexGrow: 1 }}>
+        <SafeAreaView style={{ flexGrow: 1, flexShrink: 1 }}>
             <StatusBar
                 backgroundColor={theme.colors.elevation.level2}
                 barStyle={theme.dark ? "light-content" : "dark-content"}

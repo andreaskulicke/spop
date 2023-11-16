@@ -7,7 +7,7 @@ import { RootStackParamList } from "../App";
 import { StoragesStackParamList } from "./StoragesNavigationScreen";
 import uuid from 'react-native-uuid';
 import { AvatarText, avatarSize } from "./AvatarText";
-import DraggableFlatList, { RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
+import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 import { addStorage, allStorage, setStorages, Storage } from "./store/dataSlice";
 import { StatusBarView } from "./StatusBarView";
 
@@ -69,7 +69,7 @@ export function StoragesScreen(props: {
                 <Appbar.Action icon="plus-outline" onPress={handleAddStoragePress} />
                 <Menu
                     anchor={<Appbar.Action icon="dots-vertical" onPress={handleDotsPress} />}
-                    anchorPosition="top"
+                    anchorPosition="bottom"
                     visible={menuVisible}
                     onDismiss={() => setMenuVisible(false)}
                 >
@@ -77,37 +77,39 @@ export function StoragesScreen(props: {
                 </Menu>
             </Appbar.Header>
             <Divider />
-            <List.Item
-                title={allStorage.name}
-                left={p =>
-                    <Avatar.Icon
-                        {...p}
-                        color={theme.colors.primaryContainer}
-                        icon="check-all"
-                        size={avatarSize}
-                    />}
-                right={p => {
-                    const count = items.items.filter(i => i.wanted).length;
-                    const unassignedCount = items.items.filter(i => i.wanted && ((i.storages?.length ?? 0) === 0)).length;
-                    return <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <Tooltip title="Gewünschte Dinge und ohne Storage">
-                            <Text {...p} variant="labelMedium" style={{ paddingLeft: 32, paddingVertical: 12 }}>
-                                {count}
-                            </Text>
-                        </Tooltip>
-                        <Badge visible={unassignedCount > 0} style={{ position: "absolute", top: 0, right: -20 }}>{unassignedCount}</Badge>
-                    </View>;
-                }
-                }
-                onPress={() => handleStoragePress(allStorage.id)}
-            />
-            <Divider />
-            <DraggableFlatList
-                data={storages}
-                keyExtractor={x => x.id}
-                renderItem={handleRenderItem}
-                onDragEnd={({ data }) => dispatch(setStorages(data))}
-            />
+            <NestableScrollContainer>
+                <List.Item
+                    title={allStorage.name}
+                    left={p =>
+                        <Avatar.Icon
+                            {...p}
+                            color={theme.colors.primaryContainer}
+                            icon="check-all"
+                            size={avatarSize}
+                        />}
+                    right={p => {
+                        const count = items.items.filter(i => i.wanted).length;
+                        const unassignedCount = items.items.filter(i => i.wanted && ((i.storages?.length ?? 0) === 0)).length;
+                        return <View style={{ flexDirection: "row", alignItems: "center" }}>
+                            <Tooltip title="Gewünschte Dinge und ohne Storage">
+                                <Text {...p} variant="labelMedium" style={{ paddingLeft: 32, paddingVertical: 12 }}>
+                                    {count}
+                                </Text>
+                            </Tooltip>
+                            <Badge visible={unassignedCount > 0} style={{ position: "absolute", top: 0, right: -20 }}>{unassignedCount}</Badge>
+                        </View>;
+                    }
+                    }
+                    onPress={() => handleStoragePress(allStorage.id)}
+                />
+                <Divider />
+                <NestableDraggableFlatList
+                    data={storages}
+                    keyExtractor={x => x.id}
+                    renderItem={handleRenderItem}
+                    onDragEnd={({ data }) => dispatch(setStorages(data))}
+                />
+            </NestableScrollContainer>
         </StatusBarView>
     );
 }

@@ -52,7 +52,7 @@ export function SearchBarList(props: {
     }, [filter]);
 
     return (
-        <View>
+        <View style={{ flexGrow: 1, flexShrink: 1 }}>
             <SearchBar
                 text={filter?.text}
                 onChange={handleSearchChange}

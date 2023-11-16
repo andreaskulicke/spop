@@ -7,7 +7,7 @@ import { RootStackParamList } from "../App";
 import { ShopsStackParamList } from "./ShopsNavigationScreen";
 import uuid from 'react-native-uuid';
 import { AvatarText, avatarSize } from "./AvatarText";
-import DraggableFlatList, { RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
+import DraggableFlatList, { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 import { addShop, allShop, setShops, Shop } from "./store/dataSlice";
 import { StatusBarView } from "./StatusBarView";
 
@@ -78,6 +78,7 @@ export function ShopsScreen(props: {
                 </Menu>
             </Appbar.Header>
             <Divider />
+            <NestableScrollContainer>
             <List.Item
                 title={allShop.name}
                 left={p =>
@@ -103,12 +104,13 @@ export function ShopsScreen(props: {
                 onPress={() => handleShopPress(allShop.id)}
             />
             <Divider />
-            <DraggableFlatList
+            <NestableDraggableFlatList
                 data={shops}
                 keyExtractor={x => x.id}
                 renderItem={handleRenderItem}
                 onDragEnd={({ data }) => dispatch(setShops(data))}
             />
+            </NestableScrollContainer>
         </StatusBarView>
     );
 }
