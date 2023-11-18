@@ -5,7 +5,6 @@ import { defaultItems, Item } from './data/items';
 import { defaultShops, Shop } from './data/shops';
 import { defaultStorages, Storage } from './data/storages';
 
-
 export interface Data {
     categories: Category[];
     items: Item[];
@@ -211,6 +210,9 @@ export const itemsSlice = createSlice({
             const shop = state.shops.find(x => x.id === action.payload.shopId);
             if (shop) {
                 shop.defaultCategoryId = action.payload.categoryId;
+                if (!shop.categoryIds?.find(x => x === action.payload.categoryId)) {
+                    shop.categoryIds?.push(action.payload.categoryId);
+                }
             }
         },
         setShopName: (state, action: PayloadAction<{ shopId: string, name: string }>) => {

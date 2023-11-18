@@ -1,24 +1,23 @@
-import { NavigationProp, RouteProp } from "@react-navigation/native";
-import { RootStackParamList } from "../App";
-import { View } from "react-native";
 import { Appbar, Card, IconButton, List, TextInput, TouchableRipple } from "react-native-paper";
-import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { ReactNode, useState } from "react";
 import { AvatarText } from "./AvatarText";
-import uuid from 'react-native-uuid';
-import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
-import { selectShop, addCategory, addShopCategory, setShopCategoryShow, deleteShop, setShopName, setShopCategories, setShopDefaultCategory } from "./store/dataSlice";
-import { CategoryMenu } from "./CategoryMenu";
-import { CategoryIcon } from "./CategoryIcon";
-import { StatusBarView } from "./StatusBarView";
 import { Category } from "./store/data/categories";
+import { CategoryIcon } from "./CategoryIcon";
+import { CategoryMenu } from "./CategoryMenu";
+import { NavigationProp, RouteProp } from "@react-navigation/native";
+import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
+import { ReactNode, useState } from "react";
+import { RootStackParamList } from "../App";
+import { selectShop, addCategory, addShopCategory, setShopCategoryShow, deleteShop, setShopName, setShopCategories, setShopDefaultCategory } from "./store/dataSlice";
+import { StatusBarView } from "./StatusBarView";
+import { useAppDispatch, useAppSelector } from "./store/hooks";
+import { View } from "react-native";
+import uuid from 'react-native-uuid';
 
 export function ShopScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
     route: RouteProp<RootStackParamList, "Shop">;
 }) {
     const [categoriesExpanded, setCategoriesExpanded] = useState(false);
-    const [showAllCategories, setShowAllCategories] = useState(false);
     const categories = useAppSelector(state => state.data.categories);
     const shop = useAppSelector(selectShop(props.route.params.id));
     const dispatch = useAppDispatch();
@@ -95,17 +94,6 @@ export function ShopScreen(props: {
                             title="Kategorien"
                             right={p =>
                                 <View style={{ flexDirection: "row" }}>
-                                    {
-                                        (catsHidden.length > 0)
-                                        && <IconButton
-                                            {...p}
-                                            icon={showAllCategories ? "eye-off-outline" : "eye-outline"}
-                                            onPress={() => {
-                                                setShowAllCategories(v => !v);
-                                                setCategoriesExpanded(true);
-                                            }}
-                                        />
-                                    }
                                     <IconButton
                                         {...p}
                                         icon="plus-outline"
@@ -130,7 +118,7 @@ export function ShopScreen(props: {
                         />
                     }
                     {
-                        categoriesExpanded && showAllCategories && (catsHidden.length > 0)
+                        categoriesExpanded && (catsHidden.length > 0)
                         && <List.Section title="Nicht verwendet">
                             {
                                 catsHidden.map(x => {
@@ -138,7 +126,7 @@ export function ShopScreen(props: {
                                         <List.Item
                                             key={x.id}
                                             title={x.name}
-                                            left={p => <AvatarText {...p} label={x.name} />}
+                                            left={p => <CategoryIcon {...p} icon={x.icon} />}
                                             right={p => <IconButton icon="eye-outline" onPress={() => dispatch(setShopCategoryShow({ shopId: shop.id, categoryId: x.id, show: true }))} />}
                                             onPress={() => props.navigation.navigate("Category", { id: x.id })}
                                         />
