@@ -1,22 +1,22 @@
+import { CategoryScreen } from './src/CategoryScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { HomeNavigationScreen } from './src/HomeNavigationScreen';
 import { ItemScreen } from './src/ItemScreen';
 import { NavigationContainer, DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationDefaultTheme } from '@react-navigation/native';
 import { PaperProvider, MD3DarkTheme, MD3LightTheme, adaptNavigationTheme } from 'react-native-paper';
 import { Provider } from 'react-redux';
 import { setData } from './src/store/dataSlice';
+import { setSettings } from './src/store/settingsSlice';
 import { SettingsScreen } from './src/SettingsScreen';
+import { ShopScreen } from './src/ShopScreen';
+import { StorageScreen } from './src/StorageScreen';
 import { store } from './src/store/store';
 import { useAppDispatch, useAppSelector } from './src/store/hooks';
-import { StatusBar, useColorScheme } from 'react-native';
+import { Appearance, useColorScheme } from 'react-native';
 import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import merge from 'deepmerge';
-import { StorageScreen } from './src/StorageScreen';
-import { ShopScreen } from './src/ShopScreen';
-import { CategoryScreen } from './src/CategoryScreen';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { setSettings } from './src/store/settingsSlice';
 
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
     reactNavigationLight: NavigationDefaultTheme,
@@ -111,11 +111,12 @@ function AppWithStore() {
         <GestureHandlerRootView style={{ flex: 1 }}>
             <PaperProvider theme={theme}>
                 <NavigationContainer theme={theme}>
-                    <StatusBar
-                        backgroundColor={theme.colors.elevation.level2}
-                        barStyle={theme.dark ? "light-content" : "dark-content"}
-                    />
-                    <RootStack.Navigator>
+                    <RootStack.Navigator screenOptions={{
+                        statusBarColor: theme.colors.elevation.level2,
+                        statusBarStyle: theme.dark ? "light" : "dark",
+                        navigationBarColor: theme.colors.elevation.level2,
+                    }}
+                    >
                         <RootStack.Screen
                             component={HomeNavigationScreen}
                             name="Home"
