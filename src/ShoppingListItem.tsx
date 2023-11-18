@@ -2,10 +2,11 @@ import React from 'react';
 import { View } from 'react-native';
 import { List, Checkbox, IconButton, useTheme, Tooltip } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from './store/hooks';
-import { Item, setItemWanted, setItemAmount, setItemShop, allShop } from './store/dataSlice';
+import { setItemWanted, setItemAmount, setItemShop, allShop } from './store/dataSlice';
 import { ColoredTextInput } from './ColoredTextInput';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
+import { Item } from './store/data/items';
 
 export function ShoppingListItem(props: {
     item: Item;

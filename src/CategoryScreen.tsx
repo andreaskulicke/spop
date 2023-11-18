@@ -7,42 +7,7 @@ import { deleteCategory, selectCategory, setCategoryIcon, setCategoryName } from
 import { useState } from "react";
 import { CategoryIcon } from "./CategoryIcon";
 import { StatusBarView } from "./StatusBarView";
-
-const categoryIcons = [
-    "baguette",
-    "barley",
-    "candy-outline",
-    "carrot",
-    "coffee",
-    "corn",
-    "cow",
-    "egg-outline",
-    "flower-outline",
-    "food-apple-outline",
-    "fridge-outline",
-    "fruit-cherries",
-    "fruit-grapes",
-    "glass-cocktail",
-    "home-outline",
-    "ice-cream",
-    "ice-pop",
-    "kettle-outline",
-    "leaf",
-    "liquor",
-    "muffin",
-    "noodles",
-    "peanut-outline",
-    "pig-variant-outline",
-    "pizza",
-    "popcorn",
-    "pot-outline",
-    "rice",
-    "shaker-outline",
-    "soy-sauce",
-    "tea-outline",
-
-    "dots-horizontal",
-];
+import { categoryIcons } from "./store/data/categories";
 
 export function CategoryScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -112,7 +77,7 @@ export function CategoryScreen(props: {
 }
 
 function IconModal(props: {
-    icons: string[];
+    icons: readonly string[];
     selectedIcon?: string;
     visible?: boolean;
     onClose: (icon?: string) => void;

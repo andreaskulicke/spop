@@ -1,39 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './store';
-import categoriesJson from "./data/categories.json";
-import itemsJson from "./data/items.json";
-import shopsJson from "./data/shops.json";
-import storagesJson from "./data/storages.json";
+import { Category, defaultCategories } from './data/categories';
+import { defaultItems, Item } from './data/items';
+import { defaultShops, Shop } from './data/shops';
+import { defaultStorages, Storage } from './data/storages';
 
-export interface Category {
-    id: string;
-    icon: string;
-    name: string;
-}
-
-export interface Item {
-    id: string;
-    name: string;
-    amount?: string;
-    categoryId?: string;
-    wanted?: boolean;
-    shops: { shopId: string; }[];
-    storages: { storageId: string; }[];
-}
-
-export interface Shop {
-    id: string;
-    name: string;
-    defaultCategoryId?: string;
-    /** Category IDs that are present here are shown in the order of this array */
-    categoryIds?: string[];
-}
-
-export interface Storage {
-    id: string;
-    name: string;
-    defaultCategoryId?: string;
-}
 
 export interface Data {
     categories: Category[];
@@ -44,10 +15,10 @@ export interface Data {
 
 // Define the initial state using that type
 const initialState: Data = {
-    categories: categoriesJson,
-    items: itemsJson,
-    shops: shopsJson,
-    storages: storagesJson,
+    categories: defaultCategories,
+    items: defaultItems,
+    shops: defaultShops,
+    storages: defaultStorages,
 }
 
 function initializeShopCategoryIds(data: Data, shop: Shop) {

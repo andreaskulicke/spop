@@ -2,11 +2,12 @@ import React from 'react';
 import { View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { IconButton, List } from 'react-native-paper';
-import { Item, setItemAmount, setItemWanted } from './store/dataSlice';
+import { setItemAmount, setItemWanted } from './store/dataSlice';
 import { ColoredTextInput } from './ColoredTextInput';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
 import { AvatarText } from './AvatarText';
+import { Item } from './store/data/items';
 
 export function FillListItem(props: {
     item: Item;

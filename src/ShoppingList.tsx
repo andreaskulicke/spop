@@ -2,9 +2,11 @@ import React from 'react';
 import { View } from 'react-native';
 import { useAppSelector } from './store/hooks';
 import { ShoppingListItem } from './ShoppingListItem';
-import { Category, Shop, allShop } from './store/dataSlice';
+import { allShop } from './store/dataSlice';
 import { ListSection } from './ListSection';
 import { CategorySection } from './CategorySection';
+import { Category } from './store/data/categories';
+import { Shop } from './store/data/shops';
 
 export function ShoppingList(props: {
     shop: Shop;

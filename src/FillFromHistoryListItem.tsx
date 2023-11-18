@@ -1,7 +1,7 @@
-import { Item } from './store/dataSlice';
 import { List, Text } from 'react-native-paper';
 import { TouchableOpacity, View } from 'react-native';
 import React from 'react';
+import { Item } from './store/data/items';
 
 export function FillFromHistoryListItem(props: {
     item: Item;

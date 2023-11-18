@@ -1,7 +1,10 @@
+import { addItem, allStorage, allShop } from './store/dataSlice';
 import { FillFromHistoryList } from './FillFromHistoryList';
-import { Item, addItem, allStorage, Storage, Shop, allShop } from './store/dataSlice';
+import { Item } from './store/data/items';
 import { ScrollView, View } from 'react-native';
 import { SearchBar } from './SearchBar';
+import { Shop } from './store/data/shops';
+import { Storage } from './store/data/storages';
 import { useAppDispatch } from './store/hooks';
 import React, { useEffect, useState } from 'react';
 import uuid from 'react-native-uuid';
