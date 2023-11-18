@@ -15,12 +15,12 @@ export function StoragesNavigationScreen() {
             <Stack.Screen
                 component={StoragesScreen}
                 name="Storages"
-                options={{ headerShown: false, statusBarHidden: false, statusBarTranslucent: true }}
+                options={{ headerShown: false, statusBarHidden: false }}
             />
             <Stack.Screen
                 component={FillScreen}
                 name="Fill"
-                options={{ headerShown: false, statusBarHidden: false, statusBarTranslucent: true }}
+                options={{ headerShown: false, statusBarHidden: false }}
             />
         </Stack.Navigator>
     );

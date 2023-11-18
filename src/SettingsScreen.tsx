@@ -1,15 +1,19 @@
-import { ScrollView } from "react-native";
-import { Button, Card, List, RadioButton, Text } from "react-native-paper";
-import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { setColorTheme, setSettings } from "./store/settingsSlice";
+import { Button, Card, List, RadioButton, Switch } from "react-native-paper";
 import { resetCategories, resetItems, resetShops, resetStorages, setData } from "./store/dataSlice";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ColorSchemeName, ScrollView } from "react-native";
+import { setColorTheme, setSettings, setUseCalculator } from "./store/settingsSlice";
 import { StatusBarView } from "./StatusBarView";
+import { useAppDispatch, useAppSelector } from "./store/hooks";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function SettingsScreen() {
     const data = useAppSelector(state => state.data);
     const settings = useAppSelector(state => state.settings);
     const dispatch = useAppDispatch();
+
+    function handleSetColor(colorTheme: ColorSchemeName): void {
+        dispatch(setColorTheme(colorTheme));
+    }
 
     return (
         <StatusBarView>
@@ -25,7 +29,7 @@ export function SettingsScreen() {
                                 {...p}
                                 value="undefined"
                                 status={settings.display.colorTheme === undefined ? "checked" : "unchecked"}
-                                onPress={() => dispatch(setColorTheme(undefined))}
+                                onPress={() => handleSetColor(undefined)}
                             />
                         }
                     />
@@ -36,7 +40,7 @@ export function SettingsScreen() {
                                 {...p}
                                 value="light"
                                 status={settings.display.colorTheme === "light" ? "checked" : "unchecked"}
-                                onPress={() => dispatch(setColorTheme("light"))}
+                                onPress={() => handleSetColor("light")}
                             />
                         }
                     />
@@ -47,8 +51,18 @@ export function SettingsScreen() {
                                 {...p}
                                 value="dark"
                                 status={settings.display.colorTheme === "dark" ? "checked" : "unchecked"}
-                                onPress={() => dispatch(setColorTheme("dark"))}
+                                onPress={() => handleSetColor("dark")}
                             />
+                        }
+                    />
+                </Card>
+                <Card style={{ margin: 8 }}>
+                    <Card.Title title="Dinge" />
+                    <List.Item
+                        title="Rechner verwenden"
+                        description="Bei der Eingabe von Mengen"
+                        right={p =>
+                            <Switch {...p} value={settings.things.useCalculator} onValueChange={v => { dispatch(setUseCalculator(v)); }} />
                         }
                     />
                 </Card>
