@@ -1,5 +1,4 @@
 import { Appbar, Card, IconButton, List, TextInput, TouchableRipple } from "react-native-paper";
-import { AvatarText } from "./AvatarText";
 import { Category } from "./store/data/categories";
 import { CategoryIcon } from "./CategoryIcon";
 import { CategoryMenu } from "./CategoryMenu";
@@ -7,7 +6,7 @@ import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 import { ReactNode, useState } from "react";
 import { RootStackParamList } from "../App";
-import { selectShop, addCategory, addShopCategory, setShopCategoryShow, deleteShop, setShopName, setShopCategories, setShopDefaultCategory } from "./store/dataSlice";
+import { selectShop, addCategory, addShopCategory, setShopCategoryShow, deleteShop, setShopName, setShopCategories, setShopDefaultCategory, selectCategories } from "./store/dataSlice";
 import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { View } from "react-native";
@@ -18,7 +17,7 @@ export function ShopScreen(props: {
     route: RouteProp<RootStackParamList, "Shop">;
 }) {
     const [categoriesExpanded, setCategoriesExpanded] = useState(false);
-    const categories = useAppSelector(state => state.data.categories);
+    const categories = useAppSelector(selectCategories);
     const shop = useAppSelector(selectShop(props.route.params.id));
     const dispatch = useAppDispatch();
 

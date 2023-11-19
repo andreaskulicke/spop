@@ -133,7 +133,7 @@ export const itemsSlice = createSlice({
                 item.amount = action.payload.amount;
             }
         },
-        setItemCategory: (state, action: PayloadAction<{ itemId: string, categoryId: string }>) => {
+        setItemCategory: (state, action: PayloadAction<{ itemId: string, categoryId: string | undefined }>) => {
             const item = state.items.find(x => x.id === action.payload.itemId);
             if (item) {
                 item.categoryId = action.payload.categoryId;
@@ -359,7 +359,15 @@ export default itemsSlice.reducer
 
 // Categories
 
-export function selectCategory(id: string): (state: RootState) => Category | undefined {
+export function selectCategories(state: RootState): Category[] {
+    return state.data.categories;
+}
+
+export const selectSortedCategories = createSelector(
+    [selectCategories],
+    categories => [...categories].sort((x, y) => x.name.localeCompare(y.name)));
+
+export function selectCategory(id: string | undefined): (state: RootState) => Category | undefined {
     return (state: RootState) => {
         const item = state.data.categories.find(x => x.id === id);
         return item;
@@ -367,6 +375,22 @@ export function selectCategory(id: string): (state: RootState) => Category | und
 }
 
 // Items
+
+export function selectItemsWithCategory(categoryId: string | undefined) {
+    return createSelector(
+        [selectItems],
+        items => items.filter(x => x.categoryId === categoryId));
+}
+
+export function selectItemsWithDifferentCategory(categoryId: string | undefined) {
+    return createSelector(
+        [selectItems],
+        items => items.filter(x => x.categoryId && (x.categoryId !== categoryId)));
+}
+
+export function selectItems(state: RootState): Item[] {
+    return state.data.items;
+}
 
 export function selectItem(id: string): (state: RootState) => Item | undefined {
     return (state: RootState) => {

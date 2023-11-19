@@ -1,15 +1,17 @@
-import { View } from "react-native";
-import { useAppDispatch, useAppSelector } from "./store/hooks";
+import { addStorage, allStorage, setStorages } from "./store/dataSlice";
 import { Appbar, Avatar, Badge, Divider, List, Menu, Text, Tooltip, useTheme } from "react-native-paper";
-import { ReactNode, useState } from "react";
-import { NavigationProp } from "@react-navigation/native";
-import { RootStackParamList } from "../App";
-import { StoragesStackParamList } from "./StoragesNavigationScreen";
-import uuid from 'react-native-uuid';
 import { AvatarText, avatarSize } from "./AvatarText";
+import { Count } from "./Count";
+import { NavigationProp } from "@react-navigation/native";
 import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
-import { addStorage, allStorage, setStorages, Storage } from "./store/dataSlice";
+import { ReactNode, useState } from "react";
+import { RootStackParamList } from "../App";
 import { StatusBarView } from "./StatusBarView";
+import { Storage } from "./store/data/storages";
+import { StoragesStackParamList } from "./StoragesNavigationScreen";
+import { useAppDispatch, useAppSelector } from "./store/hooks";
+import { View } from "react-native";
+import uuid from 'react-native-uuid';
 
 export function StoragesScreen(props: {
     navigation: NavigationProp<RootStackParamList & StoragesStackParamList>;
@@ -32,7 +34,7 @@ export function StoragesScreen(props: {
     function handleAddStoragePress(): void {
         const id = uuid.v4() as string;
         dispatch(addStorage(id));
-        props.navigation.navigate("Storage", { id, new: true });
+        props.navigation.navigate("Storage", { id });
     }
 
     function handleStoragePress(id: string): void {
@@ -76,33 +78,30 @@ export function StoragesScreen(props: {
                     <Menu.Item leadingIcon="cog-outline" title="Einstellungen" onPress={handleSettingsPress} />
                 </Menu>
             </Appbar.Header>
+            <List.Item
+                title={allStorage.name}
+                left={p =>
+                    <Avatar.Icon
+                        {...p}
+                        color={theme.colors.primaryContainer}
+                        icon="check-all"
+                        size={avatarSize}
+                    />}
+                right={p => {
+                    const count = items.items.filter(i => i.wanted).length;
+                    const unassignedCount = items.items.filter(i => i.wanted && ((i.storages?.length ?? 0) === 0)).length;
+                    return <View style={{ flexDirection: "row", alignItems: "center" }}>
+                        <Tooltip title="Gewünschte Dinge und ohne Storage">
+                            <Count {...p} count={count} />
+                        </Tooltip>
+                        <Badge visible={unassignedCount > 0} style={{ position: "absolute", top: 0, right: -20 }}>{unassignedCount}</Badge>
+                    </View>;
+                }
+                }
+                onPress={() => handleStoragePress(allStorage.id)}
+            />
             <Divider />
             <NestableScrollContainer>
-                <List.Item
-                    title={allStorage.name}
-                    left={p =>
-                        <Avatar.Icon
-                            {...p}
-                            color={theme.colors.primaryContainer}
-                            icon="check-all"
-                            size={avatarSize}
-                        />}
-                    right={p => {
-                        const count = items.items.filter(i => i.wanted).length;
-                        const unassignedCount = items.items.filter(i => i.wanted && ((i.storages?.length ?? 0) === 0)).length;
-                        return <View style={{ flexDirection: "row", alignItems: "center" }}>
-                            <Tooltip title="Gewünschte Dinge und ohne Storage">
-                                <Text {...p} variant="labelMedium" style={{ paddingLeft: 32, paddingVertical: 12 }}>
-                                    {count}
-                                </Text>
-                            </Tooltip>
-                            <Badge visible={unassignedCount > 0} style={{ position: "absolute", top: 0, right: -20 }}>{unassignedCount}</Badge>
-                        </View>;
-                    }
-                    }
-                    onPress={() => handleStoragePress(allStorage.id)}
-                />
-                <Divider />
                 <NestableDraggableFlatList
                     data={storages}
                     keyExtractor={x => x.id}
@@ -113,5 +112,3 @@ export function StoragesScreen(props: {
         </StatusBarView>
     );
 }
-
-

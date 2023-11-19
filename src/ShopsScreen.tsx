@@ -11,6 +11,7 @@ import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { TouchableWithoutFeedback, View } from "react-native";
 import uuid from 'react-native-uuid';
+import { Count } from "./Count";
 
 export function ShopsScreen(props: {
     navigation: NavigationProp<RootStackParamList & ShopsStackParamList>;
@@ -110,33 +111,30 @@ export function ShopsScreen(props: {
                     <Menu.Item leadingIcon="cog-outline" title="Einstellungen" onPress={handleSettingsPress} />
                 </Menu>
             </Appbar.Header>
+            <List.Item
+                title={allShop.name}
+                left={p =>
+                    <Avatar.Icon
+                        {...p}
+                        color={theme.colors.primaryContainer}
+                        icon="check-all"
+                        size={avatarSize}
+                    />}
+                right={p => {
+                    const count = items.filter(i => i.wanted).length;
+                    const unassignedCount = items.filter(i => i.wanted && ((i.shops?.length ?? 0) === 0)).length;
+                    return <View style={{ flexDirection: "row", alignItems: "center" }}>
+                        <Tooltip title="Gewünschte Dinge und ohne Shop">
+                            <Count {...p} count={count} />
+                        </Tooltip>
+                        <Badge visible={unassignedCount > 0} style={{ position: "absolute", top: 0, right: -20 }}>{unassignedCount}</Badge>
+                    </View>;
+                }
+                }
+                onPress={() => handleShopPress(allShop.id)}
+            />
             <Divider />
             <NestableScrollContainer>
-                <List.Item
-                    title={allShop.name}
-                    left={p =>
-                        <Avatar.Icon
-                            {...p}
-                            color={theme.colors.primaryContainer}
-                            icon="check-all"
-                            size={avatarSize}
-                        />}
-                    right={p => {
-                        const count = items.filter(i => i.wanted).length;
-                        const unassignedCount = items.filter(i => i.wanted && ((i.shops?.length ?? 0) === 0)).length;
-                        return <View style={{ flexDirection: "row", alignItems: "center" }}>
-                            <Tooltip title="Gewünschte Dinge und ohne Shop">
-                                <Text {...p} variant="labelMedium" style={{ paddingLeft: 32, paddingVertical: 12 }}>
-                                    {count}
-                                </Text>
-                            </Tooltip>
-                            <Badge visible={unassignedCount > 0} style={{ position: "absolute", top: 0, right: -20 }}>{unassignedCount}</Badge>
-                        </View>;
-                    }
-                    }
-                    onPress={() => handleShopPress(allShop.id)}
-                />
-                <Divider />
                 <NestableDraggableFlatList
                     data={shops}
                     keyExtractor={x => x.id}

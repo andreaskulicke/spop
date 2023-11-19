@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { addCategory, selectSortedCategories } from "./store/dataSlice";
+import { CategoryIcon } from "./CategoryIcon";
 import { IconButton, Menu, TextInput, TouchableRipple } from "react-native-paper";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { addCategory } from "./store/dataSlice";
 import { View } from "react-native";
+import React, { useState } from "react";
 import uuid from 'react-native-uuid';
-import { CategoryIcon } from "./CategoryIcon";
 
 export function CategoryMenu(props: {
     categoryId: string | undefined;
@@ -14,7 +14,7 @@ export function CategoryMenu(props: {
     onSetCategory: (categoryId: string) => void;
 }) {
     const [categoryMenuVisible, setCategoryMenuVisible] = useState(false);
-    const categories = useAppSelector(state => state.data.categories);
+    const categories = useAppSelector(selectSortedCategories);
     const dispatch = useAppDispatch();
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
@@ -62,19 +62,17 @@ export function CategoryMenu(props: {
                     onDismiss={() => setCategoryMenuVisible(false)}
                 >
                     {
-                        [...categories]
-                            .sort((x, y) => x.name.localeCompare(y.name))
-                            .map(x => (
-                                <Menu.Item
-                                    key={x.id}
-                                    contentStyle={{ marginLeft: 32 }}
-                                    title={x.name}
-                                    leadingIcon={p => <CategoryIcon {...p} icon={x.icon} selected={x.icon === category?.icon} />}
-                                    onPress={() => {
-                                        setCategoryMenuVisible(false);
-                                        props.onSetCategory(x.id);
-                                    }} />
-                            ))
+                        categories.map(x => (
+                            <Menu.Item
+                                key={x.id}
+                                contentStyle={{ marginLeft: 32 }}
+                                title={x.name}
+                                leadingIcon={p => <CategoryIcon {...p} icon={x.icon} selected={x.icon === category?.icon} />}
+                                onPress={() => {
+                                    setCategoryMenuVisible(false);
+                                    props.onSetCategory(x.id);
+                                }} />
+                        ))
                     }
                 </Menu>
             </View>

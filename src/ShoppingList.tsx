@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { useAppSelector } from './store/hooks';
 import { ShoppingListItem } from './ShoppingListItem';
-import { allShop, selectAllShops } from './store/dataSlice';
+import { allShop, selectAllShops, selectCategories } from './store/dataSlice';
 import { ListSection } from './ListSection';
 import { CategorySection } from './CategorySection';
 import { Category } from './store/data/categories';
@@ -11,7 +11,7 @@ import { Shop } from './store/data/shops';
 export function ShoppingList(props: {
     shop: Shop;
 }) {
-    const categories = useAppSelector(state => state.data.categories);
+    const categories = useAppSelector(selectCategories);
     const items = useAppSelector(state => state.data.items);
     const shops = useAppSelector(selectAllShops);
 

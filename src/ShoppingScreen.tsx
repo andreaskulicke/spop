@@ -17,7 +17,6 @@ export function ShoppingScreen(props: {
     const shop = useAppSelector(selectShop(props.route.params.id));
 
     function handleEditPress(): void {
-        setMenuVisible(false);
         props.navigation.navigate("Shop", { id: shop.id });
     }
 

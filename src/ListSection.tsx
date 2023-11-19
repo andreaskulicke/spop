@@ -6,6 +6,7 @@ export function ListSection(props: React.PropsWithChildren<{
     collapsed?: boolean | undefined;
     icon?: string;
     title: string;
+    visible?: "dynamic" | "always";
     onExpandChange?: (expanded: boolean) => void;
 }>) {
     const [expanded, setExpanded] = useState(!props.collapsed);
@@ -24,7 +25,8 @@ export function ListSection(props: React.PropsWithChildren<{
         }
     }, [props.collapsed]);
 
-    if (React.Children.count(props.children) === 0) {
+    if ((props.visible !== "always")
+        && React.Children.count(props.children) === 0) {
         return <></>;
     }
 
@@ -61,7 +63,9 @@ export function ListSection(props: React.PropsWithChildren<{
 
                 </View>
             </TouchableOpacity>
-            {expanded && props.children}
+            {
+                expanded && props.children
+            }
         </View>
     );
 }

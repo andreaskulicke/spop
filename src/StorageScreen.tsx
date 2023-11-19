@@ -3,7 +3,7 @@ import { RootStackParamList } from "../App";
 import { ScrollView } from "react-native";
 import { Appbar, Card, TextInput } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { selectStorage, deleteStorage, setStorageName, setStorageDefaultCategory } from "./store/dataSlice";
+import { selectStorage, deleteStorage, setStorageName, setStorageDefaultCategory, selectCategories } from "./store/dataSlice";
 import { CategoryMenu } from "./CategoryMenu";
 import { StatusBarView } from "./StatusBarView";
 
@@ -13,7 +13,7 @@ export function StorageScreen(props: {
 }) {
     // Just register on category change in case the default category gets deleted via edit from here.
     // Re-render would be missing otherwise.
-    const categories = useAppSelector(state => state.data.categories);
+    const categories = useAppSelector(selectCategories);
     const storage = useAppSelector(selectStorage(props.route.params.id));
     const dispatch = useAppDispatch();
 
