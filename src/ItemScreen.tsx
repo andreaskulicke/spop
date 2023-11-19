@@ -1,4 +1,4 @@
-import { addStorage, setItemWanted, deleteItem, selectItem, setItemAmount, setItemName, setItemStorage, setItemShop, setItemCategory, addShop } from "./store/dataSlice";
+import { addStorage, setItemWanted, deleteItem, selectItem, setItemAmount, setItemName, setItemStorage, setItemShop, setItemCategory, addShop, selectValidShops } from "./store/dataSlice";
 import { Appbar, Card, Checkbox, IconButton, List, TextInput, TouchableRipple } from "react-native-paper";
 import { CategoryMenu } from "./CategoryMenu";
 import { Keyboard, ScrollView, View } from "react-native";
@@ -16,7 +16,7 @@ export function ItemScreen(props: {
     const [storagesExpanded, setStoragesExpanded] = useState(false);
     const [shopsExpanded, setShopsExpanded] = useState(false);
     const item = useAppSelector(selectItem(props.route.params.id))!;
-    const shops = useAppSelector(state => state.data.shops);
+    const shops = useAppSelector(selectValidShops);
     const storages = useAppSelector(state => state.data.storages);
     const dispatch = useAppDispatch();
 

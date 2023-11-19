@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './store';
 import { Category, defaultCategories } from './data/categories';
 import { defaultItems, Item } from './data/items';
@@ -187,6 +187,13 @@ export const itemsSlice = createSlice({
                 name: "Neu",
             });
         },
+        addShopStopper: (state, action: PayloadAction<string>) => {
+            state.shops.push({
+                id: action.payload,
+                name: "_",
+                stopper: true,
+            });
+        },
         deleteShop: (state, action: PayloadAction<string>) => {
             const shopId = action.payload;
             const index = state.shops.findIndex(x => x.id === shopId);
@@ -204,7 +211,13 @@ export const itemsSlice = createSlice({
             state.shops = initialState.shops;
         },
         setShops: (state, action: PayloadAction<Shop[]>) => {
-            state.shops = action.payload;
+            let index = action.payload.length - 1
+            for (; index >= 0; index--) {
+                if (!action.payload[index].stopper) {
+                    break;
+                }
+            }
+            state.shops = action.payload.slice(0, index + 1);
         },
         setShopDefaultCategory: (state, action: PayloadAction<{ shopId: string, categoryId: string }>) => {
             const shop = state.shops.find(x => x.id === action.payload.shopId);
@@ -320,6 +333,7 @@ export const {
 
     // Shops
     addShop,
+    addShopStopper,
     addShopCategory,
     deleteShop,
     resetShops,
@@ -367,6 +381,15 @@ export const allShop: Shop = {
     id: "_",
     name: "Alle",
 }
+
+export function selectAllShops(state: RootState): Shop[] {
+    return state.data.shops;
+}
+
+export const selectValidShops = createSelector(
+    [selectAllShops],
+    shops => shops.filter(x => !x.stopper)
+);
 
 export function selectShop(id: string): (state: RootState) => Shop {
     return (state: RootState) => {

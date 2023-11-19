@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { List, Checkbox, IconButton, useTheme, Tooltip } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from './store/hooks';
-import { setItemWanted, setItemAmount, setItemShop, allShop } from './store/dataSlice';
+import { setItemWanted, setItemAmount, setItemShop, allShop, selectValidShops } from './store/dataSlice';
 import { ColoredTextInput } from './ColoredTextInput';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
@@ -13,7 +13,7 @@ export function ShoppingListItem(props: {
     shopId: string;
     showShops?: boolean;
 }) {
-    const shops = useAppSelector(state => state.data.shops);
+    const shops = useAppSelector(selectValidShops);
     const dispatch = useAppDispatch();
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
