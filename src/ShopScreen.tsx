@@ -58,7 +58,7 @@ export function ShopScreen(props: {
     const catsHidden = categories.filter(x => !catsShown.includes(x));
 
     return (
-        <StatusBarView>
+        <StatusBarView bottomPadding>
             <Appbar.Header elevated>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={shop?.name ?? "Shop"} />

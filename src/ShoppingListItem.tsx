@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { List, Checkbox, IconButton, useTheme, Tooltip } from 'react-native-paper';
+import { List, Checkbox, IconButton, Tooltip } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { setItemWanted, setItemAmount, setItemShop, allShop, selectValidShops } from './store/dataSlice';
 import { ColoredTextInput } from './ColoredTextInput';
@@ -11,7 +11,6 @@ import { Item } from './store/data/items';
 export function ShoppingListItem(props: {
     item: Item;
     shopId: string;
-    showShops?: boolean;
 }) {
     const shops = useAppSelector(selectValidShops);
     const dispatch = useAppDispatch();
@@ -35,7 +34,7 @@ export function ShoppingListItem(props: {
     }
 
     let description = "";
-    if (props.showShops) {
+    if (props.shopId !== allShop.id) {
         description = props.item.shops
             .map(x => shops.find(s => s.id === x.shopId)?.name)
             .filter(x => !!x)

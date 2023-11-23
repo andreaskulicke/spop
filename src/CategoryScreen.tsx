@@ -42,7 +42,7 @@ export function CategoryScreen(props: {
     }
 
     return (
-        <StatusBarView>
+        <StatusBarView bottomPadding>
             <Appbar.Header elevated>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={category?.name ?? "Category"} />

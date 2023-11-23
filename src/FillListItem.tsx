@@ -1,8 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
-import { IconButton, List } from 'react-native-paper';
-import { setItemAmount, setItemWanted } from './store/dataSlice';
+import { IconButton, List, Tooltip } from 'react-native-paper';
+import { allStorage, setItemAmount, setItemStorage, setItemWanted } from './store/dataSlice';
 import { ColoredTextInput } from './ColoredTextInput';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
@@ -11,11 +11,15 @@ import { Item } from './store/data/items';
 
 export function FillListItem(props: {
     item: Item;
-    showStorage?: boolean;
+    storageId: string;
 }) {
     const storages = useAppSelector(state => state.data.storages);
     const dispatch = useAppDispatch();
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+    function handleAddToStoragePress(): void {
+        dispatch(setItemStorage({ itemId: props.item.id, storageId: props.storageId, checked: true }));
+    }
 
     function handleAmountChange(text: string): void {
         dispatch(setItemAmount({ itemId: props.item.id, amount: text }));
@@ -30,7 +34,7 @@ export function FillListItem(props: {
     }
 
     let description = "";
-    if (props.showStorage) {
+    if (props.storageId !== allStorage.id) {
         description = props.item.storages
             .map(x => storages.find(s => s.id === x.storageId)?.name)
             .filter(x => !!x)
@@ -52,6 +56,16 @@ export function FillListItem(props: {
                         icon={props.item.wanted ? "minus-thick" : "plus-outline"}
                         onPress={handleCheckPress}
                     />
+                    {
+                        (props.storageId !== allStorage.id) && (props.item.storages.length === 0)
+                        && <Tooltip title="Zum Storage hinzufügen">
+                            <IconButton
+                                {...p}
+                                icon="home-plus-outline"
+                                onPress={handleAddToStoragePress}
+                            />
+                        </Tooltip>
+                    }
                 </View>
             }
             onPress={handleItemPress}

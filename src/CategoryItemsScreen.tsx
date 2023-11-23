@@ -48,6 +48,7 @@ export function CategoryItemsScreen(props: {
                 icon={info.section.icon}
                 title={info.section.title}
                 collapsed={info.section.collapsed}
+                count={info.section.data.length}
                 visible="always"
                 onExpandChange={info.section.onExpandChange}
             />

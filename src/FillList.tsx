@@ -2,27 +2,40 @@ import React from 'react';
 import { View } from 'react-native';
 import { useAppSelector } from './store/hooks';
 import { FillListItem } from './FillListItem';
-import { allStorage } from './store/dataSlice';
+import { allStorage, selectItems } from './store/dataSlice';
 import { ListSection } from './ListSection';
 
 export function FillList(props: {
     storageId: string;
 }) {
-    const items = useAppSelector(state => state.data);
+    const items = useAppSelector(selectItems);
 
-    const recentlyUsed = items.items
+    const unassigned = items
+        .filter(x => (x.storages.length === 0) && x.wanted);
+    const recentlyUsed = items
         .filter(x => ((props.storageId === allStorage.id) || x.storages.find(x => x.storageId === props.storageId)) && !x.wanted);
 
+    const itemsForThisStorage = items.filter(x => ((props.storageId === allStorage.id) || x.storages.find(x => x.storageId === props.storageId)) && x.wanted);
     return (
         <View>
-            {
-                items.items
-                    .filter(x => ((props.storageId === allStorage.id) || x.storages.find(x => x.storageId === props.storageId)) && x.wanted)
-                    .map(x => <FillListItem key={x.id} item={x} showStorage={props.storageId === allStorage.id} />)
-            }
-            <ListSection icon="history" title="Zuletzt verwendet">
+            <ListSection
+                icon="cart"
+                title="Dinge"
+                collapsed={false}
+                count={itemsForThisStorage.length}
+            >
                 {
-                    recentlyUsed.map(x => <FillListItem key={x.id} item={x} showStorage={props.storageId === allStorage.id} />)
+                    itemsForThisStorage.map(x => <FillListItem key={x.id} item={x} storageId={props.storageId} />)
+                }
+            </ListSection>
+            <ListSection icon="home-remove-outline" title="Ohne Storage" collapsed={false} count={unassigned.length}>
+                {
+                    unassigned.map(x => <FillListItem key={x.id} item={x} storageId={props.storageId} />)
+                }
+            </ListSection>
+            <ListSection icon="history" title="Zuletzt verwendet" collapsed={false} count={recentlyUsed.length}>
+                {
+                    recentlyUsed.map(x => <FillListItem key={x.id} item={x} storageId={props.storageId} />)
                 }
             </ListSection>
         </View>

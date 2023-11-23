@@ -51,7 +51,7 @@ export function CategoriesScreen(props: {
     return (
         <StatusBarView>
             <Appbar.Header elevated>
-                <Appbar.Content title="Kategories" />
+                <Appbar.Content title="Kategorien" />
                 <Tooltip title="Neue Kategorie hinzufügen">
                     <Appbar.Action icon="plus-outline" onPress={handleAddCategoryPress} />
                 </Tooltip>

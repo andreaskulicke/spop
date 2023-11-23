@@ -37,34 +37,36 @@ export function ShoppingList(props: {
         }
     }
 
+    const itemsForThisShop = items.filter(i => i.wanted && (props.shop.id === allShop.id || i.shops.find(x => s.has(x.shopId))))
+        .filter(x => (x.categoryId === undefined) || cats.find(c => c?.id === x.categoryId));
+
     return (
         <View>
-            <ListSection icon="cart" title="Dinge" collapsed={false}>
+            <ListSection
+                icon="cart"
+                title="Dinge"
+                collapsed={false}
+                count={itemsForThisShop.length}
+            >
                 {
                     cats.map(cat => {
-                        const catItems = items
-                            .filter(x => x.wanted)
-                            .filter(x => x.categoryId === cat?.id)
-                            .filter(x => ((props.shop.id === allShop.id) || x.shops.find(x => s.has(x.shopId))));
+                        const catItems = itemsForThisShop.filter(x => x.categoryId === cat?.id);
                         return (
                             <CategorySection key={cat?.id ?? "_"} icon={cat?.icon} title={cat?.name ?? "Unbekannte Kategorie"}>
                                 {
-                                    catItems.map(x => <ShoppingListItem key={x.id} item={x} shopId={props.shop.id} showShops={props.shop.id === allShop.id} />)
+                                    catItems.map(x => <ShoppingListItem key={x.id} item={x} shopId={props.shop.id} />)
                                 }
                             </CategorySection>
                         );
                     })
                 }
             </ListSection>
-            {
-                (props.shop.id !== allShop.id)
-                && <ListSection icon="store-off" title="Ohne Shop" collapsed={false}>
-                    {
-                        unassigned.map(x => <ShoppingListItem key={x.id} item={x} shopId={props.shop.id} />)
-                    }
-                </ListSection>
-            }
-            <ListSection icon="history" title="Zuletzt verwendet" collapsed={false}>
+            <ListSection icon="store-off" title="Ohne Shop" collapsed={false} count={unassigned.length}>
+                {
+                    unassigned.map(x => <ShoppingListItem key={x.id} item={x} shopId={props.shop.id} />)
+                }
+            </ListSection>
+            <ListSection icon="history" title="Zuletzt verwendet" collapsed={false} count={recentlyUsed.length}>
                 {
                     recentlyUsed.map(x => <ShoppingListItem key={x.id} item={x} shopId={props.shop.id} showShops={props.shop.id === allShop.id} />)
                 }

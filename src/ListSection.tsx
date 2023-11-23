@@ -4,6 +4,7 @@ import { Icon, IconButton, Text, useTheme } from 'react-native-paper';
 
 export function ListSection(props: React.PropsWithChildren<{
     collapsed?: boolean | undefined;
+    count?: number;
     icon?: string;
     title: string;
     visible?: "dynamic" | "always";
@@ -50,7 +51,7 @@ export function ListSection(props: React.PropsWithChildren<{
                             && <Icon size={16} source={props.icon} />
                         }
                         <Text variant="titleSmall">
-                            {props.title}
+                            {props.title + ((props.count !== undefined) ? ` (${props.count})` : "")}
                         </Text>
                     </View>
                     {

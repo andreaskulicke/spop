@@ -27,7 +27,7 @@ export function StorageScreen(props: {
     }
 
     return (
-        <StatusBarView>
+        <StatusBarView bottomPadding>
             <Appbar.Header elevated>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={storage?.name ?? "Storage"} />
