@@ -1,12 +1,16 @@
-import { Button, Card, List, RadioButton, Switch } from "react-native-paper";
+import { Appbar, Button, Card, List, RadioButton, Switch } from "react-native-paper";
 import { resetCategories, resetItems, resetShops, resetStorages, setData } from "./store/dataSlice";
 import { ColorSchemeName, ScrollView } from "react-native";
 import { setColorTheme, setSettings, setUseCalculator } from "./store/settingsSlice";
 import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NavigationProp } from "@react-navigation/native";
+import { RootStackParamList } from "../App";
 
-export function SettingsScreen() {
+export function SettingsScreen(props: {
+    navigation: NavigationProp<RootStackParamList>;
+}) {
     const data = useAppSelector(state => state.data);
     const settings = useAppSelector(state => state.settings);
     const dispatch = useAppDispatch();
@@ -16,7 +20,11 @@ export function SettingsScreen() {
     }
 
     return (
-        <StatusBarView>
+        <StatusBarView bottomPadding>
+            <Appbar.Header elevated>
+                <Appbar.BackAction onPress={() => props.navigation.goBack()} />
+                <Appbar.Content title={"Einstellungen"} />
+            </Appbar.Header>
             <ScrollView>
                 <Card
                     style={{ margin: 8 }}

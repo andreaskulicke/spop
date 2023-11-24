@@ -86,7 +86,7 @@ function AppWithStore() {
                         <RootStack.Screen
                             component={SettingsScreen}
                             name="Settings"
-                            options={{ headerShown: true, statusBarHidden: false }}
+                            options={{ headerShown: false, statusBarHidden: false }}
                         />
                         <RootStack.Screen
                             component={ShopScreen}
