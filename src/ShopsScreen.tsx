@@ -1,11 +1,12 @@
 import { addShop, addShopStopper, allShop, selectAllShops, setShops } from "./store/dataSlice";
 import { Appbar, Avatar, List, Menu, useTheme, Text, Divider, Badge, Tooltip, Icon } from "react-native-paper";
+import { Image } from "react-native";
 import { AvatarText, avatarSize } from "./AvatarText";
 import { NavigationProp } from "@react-navigation/native";
 import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 import { ReactNode, useState } from "react";
 import { RootStackParamList } from "../App";
-import { Shop } from "./store/data/shops";
+import { Shop, getShopSvg } from "./store/data/shops";
 import { ShopsStackParamList } from "./ShopsNavigationScreen";
 import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
@@ -79,7 +80,7 @@ export function ShopsScreen(props: {
                                 {params.item.name}
                             </Text>
                         }
-                        left={p => <AvatarText {...p} label={params.item.name} />}
+                        left={p => getShopSvg(params.item, p)}
                         right={p =>
                             <Text {...p} variant="labelMedium">
                                 {count}
@@ -113,13 +114,7 @@ export function ShopsScreen(props: {
             </Appbar.Header>
             <List.Item
                 title={allShop.name}
-                left={p =>
-                    <Avatar.Icon
-                        {...p}
-                        color={theme.colors.primaryContainer}
-                        icon="check-all"
-                        size={avatarSize}
-                    />}
+                left={p => getShopSvg(allShop, p)}
                 right={p => {
                     const count = items.filter(i => i.wanted).length;
                     const unassignedCount = items.filter(i => i.wanted && ((i.shops?.length ?? 0) === 0)).length;
