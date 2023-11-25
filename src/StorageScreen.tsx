@@ -6,11 +6,13 @@ import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { selectStorage, deleteStorage, setStorageName, setStorageDefaultCategory, selectCategories } from "./store/dataSlice";
 import { CategoryMenu } from "./CategoryMenu";
 import { StatusBarView } from "./StatusBarView";
+import { useEffect, useState } from "react";
 
 export function StorageScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
     route: RouteProp<RootStackParamList, "Storage">;
 }) {
+    const [name, setName] = useState("");
     // Just register on category change in case the default category gets deleted via edit from here.
     // Re-render would be missing otherwise.
     const categories = useAppSelector(selectCategories);
@@ -22,9 +24,20 @@ export function StorageScreen(props: {
         props.navigation.goBack();
     }
 
-    function handleNameChange(text: string): void {
-        dispatch(setStorageName({ storageId: storage.id, name: text }));
+    function handleTextInputNameBlur(): void {
+        if (storage) {
+            dispatch(setStorageName({ storageId: storage.id, name: name.trim() }));
+            setName(name.trim());
+        }
     }
+
+    function handleTextInputNameChange(text: string): void {
+        setName(text);
+    }
+
+    useEffect(() => {
+        setName(storage?.name ?? "");
+    }, [storage])
 
     return (
         <StatusBarView bottomPadding>
@@ -43,8 +56,9 @@ export function StorageScreen(props: {
                         mode="outlined"
                         selectTextOnFocus
                         style={{ margin: 8 }}
-                        value={storage.name}
-                        onChangeText={handleNameChange}
+                        value={name}
+                        onBlur={handleTextInputNameBlur}
+                        onChangeText={handleTextInputNameChange}
                     />
                     <CategoryMenu
                         categoryId={storage.defaultCategoryId}

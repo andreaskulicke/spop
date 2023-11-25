@@ -4,7 +4,7 @@ import { ScrollView, View } from "react-native";
 import { Appbar, Card, Portal, TextInput, Dialog } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { deleteCategory, selectCategory, setCategoryIcon, setCategoryName } from "./store/dataSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CategoryIcon } from "./CategoryIcon";
 import { StatusBarView } from "./StatusBarView";
 import { categoryIcons } from "./store/data/categories";
@@ -13,6 +13,7 @@ export function CategoryScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
     route: RouteProp<RootStackParamList, "Category">;
 }) {
+    const [name, setName] = useState("");
     const [iconModalVisible, setIconModalVisible] = useState(false);
     const category = useAppSelector(selectCategory(props.route.params.id));
     const dispatch = useAppDispatch();
@@ -35,11 +36,20 @@ export function CategoryScreen(props: {
         }
     }
 
-    function handleNameChange(text: string): void {
+    function handleTextInputNameBlur(): void {
         if (category) {
-            dispatch(setCategoryName({ categoryId: category.id, name: text }));
+            dispatch(setCategoryName({ categoryId: category.id, name: name.trim() }));
+            setName(name.trim());
         }
     }
+
+    function handleTextInputNameChange(text: string): void {
+        setName(text);
+    }
+
+    useEffect(() => {
+        setName(category?.name ?? "");
+    }, [category])
 
     return (
         <StatusBarView bottomPadding>
@@ -66,8 +76,9 @@ export function CategoryScreen(props: {
                             mode="outlined"
                             selectTextOnFocus
                             style={{ flex: 1, marginVertical: 8, marginRight: 8 }}
-                            value={category?.name ?? ""}
-                            onChangeText={handleNameChange}
+                            value={name}
+                            onBlur={handleTextInputNameBlur}
+                            onChangeText={handleTextInputNameChange}
                         />
                     </View>
                 </Card>

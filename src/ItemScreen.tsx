@@ -5,7 +5,7 @@ import { Keyboard, ScrollView, View } from "react-native";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import uuid from 'react-native-uuid';
 import { StatusBarView } from "./StatusBarView";
 
@@ -13,6 +13,8 @@ export function ItemScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
     route: RouteProp<RootStackParamList, "Item">;
 }) {
+    const [name, setName] = useState("");
+    const [amount, setAmount] = useState("");
     const [storagesExpanded, setStoragesExpanded] = useState(false);
     const [shopsExpanded, setShopsExpanded] = useState(false);
     const item = useAppSelector(selectItem(props.route.params.id))!;
@@ -23,14 +25,6 @@ export function ItemScreen(props: {
     function handleDeletePress(): void {
         dispatch(deleteItem(item.id));
         props.navigation.goBack();
-    }
-
-    function handleAmountChange(text: string): void {
-        dispatch(setItemAmount({ itemId: item.id, amount: text }));
-    }
-
-    function handleNameChange(text: string): void {
-        dispatch(setItemName({ itemId: item.id, name: text }));
     }
 
     function handleAddShopPress(): void {
@@ -60,6 +54,33 @@ export function ItemScreen(props: {
         dispatch(setItemWanted({ itemId: item.id, wanted: !item.wanted }))
     }
 
+    function handleTextInputNameBlur(): void {
+        if (item) {
+            dispatch(setItemName({ itemId: item.id, name: name.trim() }));
+            setName(name.trim());
+        }
+    }
+
+    function handleTextInputNameChange(text: string): void {
+        setName(text);
+    }
+
+    function handleTextInputAmountBlur(): void {
+        if (item) {
+            dispatch(setItemAmount({ itemId: item.id, amount: amount.trim() }));
+            setAmount(amount.trim());
+        }
+    }
+
+    function handleTextInputAmountChange(text: string): void {
+        setAmount(text);
+    }
+
+    useEffect(() => {
+        setName(item?.name ?? "");
+        setAmount(item?.amount ?? "");
+    }, [item])
+
     return (
         <StatusBarView bottomPadding>
             <Appbar.Header elevated>
@@ -77,16 +98,18 @@ export function ItemScreen(props: {
                         mode="outlined"
                         selectTextOnFocus
                         style={{ margin: 8 }}
-                        value={item.name}
-                        onChangeText={handleNameChange}
+                        value={name}
+                        onBlur={handleTextInputNameBlur}
+                        onChangeText={handleTextInputNameChange}
                     />
                     <TextInput
                         label="Menge"
                         mode="outlined"
                         selectTextOnFocus
                         style={{ margin: 8 }}
-                        value={item.amount}
-                        onChangeText={handleAmountChange}
+                        value={amount}
+                        onBlur={handleTextInputAmountBlur}
+                        onChangeText={handleTextInputAmountChange}
                     />
                     <CategoryMenu
                         categoryId={item.categoryId}

@@ -4,9 +4,9 @@ import { CategoryIcon } from "./CategoryIcon";
 import { CategoryMenu } from "./CategoryMenu";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { RootStackParamList } from "../App";
-import { selectShop, addCategory, addShopCategory, setShopCategoryShow, deleteShop, setShopName, setShopCategories, setShopDefaultCategory, selectCategories } from "./store/dataSlice";
+import { selectShop, addCategory, addShopCategory, setShopCategoryShow, deleteShop, setShopName, setShopCategories, setShopDefaultCategory, selectCategories, setStorageName } from "./store/dataSlice";
 import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { View } from "react-native";
@@ -16,6 +16,7 @@ export function ShopScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
     route: RouteProp<RootStackParamList, "Shop">;
 }) {
+    const [name, setName] = useState("");
     const [categoriesExpanded, setCategoriesExpanded] = useState(false);
     const categories = useAppSelector(selectCategories);
     const shop = useAppSelector(selectShop(props.route.params.id));
@@ -34,10 +35,6 @@ export function ShopScreen(props: {
         props.navigation.goBack();
     }
 
-    function handleNameChange(text: string): void {
-        dispatch(setShopName({ shopId: shop.id, name: text }));
-    }
-
     function handleRenderItem(params: RenderItemParams<Category>): ReactNode {
         return (
             <ScaleDecorator>
@@ -52,6 +49,21 @@ export function ShopScreen(props: {
             </ScaleDecorator>
         );
     }
+
+    function handleTextInputNameBlur(): void {
+        if (shop) {
+            dispatch(setShopName({ shopId: shop.id, name: name.trim() }));
+            setName(name.trim());
+        }
+    }
+
+    function handleTextInputNameChange(text: string): void {
+        setName(text);
+    }
+
+    useEffect(() => {
+        setName(shop?.name ?? "");
+    }, [shop])
 
     const c = new Map(categories.map(x => [x.id, x]));
     const catsShown = shop.categoryIds?.map(x => c.get(x)!).filter(x => !!x) ?? categories;
@@ -74,8 +86,9 @@ export function ShopScreen(props: {
                         mode="outlined"
                         selectTextOnFocus
                         style={{ margin: 8 }}
-                        value={shop.name}
-                        onChangeText={handleNameChange}
+                        value={name}
+                        onBlur={handleTextInputNameBlur}
+                        onChangeText={handleTextInputNameChange}
                     />
                     <CategoryMenu
                         categoryId={shop.defaultCategoryId}
