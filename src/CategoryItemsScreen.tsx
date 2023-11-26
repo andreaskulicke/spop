@@ -65,11 +65,11 @@ export function CategoryItemsScreen(props: {
                         <View style={{ flexDirection: "row", alignItems: "center", height: 42 }}>
                             {
                                 category && (!info.item.categoryId || (info.item.categoryId !== category?.id))
-                                && <IconButton {...p} icon="plus-outline" onPress={() => dispatch(setItemCategory({ itemId: info.item.id, categoryId: category?.id }))} />
+                                && <IconButton {...p} icon="archive-plus-outline" onPress={() => dispatch(setItemCategory({ itemId: info.item.id, categoryId: category?.id }))} />
                             }
                             {
                                 info.item.categoryId
-                                && <IconButton {...p} icon="minus-thick" onPress={() => dispatch(setItemCategory({ itemId: info.item.id, categoryId: undefined }))} />
+                                && <IconButton {...p} icon="archive-minus-outline" onPress={() => dispatch(setItemCategory({ itemId: info.item.id, categoryId: undefined }))} />
                             }
                         </View>
                     }

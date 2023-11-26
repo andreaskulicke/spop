@@ -28,7 +28,7 @@ export function HomeNavigationScreen() {
                 component={CategoriesNavigationScreen}
                 name="CategoriesEntry"
                 options={{
-                    tabBarIcon: p => <Icon {...p} size={24} source="shape-outline" />,
+                    tabBarIcon: p => <Icon {...p} size={24} source="archive-outline" />,
                     tabBarLabel: "Kategorien",
                 }}
             />
