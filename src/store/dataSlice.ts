@@ -45,6 +45,10 @@ export const itemsSlice = createSlice({
                 icon: "dots-horizontal",
                 name: "Neu",
             });
+            state.shops.forEach(shop => {
+                initializeShopCategoryIds(state, shop);
+                shop.categoryIds?.push(categoryId);
+            });
         },
         deleteCategory: (state, action: PayloadAction<string>) => {
             const categoryId = action.payload;
@@ -58,7 +62,9 @@ export const itemsSlice = createSlice({
                         shop.categoryIds?.splice(index, 1);
                     }
                 });
-                state.storages.filter(storage => storage.defaultCategoryId === categoryId).forEach(storage => storage.defaultCategoryId = undefined);
+                state.storages
+                    .filter(storage => storage.defaultCategoryId === categoryId)
+                    .forEach(storage => storage.defaultCategoryId = undefined);
             }
         },
         resetCategories: (state) => {
