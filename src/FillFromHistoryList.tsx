@@ -1,8 +1,8 @@
 import { FillFromHistoryListItem } from './FillFromHistoryListItem';
+import { Item } from './store/data/items';
 import { useAppSelector } from './store/hooks';
 import { View } from 'react-native';
 import React from 'react';
-import { Item } from './store/data/items';
 
 export function FillFromHistoryList(props: {
     item: Item;

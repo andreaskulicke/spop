@@ -1,7 +1,7 @@
 import { addItem, allStorage, allShop } from './store/dataSlice';
 import { FillFromHistoryList } from './FillFromHistoryList';
 import { Item } from './store/data/items';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 import { SearchBar } from './SearchBar';
 import { Shop } from './store/data/shops';
 import { Storage } from './store/data/storages';
@@ -61,16 +61,14 @@ export function SearchBarList(props: {
                 onChange={handleSearchChange}
                 onSubmitEditing={() => handlePress(newItem)}
             />
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps={filter ? "always" : "never"}>
-                {
-                    !filter
-                        ? props.list
-                        : <FillFromHistoryList
-                            item={newItem}
-                            onPress={handlePress}
-                            onIconPress={handleIconPress} />
-                }
-            </ScrollView>
+            {
+                !filter
+                    ? props.list
+                    : <FillFromHistoryList
+                        item={newItem}
+                        onPress={handlePress}
+                        onIconPress={handleIconPress} />
+            }
         </View>
     );
 }
