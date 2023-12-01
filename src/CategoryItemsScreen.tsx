@@ -2,11 +2,11 @@ import { allShop, selectCategories, selectCategory, selectItemsWithCategory, sel
 import { Appbar, IconButton, List } from "react-native-paper";
 import { CategoriesStackParamList } from "./CategoriesNavigationScreen";
 import { Item } from "./store/data/items";
-import { ItemsSectionList, ItemsSectionListData } from "./ItemsSectionList";
+import { ItemsSectionList, ItemsSectionListSection } from "./ItemsSectionList";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { ReactElement, JSXElementConstructor } from "react";
 import { RootStackParamList } from "../App";
-import { SectionListRenderItemInfo, View } from "react-native";
+import { View } from "react-native";
 import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 
@@ -31,29 +31,29 @@ export function CategoryItemsScreen(props: {
         }
     }
 
-    function handleRenderItem(info: SectionListRenderItemInfo<Item, Data>): ReactElement<any, string | JSXElementConstructor<any>> | null {
+    function handleRenderItem(item: Item): ReactElement<any, string | JSXElementConstructor<any>> | null {
         return (
             <List.Item
-                title={info.item.name}
-                description={(info.item.categoryId !== category?.id) ? getCategoryName(info.item.categoryId) : undefined}
+                title={item.name}
+                description={(item.categoryId !== category?.id) ? getCategoryName(item.categoryId) : undefined}
                 right={p =>
                     <View style={{ flexDirection: "row", alignItems: "center", height: 42 }}>
                         {
-                            category && (!info.item.categoryId || (info.item.categoryId !== category?.id))
-                            && <IconButton {...p} icon="archive-plus-outline" onPress={() => dispatch(setItemCategory({ itemId: info.item.id, categoryId: category?.id }))} />
+                            category && (!item.categoryId || (item.categoryId !== category?.id))
+                            && <IconButton {...p} icon="archive-plus-outline" onPress={() => dispatch(setItemCategory({ itemId: item.id, categoryId: category?.id }))} />
                         }
                         {
-                            info.item.categoryId
-                            && <IconButton {...p} icon="archive-minus-outline" onPress={() => dispatch(setItemCategory({ itemId: info.item.id, categoryId: undefined }))} />
+                            item.categoryId
+                            && <IconButton {...p} icon="archive-minus-outline" onPress={() => dispatch(setItemCategory({ itemId: item.id, categoryId: undefined }))} />
                         }
                     </View>
                 }
-                onPress={() => props.navigation.navigate("Item", { id: info.item.id })}
+                onPress={() => props.navigation.navigate("Item", { id: item.id })}
             />
         );
     }
 
-    const data: ItemsSectionListData[] = [
+    const data: ItemsSectionListSection[] = [
         {
             title: "Nicht zugewiesen",
             icon: "dots-horizontal",

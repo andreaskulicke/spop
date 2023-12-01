@@ -1,13 +1,13 @@
 import { allStorage, selectItems } from './store/dataSlice';
 import { FillListItem } from './FillListItem';
 import { Item } from './store/data/items';
-import { ItemsSectionList, ItemsSectionListData } from './ItemsSectionList';
-import { SectionListRenderItemInfo } from 'react-native';
+import { ItemsSectionList, ItemsSectionListSection } from './ItemsSectionList';
 import { useAppSelector } from './store/hooks';
-import React, { JSXElementConstructor, ReactElement } from 'react';
+import React, { JSXElementConstructor, ReactElement, useEffect } from 'react';
 
 export function FillList(props: {
     storageId: string;
+    selectedItemId?: string;
 }) {
     const items = useAppSelector(selectItems);
 
@@ -17,17 +17,17 @@ export function FillList(props: {
     const recentlyUsed = items
         .filter(x => ((props.storageId === allStorage.id) || x.storages.find(x => x.storageId === props.storageId)) && !x.wanted);
 
-    function handleRenderItem(info: SectionListRenderItemInfo<Item, ItemsSectionListData>): ReactElement<any, string | JSXElementConstructor<any>> | null {
+    function handleRenderItem(item: Item): ReactElement<any, string | JSXElementConstructor<any>> | null {
         return (
             <FillListItem
-                key={info.item.id}
-                item={info.item}
+                key={item.id}
+                item={item}
                 storageId={props.storageId}
             />
         );
     }
 
-    const data: ItemsSectionListData[] = [
+    const data: ItemsSectionListSection[] = [
         {
             title: "Dinge",
             icon: "cart",
@@ -49,6 +49,7 @@ export function FillList(props: {
         <ItemsSectionList
             data={data}
             renderItem={handleRenderItem}
+            selectedItemId={props.selectedItemId}
         />
     );
 }

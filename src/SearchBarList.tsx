@@ -13,6 +13,7 @@ export function SearchBarList(props: {
     list: React.ReactNode;
     shop?: Shop;
     storage?: Storage;
+    onItemPress?: (itemId: string) => void;
 }) {
     const [filter, setFilter] = useState<{ text: string; name?: string; amount?: string; }>();
     const dispatch = useAppDispatch();
@@ -35,6 +36,7 @@ export function SearchBarList(props: {
                 }));
             setFilter(undefined);
             setNewItem(v => ({ ...v, id: uuid.v4() as string }));
+            props.onItemPress?.(item.id);
         }
     }
 

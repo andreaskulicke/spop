@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { Appbar } from 'react-native-paper';
 import { RootStackParamList } from '../App';
@@ -13,6 +13,7 @@ export function ShoppingScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
     route: RouteProp<ShopsStackParamList, "Shopping">;
 }) {
+    const [selectedItemId, setSelectedItemId] = useState("");
     const shop = useAppSelector(selectShop(props.route.params.id));
 
     function handleEditPress(): void {
@@ -30,8 +31,9 @@ export function ShoppingScreen(props: {
                 }
             </Appbar.Header>
             <SearchBarList
-                list={<ShoppingList shop={shop} />}
+                list={<ShoppingList shop={shop} selectedItemId={selectedItemId} />}
                 shop={shop}
+                onItemPress={itemId => setSelectedItemId(itemId)}
             />
         </StatusBarView>
     );

@@ -1,4 +1,4 @@
-import { addShop, addShopStopper, allShop, selectAllShops, setShops } from "./store/dataSlice";
+import { addShop, addShopStopper, allShop, selectShops, setShops } from "./store/dataSlice";
 import { Appbar, Avatar, List, Menu, useTheme, Text, Divider, Badge, Tooltip, Icon } from "react-native-paper";
 import { Image } from "react-native";
 import { AvatarText, avatarSize } from "./AvatarText";
@@ -20,7 +20,7 @@ export function ShopsScreen(props: {
     const [menuVisible, setMenuVisible] = useState(false);
     const [draggingStopper, setDraggingStopper] = useState(false);
     const items = useAppSelector(state => state.data.items);
-    const shops = useAppSelector(selectAllShops);
+    const shops = useAppSelector(selectShops);
     const dispatch = useAppDispatch();
     const theme = useTheme();
 

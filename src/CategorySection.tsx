@@ -5,10 +5,12 @@ import { Icon, Text, useTheme } from 'react-native-paper';
 export function CategorySection(props: React.PropsWithChildren<{
     icon?: string;
     title: string;
+    visible?: "dynamic" | "always";
 }>) {
     const theme = useTheme();
 
-    if (React.Children.count(props.children) === 0) {
+    if ((props.visible !== "always")
+        && React.Children.count(props.children) === 0) {
         return <></>;
     }
 

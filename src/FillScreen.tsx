@@ -7,12 +7,13 @@ import { SearchBarList } from './SearchBarList';
 import { StatusBarView } from './StatusBarView';
 import { StoragesStackParamList } from './StoragesNavigationScreen';
 import { useAppSelector } from './store/hooks';
-import React from 'react';
+import React, { useState } from 'react';
 
 export function FillScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
     route: RouteProp<StoragesStackParamList, "Fill">;
 }) {
+    const [selectedItemId, setSelectedItemId] = useState("");
     const storage = useAppSelector(selectStorage(props.route.params.storageId));
 
     function handleEditPress(): void {
@@ -30,8 +31,9 @@ export function FillScreen(props: {
                 }
             </Appbar.Header>
             <SearchBarList
-                list={<FillList storageId={storage.id} />}
+                list={<FillList storageId={storage.id} selectedItemId={selectedItemId} />}
                 storage={storage}
+                onItemPress={itemId => setSelectedItemId(itemId)}
             />
         </StatusBarView>
     );
