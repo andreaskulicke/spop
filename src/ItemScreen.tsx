@@ -4,10 +4,10 @@ import { CategoryMenu } from "./CategoryMenu";
 import { Keyboard, ScrollView, View } from "react-native";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
+import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import React, { useEffect, useState } from "react";
 import uuid from 'react-native-uuid';
-import { StatusBarView } from "./StatusBarView";
 
 export function ItemScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -21,6 +21,12 @@ export function ItemScreen(props: {
     const shops = useAppSelector(selectValidShops);
     const storages = useAppSelector(state => state.data.storages);
     const dispatch = useAppDispatch();
+
+    function handleGoBack() {
+        handleTextInputNameBlur();
+        handleTextInputAmountBlur();
+        props.navigation.goBack();
+    }
 
     function handleDeletePress(): void {
         dispatch(deleteItem(item.id));
@@ -84,7 +90,7 @@ export function ItemScreen(props: {
     return (
         <StatusBarView bottomPadding>
             <Appbar.Header elevated>
-                <Appbar.BackAction onPress={() => props.navigation.goBack()} />
+                <Appbar.BackAction onPress={handleGoBack} />
                 <Appbar.Content title={item?.name ?? "Item"} />
                 <Appbar.Action icon="trash-can" onPress={handleDeletePress} />
             </Appbar.Header>

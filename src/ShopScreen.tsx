@@ -22,6 +22,11 @@ export function ShopScreen(props: {
     const shop = useAppSelector(selectShop(props.route.params.id));
     const dispatch = useAppDispatch();
 
+    function handleGoBack() {
+        handleTextInputNameBlur();
+        props.navigation.goBack();
+    }
+
     function handleAddCategoryPress(): void {
         const id = uuid.v4() as string;
         dispatch(addCategory(id));
@@ -72,7 +77,7 @@ export function ShopScreen(props: {
     return (
         <StatusBarView bottomPadding>
             <Appbar.Header elevated>
-                <Appbar.BackAction onPress={() => props.navigation.goBack()} />
+                <Appbar.BackAction onPress={handleGoBack} />
                 <Appbar.Content title={shop?.name ?? "Shop"} />
                 <Appbar.Action icon="trash-can" onPress={handleDeletePress} />
             </Appbar.Header>

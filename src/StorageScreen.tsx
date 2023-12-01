@@ -19,6 +19,11 @@ export function StorageScreen(props: {
     const storage = useAppSelector(selectStorage(props.route.params.id));
     const dispatch = useAppDispatch();
 
+    function handleGoBack() {
+        handleTextInputNameBlur();
+        props.navigation.goBack();
+    }
+
     function handleDeletePress(): void {
         dispatch(deleteStorage(storage.id));
         props.navigation.goBack();
@@ -42,7 +47,7 @@ export function StorageScreen(props: {
     return (
         <StatusBarView bottomPadding>
             <Appbar.Header elevated>
-                <Appbar.BackAction onPress={() => props.navigation.goBack()} />
+                <Appbar.BackAction onPress={handleGoBack} />
                 <Appbar.Content title={storage?.name ?? "Storage"} />
                 <Appbar.Action icon="trash-can" onPress={handleDeletePress} />
             </Appbar.Header>

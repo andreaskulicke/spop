@@ -18,6 +18,11 @@ export function CategoryScreen(props: {
     const category = useAppSelector(selectCategory(props.route.params.id));
     const dispatch = useAppDispatch();
 
+    function handleGoBack() {
+        handleTextInputNameBlur();
+        props.navigation.goBack();
+    }
+
     function handleDeletePress(): void {
         if (category) {
             dispatch(deleteCategory(category.id));
@@ -54,7 +59,7 @@ export function CategoryScreen(props: {
     return (
         <StatusBarView bottomPadding>
             <Appbar.Header elevated>
-                <Appbar.BackAction onPress={() => props.navigation.goBack()} />
+                <Appbar.BackAction onPress={handleGoBack} />
                 <Appbar.Content title={category?.name ?? "Category"} />
                 <Appbar.Action icon="trash-can" onPress={handleDeletePress} />
             </Appbar.Header>
