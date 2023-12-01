@@ -2,6 +2,7 @@ import { categoryIds } from "./categories";
 import { Style } from "react-native-paper/lib/typescript/components/List/utils";
 import { SvgProps } from "react-native-svg";
 import AldiSvg from "../icons/Aldi.svg";
+import BaeckerSvg from "../icons/Baecker.svg";
 import DmSvg from "../icons/Dm.svg";
 import EdekaSvg from "../icons/Edeka.svg";
 import HornbachSvg from "../icons/Hornbach.svg";
@@ -29,36 +30,39 @@ export function getShopSvg(shop: Shop, props: { color: string, style: Style }) {
         ...props,
     };
     if (/aldi/i.test(shop.name)) {
-        return AldiSvg(s);
+        return <AldiSvg {...s} />;
+    }
+    if (/baecker|bäcker|backer|polster/i.test(shop.name)) {
+        return <BaeckerSvg {...s} />;
     }
     if (/dm/i.test(shop.name)) {
-        return DmSvg(s);
+        return <DmSvg {...s} />;
     }
     if (/edeka/i.test(shop.name)) {
-        return EdekaSvg(s);
+        return <EdekaSvg {...s} />;
     }
     if (/hornbach/i.test(shop.name)) {
-        return HornbachSvg(s);
+        return <HornbachSvg {...s} />;
     }
     if (/lidl/i.test(shop.name)) {
-        return LidlSvg(s);
+        return <LidlSvg {...s} />;
     }
     if (/mueller|müller|muller/i.test(shop.name)) {
-        return MuellerSvg(s);
+        return <MuellerSvg {...s} />;
     }
     if (/norma/i.test(shop.name)) {
-        return NormaSvg(s);
+        return <NormaSvg {...s} />;
     }
     if (/obi/i.test(shop.name)) {
-        return ObiSvg(s);
+        return <ObiSvg {...s} />;
     }
     if (/rewe/i.test(shop.name)) {
-        return ReweSvg(s);
+        return <ReweSvg {...s} />;
     }
     if (/rossman/i.test(shop.name)) {
-        return RossmannSvg(s);
+        return <RossmannSvg {...s} />;
     }
-    return UnknownSvg(s);
+    return <UnknownSvg {...s} />;
 }
 
 export const defaultShops: Shop[] = [

@@ -1,6 +1,21 @@
+# logo/*
+
+- 01.12.2023: https://commons.wikimedia.org/wiki/File:Ampelmann_Gr%C3%BCn.svg
+- 01.12.2023: https://commons.wikimedia.org/wiki/File:Ic_shopping_basket_48px.svg
+
+Combined and modified.
+
 # Aldi.svg
 
 23.11.2023: https://de.wikipedia.org/wiki/Aldi#/media/Datei:Aldi_S%C3%BCd_2017_logo.svg
+
+Added viewBox.
+
+# Bäcker.svg
+
+01.12.2023: https://upload.wikimedia.org/wikipedia/commons/6/6e/Iceland_road_sign_E08.43.svg
+
+Added viewBox.
 
 # Dm.svg
 
