@@ -1,7 +1,6 @@
 import { addShop, addShopStopper, allShop, selectShops, setShops } from "./store/dataSlice";
-import { Appbar, Avatar, List, Menu, useTheme, Text, Divider, Badge, Tooltip, Icon } from "react-native-paper";
-import { Image } from "react-native";
-import { AvatarText, avatarSize } from "./AvatarText";
+import { Appbar, List, Menu, useTheme, Text, Divider, Badge, Tooltip, Icon } from "react-native-paper";
+import { Count } from "./Count";
 import { NavigationProp } from "@react-navigation/native";
 import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 import { ReactNode, useState } from "react";
@@ -9,16 +8,15 @@ import { RootStackParamList } from "../App";
 import { Shop, getShopSvg } from "./store/data/shops";
 import { ShopsStackParamList } from "./ShopsNavigationScreen";
 import { StatusBarView } from "./StatusBarView";
-import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { TouchableWithoutFeedback, View } from "react-native";
+import { useAppDispatch, useAppSelector } from "./store/hooks";
 import uuid from 'react-native-uuid';
-import { Count } from "./Count";
 
 export function ShopsScreen(props: {
     navigation: NavigationProp<RootStackParamList & ShopsStackParamList>;
 }) {
     const [menuVisible, setMenuVisible] = useState(false);
-    const [draggingStopper, setDraggingStopper] = useState(false);
+    const [draggingStopper, setDraggingStopper] = useState("");
     const items = useAppSelector(state => state.data.items);
     const shops = useAppSelector(selectShops);
     const dispatch = useAppDispatch();
@@ -55,13 +53,14 @@ export function ShopsScreen(props: {
                 ? <ScaleDecorator activeScale={2}>
                     <TouchableWithoutFeedback
                         onLongPress={() => {
-                            setDraggingStopper(true);
+                            setDraggingStopper(params.item.id);
                             params.drag();
                         }}
+
                     >
                         <View style={{ backgroundColor: theme.colors.elevation.level1, height: 24 }}>
                             {
-                                draggingStopper
+                                (draggingStopper === params.item.id)
                                     ? <View style={{ alignItems: "center", paddingTop: 8 }}>
                                         <Icon size={8} source="trash-can" />
                                         <Icon size={8} source="chevron-down" />
@@ -118,24 +117,26 @@ export function ShopsScreen(props: {
                 right={p => {
                     const count = items.filter(i => i.wanted).length;
                     const unassignedCount = items.filter(i => i.wanted && ((i.shops?.length ?? 0) === 0)).length;
-                    return <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <Tooltip title="Gewünschte Dinge und ohne Shop">
-                            <Count {...p} count={count} />
-                        </Tooltip>
-                        <Badge visible={unassignedCount > 0} style={{ position: "absolute", top: 0, right: -20 }}>{unassignedCount}</Badge>
-                    </View>;
+                    return (
+                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                            <Tooltip title="Gewünschte Dinge und ohne Shop">
+                                <Count {...p} count={count} />
+                            </Tooltip>
+                            <Badge visible={unassignedCount > 0} style={{ position: "absolute", top: 0, right: -20 }}>{unassignedCount}</Badge>
+                        </View>
+                    );
                 }
                 }
                 onPress={() => handleShopPress(allShop.id)}
             />
             <Divider />
-            <NestableScrollContainer>
+            <NestableScrollContainer style={{ flex: 1 }} >
                 <NestableDraggableFlatList
                     data={shops}
                     keyExtractor={x => x.id}
                     renderItem={handleRenderItem}
                     onDragEnd={({ data }) => {
-                        setDraggingStopper(false);
+                        setDraggingStopper("");
                         dispatch(setShops(data));
                     }}
                 />

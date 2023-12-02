@@ -194,11 +194,20 @@ export const itemsSlice = createSlice({
             });
         },
         addShopStopper: (state, action: PayloadAction<string>) => {
-            state.shops.push({
+            const shopStopper: Shop = {
                 id: action.payload,
                 name: "_",
                 stopper: true,
-            });
+            };
+            if (state.shops.length === 0) {
+                state.shops.push(shopStopper);
+            } else {
+                state.shops = [
+                    ...state.shops.splice(0, state.shops.length - 1),
+                    shopStopper,
+                    state.shops[state.shops.length - 1],
+                ]
+            }
         },
         deleteShop: (state, action: PayloadAction<string>) => {
             const shopId = action.payload;
