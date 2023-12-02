@@ -131,7 +131,7 @@ export function ShopScreen(props: {
                             data={catsShown}
                             keyExtractor={x => x.id}
                             renderItem={handleRenderItem}
-                            onDragEnd={({ data }) => dispatch(setShopCategories({ shopId: shop.id, categoryIds: [...data.map(x => x.id), ...catsHidden.map(x => x.id)] }))}
+                            onDragEnd={({ data }) => dispatch(setShopCategories({ shopId: shop.id, categoryIds: data.map(x => x.id) }))}
                         />
                     }
                     {
