@@ -1,12 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
-import { List, Checkbox, IconButton, Tooltip } from 'react-native-paper';
+import { List, Checkbox, IconButton, Tooltip, useTheme } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { setItemWanted, setItemAmount, setItemShop, allShop, selectValidShops } from './store/dataSlice';
 import { ColoredTextInput } from './ColoredTextInput';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
-import { Item } from './store/data/items';
+import { Item, itemListStyle } from './store/data/items';
 
 export function ShoppingListItem(props: {
     item: Item;
@@ -15,6 +15,7 @@ export function ShoppingListItem(props: {
     const shops = useAppSelector(selectValidShops);
     const dispatch = useAppDispatch();
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const theme = useTheme();
 
     function handleAmountChange(text: string): void {
         dispatch(setItemAmount({ itemId: props.item.id, amount: text }));
@@ -45,6 +46,7 @@ export function ShoppingListItem(props: {
         <List.Item
             description={description ? description : undefined}
             title={props.item.name}
+            style={itemListStyle(theme)}
             right={
                 p => (
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>

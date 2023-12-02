@@ -4,6 +4,7 @@ import { Item, isItem } from './store/data/items';
 import { ListSection } from './ListSection';
 import { SectionList, SectionListData, SectionListRenderItemInfo } from 'react-native';
 import React, { JSXElementConstructor, ReactElement, useEffect, useRef, useState } from 'react';
+import sectionListGetItemLayout from 'react-native-section-list-get-item-layout'
 
 export type ItemsSectionListItem = undefined | Category | Item;
 
@@ -66,7 +67,13 @@ export function ItemsSectionList(props: {
         for (let sectionIndex = 0; sectionIndex < props.data.length; sectionIndex++) {
             const itemIndex = props.data[sectionIndex].data.findIndex(x => x?.id === props.selectedItemId);
             if (itemIndex !== -1) {
-                listRef.current?.scrollToLocation({ sectionIndex: sectionIndex, itemIndex: itemIndex, viewOffset: -52, viewPosition: 0, });
+                console.log("scrollTo:" + sectionIndex + "," + itemIndex)
+                listRef.current?.scrollToLocation({
+                    sectionIndex: sectionIndex,
+                    itemIndex: itemIndex,
+                    viewOffset: 0,
+                    viewPosition: 0,
+                });
                 break;
             }
         }
@@ -74,15 +81,47 @@ export function ItemsSectionList(props: {
 
     const data: Data[] = props.data.map((x, i) => ({ ...x, collapsed: !expanded[i], onExpandChange: (exp) => handleExpandChange(i, exp) }));
 
+    const headerHeight = 52;
+    const sectionHeaderHeight = 52;
+    const sectionFooterHeight = 0;
+    const categoryHeight = 52;
+    const itemHeight = 72;
+
+    // const offsets: { length: number; offset: number; id: string }[] = [{ length: headerHeight, offset: 0, id: "" }];
+    // for (let sectionIndex = 0; sectionIndex < data.length; sectionIndex++) {
+    //     const section = data[sectionIndex];
+    //     offsets.push({ length: sectionHeaderHeight, offset: (offsets[offsets.length - 1].offset + offsets[offsets.length - 1].length), id: "sh:" + section.title });
+    //     for (let sectionRowIndex = 0; sectionRowIndex < section.data.length; sectionRowIndex++) {
+    //         let height = 0;
+    //         const row = section.data[sectionRowIndex];
+    //         if (isItem(row)) {
+    //             height = itemHeight;
+    //         } else {
+    //             height = categoryHeight;
+    //         }
+    //         offsets.push({ length: height, offset: (offsets[offsets.length - 1].offset + offsets[offsets.length - 1].length), id: "r: " + row?.name });
+    //     }
+    //     offsets.push({ length: sectionFooterHeight, offset: (offsets[offsets.length - 1].offset + offsets[offsets.length - 1].length), id: "sf" });
+    // }
+    // offsets.shift();
+    // console.log(offsets);
+
     return (
         <SectionList
             ref={listRef}
             sections={data}
             renderSectionHeader={handleRenderSectionHeader}
             renderItem={handleRenderItem}
-            getItemLayout={(data, index) => (
-                { length: 68, offset: 68 * index, index }
-            )}
+            // getItemLayout={(d, i) => {
+            //     return { ...offsets[i], index: i };
+            // }}
+            getItemLayout={sectionListGetItemLayout({
+                getItemHeight: (rowData, sectionIndex, rowIndex) => {
+                    return isItem(rowData) ? itemHeight : categoryHeight;
+                },
+                getSectionHeaderHeight: () => sectionHeaderHeight,
+                listHeaderHeight: headerHeight,
+            }) as (data: SectionListData<ItemsSectionListItem, Data>[] | null, index: number) => { length: number; offset: number; index: number; }}
         >
         </SectionList>
     );

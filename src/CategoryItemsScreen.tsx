@@ -1,7 +1,7 @@
 import { allShop, selectCategories, selectCategory, selectItemsWithCategory, selectItemsWithDifferentCategory, setItemCategory } from "./store/dataSlice";
-import { Appbar, IconButton, List } from "react-native-paper";
+import { Appbar, IconButton, List, useTheme } from "react-native-paper";
 import { CategoriesStackParamList } from "./CategoriesNavigationScreen";
-import { Item } from "./store/data/items";
+import { Item, itemListStyle } from "./store/data/items";
 import { ItemsSectionList, ItemsSectionListSection } from "./ItemsSectionList";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { ReactElement, JSXElementConstructor } from "react";
@@ -20,6 +20,7 @@ export function CategoryItemsScreen(props: {
     const itemsNoCategory = useAppSelector(selectItemsWithCategory(undefined));
     const itemsDifferentCategory = useAppSelector(selectItemsWithDifferentCategory(category?.id));
     const dispatch = useAppDispatch();
+    const theme = useTheme();
 
     function getCategoryName(categoryId: string | undefined): string | undefined {
         return categories.find(x => x.id === categoryId)?.name;
@@ -36,6 +37,7 @@ export function CategoryItemsScreen(props: {
             <List.Item
                 title={item.name}
                 description={(item.categoryId !== category?.id) ? getCategoryName(item.categoryId) : undefined}
+                style={itemListStyle(theme)}
                 right={p =>
                     <View style={{ flexDirection: "row", alignItems: "center", height: 42 }}>
                         {

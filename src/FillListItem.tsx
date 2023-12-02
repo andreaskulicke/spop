@@ -1,13 +1,13 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
-import { IconButton, List, Tooltip } from 'react-native-paper';
+import { IconButton, List, Tooltip, useTheme } from 'react-native-paper';
 import { allStorage, setItemAmount, setItemStorage, setItemWanted } from './store/dataSlice';
 import { ColoredTextInput } from './ColoredTextInput';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
 import { AvatarText } from './AvatarText';
-import { Item } from './store/data/items';
+import { Item, itemListStyle } from './store/data/items';
 
 export function FillListItem(props: {
     item: Item;
@@ -16,6 +16,7 @@ export function FillListItem(props: {
     const storages = useAppSelector(state => state.data.storages);
     const dispatch = useAppDispatch();
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const theme = useTheme();
 
     function handleAddToStoragePress(): void {
         dispatch(setItemStorage({ itemId: props.item.id, storageId: props.storageId, checked: true }));
@@ -45,6 +46,7 @@ export function FillListItem(props: {
         <List.Item
             description={description ? description : undefined}
             title={props.item.name}
+            style={itemListStyle(theme)}
             left={p => <AvatarText {...p} label={props.item.name} />}
             right={p =>
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>

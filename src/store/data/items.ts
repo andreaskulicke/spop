@@ -1,3 +1,7 @@
+import { ViewStyle } from "react-native";
+import { MD3Theme } from "react-native-paper";
+import { Category } from "./categories";
+
 export interface Item {
     id: string;
     name: string;
@@ -8,8 +12,15 @@ export interface Item {
     storages: { storageId: string; }[];
 }
 
+export function itemListStyle(theme: MD3Theme): ViewStyle {
+    return {
+        backgroundColor: theme.colors.elevation.level2,
+        marginHorizontal: 4,
+        marginVertical: 2,
+    };
+}
 
-export function isItem(o: unknown): o is Item {
+export function isItem(o: (undefined | Category |Item)): o is Item {
     const item = o as Item;
     return (item?.wanted !== undefined)
         || ((item?.shops !== undefined) && (item?.storages !== undefined));
