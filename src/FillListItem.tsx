@@ -6,7 +6,6 @@ import { allStorage, setItemAmount, setItemStorage, setItemWanted } from './stor
 import { ColoredTextInput } from './ColoredTextInput';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
-import { AvatarText } from './AvatarText';
 import { Item, itemListStyle } from './store/data/items';
 
 export function FillListItem(props: {
@@ -47,7 +46,6 @@ export function FillListItem(props: {
             description={description ? description : undefined}
             title={props.item.name}
             style={itemListStyle(theme)}
-            left={p => <AvatarText {...p} label={props.item.name} />}
             right={p =>
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
                     <ColoredTextInput

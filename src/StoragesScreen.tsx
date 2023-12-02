@@ -1,6 +1,7 @@
 import { addStorage, allStorage, setStorages } from "./store/dataSlice";
-import { Appbar, Avatar, Badge, Divider, List, Menu, Text, Tooltip, useTheme } from "react-native-paper";
-import { AvatarText, avatarSize } from "./AvatarText";
+import { Appbar, Badge, Divider, List, Menu, Text, Tooltip, useTheme } from "react-native-paper";
+import { AvatarText } from "./AvatarText";
+import { CategoryIcon } from "./CategoryIcon";
 import { Count } from "./Count";
 import { NavigationProp } from "@react-navigation/native";
 import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
@@ -80,13 +81,7 @@ export function StoragesScreen(props: {
             </Appbar.Header>
             <List.Item
                 title={allStorage.name}
-                left={p =>
-                    <Avatar.Icon
-                        {...p}
-                        color={theme.colors.primaryContainer}
-                        icon="check-all"
-                        size={avatarSize}
-                    />}
+                left={p => <CategoryIcon {...p} icon="check-all" />}
                 right={p => {
                     const count = items.items.filter(i => i.wanted).length;
                     const unassignedCount = items.items.filter(i => i.wanted && ((i.storages?.length ?? 0) === 0)).length;

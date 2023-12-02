@@ -1,8 +1,6 @@
 import { Avatar, useTheme } from "react-native-paper";
 import { Style } from "react-native-paper/lib/typescript/components/List/utils";
 
-export const avatarSize = 32;
-
 export function AvatarText(props: {
     style?: Style;
     label: string;
@@ -11,10 +9,18 @@ export function AvatarText(props: {
 
     return (
         <Avatar.Text
-            style={{ ...props.style, alignSelf: "center" }}
-            color={theme.colors.primaryContainer}
+            style={{
+                ...props.style,
+                alignSelf: "center",
+                backgroundColor: theme.colors.elevation.level3,
+            }}
+            labelStyle={{
+                fontSize: 16,
+                fontWeight: "bold",
+            }}
+            color={theme.colors.primary}
             label={props.label.substring(0, 2).toUpperCase()}
-            size={avatarSize}
+            size={40}
         />
     );
 }
