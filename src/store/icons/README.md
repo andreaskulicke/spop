@@ -1,7 +1,6 @@
 # logo/*
 
 - 01.12.2023: https://commons.wikimedia.org/wiki/File:Ampelmann_Gr%C3%BCn.svg
-- 01.12.2023: https://commons.wikimedia.org/wiki/File:Ic_shopping_basket_48px.svg
 
 Combined and modified.
 
