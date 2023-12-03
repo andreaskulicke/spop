@@ -41,6 +41,7 @@ export function SearchBarList(props: {
     }
 
     function handleIconPress(name: string, amount: string | undefined): void {
+        name = name.trim() + " ";
         setFilter({ text: amount ? `${amount} ${name}` : name, name, amount });
     }
 
