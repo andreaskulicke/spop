@@ -8,7 +8,6 @@ import { StatusBarView } from './StatusBarView';
 import { StoragesStackParamList } from './StoragesNavigationScreen';
 import { useAppSelector } from './store/hooks';
 import React, { useState } from 'react';
-import { KeyboardAvoidingView } from 'react-native';
 
 export function FillScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -31,13 +30,11 @@ export function FillScreen(props: {
                     && <Appbar.Action icon="pencil-outline" onPress={handleEditPress} />
                 }
             </Appbar.Header>
-            <KeyboardAvoidingView behavior="height" style={{ flex: 1 }}>
-                <SearchBarList
-                    list={<FillList storageId={storage.id} selectedItemId={selectedItemId} />}
-                    storage={storage}
-                    onItemPress={itemId => setSelectedItemId(itemId)}
-                />
-            </KeyboardAvoidingView>
+            <SearchBarList
+                list={<FillList storageId={storage.id} selectedItemId={selectedItemId} />}
+                storage={storage}
+                onItemPress={itemId => setSelectedItemId(itemId)}
+            />
         </StatusBarView>
     );
 }

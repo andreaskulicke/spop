@@ -1,7 +1,7 @@
 import { addItem, allStorage, allShop } from './store/dataSlice';
 import { FillFromHistoryList } from './FillFromHistoryList';
 import { Item } from './store/data/items';
-import { View } from 'react-native';
+import { KeyboardAvoidingView, View } from 'react-native';
 import { SearchBar } from './SearchBar';
 import { Shop } from './store/data/shops';
 import { Storage } from './store/data/storages';
@@ -58,7 +58,7 @@ export function SearchBarList(props: {
     }, [filter]);
 
     return (
-        <View style={{ flexGrow: 1, flexShrink: 1 }}>
+        <KeyboardAvoidingView behavior="height" style={{ flex: 1 }}>
             <SearchBar
                 text={filter?.text}
                 onChange={handleSearchChange}
@@ -72,6 +72,6 @@ export function SearchBarList(props: {
                         onPress={handlePress}
                         onIconPress={handleIconPress} />
             }
-        </View>
+        </KeyboardAvoidingView>
     );
 }
