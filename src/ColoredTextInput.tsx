@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { NativeSyntheticEvent, StyleSheet, TextInput, TextInputFocusEventData, View } from 'react-native';
+import { NativeSyntheticEvent, StyleSheet, TextInput, TextInputFocusEventData, TouchableOpacity, View } from 'react-native';
 import { Portal, useTheme, Text, Modal, Button, TextInput as PaperTextInput } from 'react-native-paper';
 import { useAppSelector } from './store/hooks';
 
@@ -36,22 +36,24 @@ export function ColoredTextInput(props: {
 
 
     return (
-        <View>
-            <TextInput
-                ref={ref}
-                selectTextOnFocus
-                style={{ backgroundColor: backgroundColor, color: theme.colors.onBackground, minWidth: 56, maxWidth: "60%", marginHorizontal: 8 }}
-                textAlign="right"
-                value={value}
-                onBlur={handleBlur}
-                onChangeText={handleChangeText}
-                onFocus={handleFocus}
-            />
-            <Calculator visible={showCalculator} onClose={() => {
-                setShowCalculator(false);
-                ref.current?.blur();
-            }} />
-        </View>
+        <TouchableOpacity onPress={() => ref.current?.focus()}>
+            <View pointerEvents="none">
+                <TextInput
+                    ref={ref}
+                    selectTextOnFocus
+                    style={{ backgroundColor: backgroundColor, color: theme.colors.onBackground, minWidth: 56, maxWidth: "60%", marginHorizontal: 8 }}
+                    textAlign="right"
+                    value={value}
+                    onBlur={handleBlur}
+                    onChangeText={handleChangeText}
+                    onFocus={handleFocus}
+                />
+                <Calculator visible={showCalculator} onClose={() => {
+                    setShowCalculator(false);
+                    ref.current?.blur();
+                }} />
+            </View>
+        </TouchableOpacity>
     );
 }
 

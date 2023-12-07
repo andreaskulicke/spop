@@ -22,7 +22,7 @@ export function FillFromHistoryList(props: {
     const itemName = transformToSearchName(props.item.name);
 
     return (
-        <ScrollView>
+        <ScrollView keyboardShouldPersistTaps="always">
             {
                 props.item.name && !items.items.find(x => transformToSearchName(x.name) === itemName)
                 && <FillFromHistoryListItem

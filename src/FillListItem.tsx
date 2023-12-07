@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { IconButton, List, Tooltip, useTheme } from 'react-native-paper';
-import { allStorage, setItemquantity, setItemStorage, setItemWanted } from './store/dataSlice';
+import { allStorage, setItemQuantity, setItemStorage, setItemWanted } from './store/dataSlice';
 import { ColoredTextInput } from './ColoredTextInput';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
