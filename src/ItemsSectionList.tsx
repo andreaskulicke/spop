@@ -67,7 +67,6 @@ export function ItemsSectionList(props: {
         for (let sectionIndex = 0; sectionIndex < props.data.length; sectionIndex++) {
             const itemIndex = props.data[sectionIndex].data.findIndex(x => x?.id === props.selectedItemId);
             if (itemIndex !== -1) {
-                console.log("scrollTo:" + sectionIndex + "," + itemIndex)
                 listRef.current?.scrollToLocation({
                     sectionIndex: sectionIndex,
                     itemIndex: itemIndex,

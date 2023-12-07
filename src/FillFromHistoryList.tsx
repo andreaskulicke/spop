@@ -1,7 +1,7 @@
 import { FillFromHistoryListItem } from './FillFromHistoryListItem';
 import { Item } from './store/data/items';
+import { ScrollView } from 'react-native';
 import { useAppSelector } from './store/hooks';
-import { View } from 'react-native';
 import React from 'react';
 
 export function FillFromHistoryList(props: {
@@ -22,7 +22,7 @@ export function FillFromHistoryList(props: {
     const itemName = transformToSearchName(props.item.name);
 
     return (
-        <View>
+        <ScrollView>
             {
                 props.item.name && !items.items.find(x => transformToSearchName(x.name) === itemName)
                 && <FillFromHistoryListItem
@@ -39,6 +39,6 @@ export function FillFromHistoryList(props: {
                         onPress={props.onPress}
                         onIconPress={props.onIconPress} />)
             }
-        </View>
+        </ScrollView>
     );
 }
