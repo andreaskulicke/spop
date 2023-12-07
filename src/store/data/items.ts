@@ -5,7 +5,7 @@ import { Category } from "./categories";
 export interface Item {
     id: string;
     name: string;
-    amount?: string;
+    quantity?: string;
     categoryId?: string;
     wanted?: boolean;
     shops: { shopId: string; }[];
@@ -30,7 +30,7 @@ export const defaultItems: Item[] = [
     {
         id: "Gurken",
         name: "Gurken",
-        amount: "2",
+        quantity: "2",
         shops: [],
         storages: [
             {

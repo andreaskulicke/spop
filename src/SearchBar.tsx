@@ -3,7 +3,7 @@ import { Searchbar, useTheme } from 'react-native-paper';
 
 export function SearchBar(props: {
     text?: string;
-    onChange?: (text: string, name: string, amount: string) => void;
+    onChange?: (text: string, name: string, quantity: string) => void;
     onSubmitEditing?: () => void;
 }) {
     const theme = useTheme();

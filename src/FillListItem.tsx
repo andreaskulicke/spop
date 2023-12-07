@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { IconButton, List, Tooltip, useTheme } from 'react-native-paper';
-import { allStorage, setItemAmount, setItemStorage, setItemWanted } from './store/dataSlice';
+import { allStorage, setItemquantity, setItemStorage, setItemWanted } from './store/dataSlice';
 import { ColoredTextInput } from './ColoredTextInput';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
@@ -21,8 +21,8 @@ export function FillListItem(props: {
         dispatch(setItemStorage({ itemId: props.item.id, storageId: props.storageId, checked: true }));
     }
 
-    function handleAmountChange(text: string): void {
-        dispatch(setItemAmount({ itemId: props.item.id, amount: text }));
+    function handleQuantityChange(text: string): void {
+        dispatch(setItemQuantity({ itemId: props.item.id, quantity: text }));
     }
 
     function handleCheckPress(): void {
@@ -49,8 +49,8 @@ export function FillListItem(props: {
             right={p =>
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
                     <ColoredTextInput
-                        value={props.item.amount}
-                        onChange={handleAmountChange} />
+                        value={props.item.quantity}
+                        onChange={handleQuantityChange} />
                     <IconButton
                         {...p}
                         icon={props.item.wanted ? "minus-thick" : "plus-outline"}

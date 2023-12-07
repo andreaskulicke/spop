@@ -90,7 +90,7 @@ export const itemsSlice = createSlice({
         addItem: (state, action: PayloadAction<{ item: Item, shop?: Shop, storage?: Storage }>) => {
             let item = state.items.find(x => x.id === action.payload.item.id);
             if (item) {
-                item.amount = action.payload.item.amount;
+                item.quantity = action.payload.item.quantity;
                 item.categoryId = item.categoryId ?? action.payload.storage?.defaultCategoryId;
                 item.wanted = true;
             } else {
@@ -133,10 +133,10 @@ export const itemsSlice = createSlice({
             state.items = action.payload;
         },
 
-        setItemAmount: (state, action: PayloadAction<{ itemId: string, amount: string }>) => {
+        setItemQuantity: (state, action: PayloadAction<{ itemId: string, quantity: string }>) => {
             const item = state.items.find(x => x.id === action.payload.itemId);
             if (item) {
-                item.amount = action.payload.amount;
+                item.quantity = action.payload.quantity;
             }
         },
         setItemCategory: (state, action: PayloadAction<{ itemId: string, categoryId: string | undefined }>) => {
@@ -338,7 +338,7 @@ export const {
     deleteItem,
     deleteItems,
     resetItems,
-    setItemAmount,
+    setItemQuantity,
     setItemCategory,
     setItemName,
     setItems,

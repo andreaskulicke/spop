@@ -1,4 +1,4 @@
-import { addStorage, setItemWanted, deleteItem, selectItem, setItemAmount, setItemName, setItemStorage, setItemShop, setItemCategory, addShop, selectValidShops } from "./store/dataSlice";
+import { addStorage, setItemWanted, deleteItem, selectItem, setItemQuantity, setItemName, setItemStorage, setItemShop, setItemCategory, addShop, selectValidShops } from "./store/dataSlice";
 import { Appbar, Card, Checkbox, IconButton, List, TextInput, TouchableRipple } from "react-native-paper";
 import { CategoryMenu } from "./CategoryMenu";
 import { Keyboard, ScrollView, View } from "react-native";
@@ -14,7 +14,7 @@ export function ItemScreen(props: {
     route: RouteProp<RootStackParamList, "Item">;
 }) {
     const [name, setName] = useState("");
-    const [amount, setAmount] = useState("");
+    const [quantity, setQuantity] = useState("");
     const [storagesExpanded, setStoragesExpanded] = useState(false);
     const [shopsExpanded, setShopsExpanded] = useState(false);
     const item = useAppSelector(selectItem(props.route.params.id))!;
@@ -24,7 +24,7 @@ export function ItemScreen(props: {
 
     function handleGoBack() {
         handleTextInputNameBlur();
-        handleTextInputAmountBlur();
+        handleTextInputQuantityBlur();
         props.navigation.goBack();
     }
 
@@ -71,20 +71,20 @@ export function ItemScreen(props: {
         setName(text);
     }
 
-    function handleTextInputAmountBlur(): void {
+    function handleTextInputQuantityBlur(): void {
         if (item) {
-            dispatch(setItemAmount({ itemId: item.id, amount: amount.trim() }));
-            setAmount(amount.trim());
+            dispatch(setItemQuantity({ itemId: item.id, quantity: quantity.trim() }));
+            setQuantity(quantity.trim());
         }
     }
 
-    function handleTextInputAmountChange(text: string): void {
-        setAmount(text);
+    function handleTextInputQuantityChange(text: string): void {
+        setQuantity(text);
     }
 
     useEffect(() => {
         setName(item?.name ?? "");
-        setAmount(item?.amount ?? "");
+        setQuantity(item?.quantity ?? "");
     }, [item])
 
     return (
@@ -113,9 +113,9 @@ export function ItemScreen(props: {
                         mode="outlined"
                         selectTextOnFocus
                         style={{ margin: 8 }}
-                        value={amount}
-                        onBlur={handleTextInputAmountBlur}
-                        onChangeText={handleTextInputAmountChange}
+                        value={quantity}
+                        onBlur={handleTextInputQuantityBlur}
+                        onChangeText={handleTextInputQuantityChange}
                     />
                     <CategoryMenu
                         categoryId={item.categoryId}

@@ -15,13 +15,13 @@ export function SearchBarList(props: {
     storage?: Storage;
     onItemPress?: (itemId: string) => void;
 }) {
-    const [filter, setFilter] = useState<{ text: string; name?: string; amount?: string; }>();
+    const [filter, setFilter] = useState<{ text: string; name?: string; quantity?: string; }>();
     const dispatch = useAppDispatch();
 
     const [newItem, setNewItem] = useState<Item>({
         id: uuid.v4() as string,
         name: "",
-        amount: "",
+        quantity: "",
         shops: (!props.shop || (props.shop.id === allShop.id)) ? [] : [{ shopId: props.shop.id }],
         storages: (!props.storage || (props.storage.id === allStorage.id)) ? [] : [{ storageId: props.storage.id }],
     });
@@ -30,7 +30,7 @@ export function SearchBarList(props: {
         if (item?.name) {
             dispatch(addItem(
                 {
-                    item: { ...item, amount: filter?.amount },
+                    item: { ...item, quantity: filter?.quantity },
                     shop: props.shop,
                     storage: props.storage,
                 }));
@@ -40,20 +40,20 @@ export function SearchBarList(props: {
         }
     }
 
-    function handleIconPress(name: string, amount: string | undefined): void {
+    function handleIconPress(name: string, quantity: string | undefined): void {
         name = name.trim() + " ";
-        setFilter({ text: amount ? `${amount} ${name}` : name, name, amount });
+        setFilter({ text: quantity ? `${quantity} ${name}` : name, name, quantity });
     }
 
-    function handleSearchChange(text: string, name: string, amount: string): void {
-        setFilter({ text, name, amount });
+    function handleSearchChange(text: string, name: string, quantity: string): void {
+        setFilter({ text, name, quantity });
     }
 
     useEffect(() => {
         setNewItem(v => ({
             ...v,
             name: filter?.name ?? filter?.text ?? "",
-            amount: filter?.amount ?? "",
+            quantity: filter?.quantity ?? "",
         }));
     }, [filter]);
 

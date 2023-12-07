@@ -6,14 +6,14 @@ import { Item } from './store/data/items';
 export function FillFromHistoryListItem(props: {
     item: Item;
     onPress?: (item: Item) => void;
-    onIconPress?: (name: string, amount: string | undefined) => void;
+    onIconPress?: (name: string, quantity: string | undefined) => void;
 }) {
     function handlePress(): void {
         props.onPress?.(props.item);
     }
 
     function handleIconPress(): void {
-        props.onIconPress?.(props.item.name, props.item.amount);
+        props.onIconPress?.(props.item.name, props.item.quantity);
     }
 
     return (
@@ -23,7 +23,7 @@ export function FillFromHistoryListItem(props: {
                 <View
                     style={{ flexDirection: "row", alignItems: "center" }}
                 >
-                    <Text>{props.item.amount}</Text>
+                    <Text>{props.item.quantity}</Text>
                     <TouchableOpacity onPress={handleIconPress}>
                         <List.Icon {...p} icon="arrow-top-left" style={{ padding: 8 }} />
                     </TouchableOpacity>

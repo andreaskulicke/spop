@@ -7,7 +7,7 @@ import React from 'react';
 export function FillFromHistoryList(props: {
     item: Item;
     onPress?: (item: Item) => void;
-    onIconPress?: (name: string, amount: string | undefined) => void;
+    onIconPress?: (name: string, quantity: string | undefined) => void;
 }) {
     const items = useAppSelector(state => state.data);
 
@@ -35,7 +35,7 @@ export function FillFromHistoryList(props: {
                     .filter(x => transformToSearchName(x.name).includes(itemName))
                     .map(x => <FillFromHistoryListItem
                         key={x.id}
-                        item={{ ...x, amount: props.item.amount }}
+                        item={{ ...x, quantity: props.item.quantity }}
                         onPress={props.onPress}
                         onIconPress={props.onIconPress} />)
             }
