@@ -40,7 +40,6 @@ export function CategoryMenu(props: {
                 <Menu
                     anchor={
                         <TouchableRipple
-                            style={{}}
                             onPress={() => setCategoryMenuVisible(true)}
                         >
                             <TextInput
@@ -71,7 +70,8 @@ export function CategoryMenu(props: {
                                 onPress={() => {
                                     setCategoryMenuVisible(false);
                                     props.onSetCategory(x.id);
-                                }} />
+                                }}
+                            />
                         ))
                     }
                 </Menu>

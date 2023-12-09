@@ -2,14 +2,65 @@ import { ViewStyle } from "react-native";
 import { MD3Theme } from "react-native-paper";
 import { Category } from "./categories";
 
+// Unit
+
+export type UnitId = "-" | "pkg" | "g" | "kg" | "ml" | "l";
+
+export interface Unit {
+    id: UnitId;
+    name: string;
+    group?: string;
+}
+
+export const units: Unit[] = [
+    {
+        id: "-",
+        name: "-",
+    },
+    {
+        id: "pkg",
+        name: "Pck",
+    },
+    {
+        id: "g",
+        name: "g",
+        group: "g",
+    },
+    {
+        id: "kg",
+        name: "kg",
+        group: "g",
+    },
+    {
+        id: "ml",
+        name: "ml",
+        group: "l",
+    },
+    {
+        id: "l",
+        name: "l",
+        group: "l",
+    },
+];
+
+// Item
 export interface Item {
     id: string;
     name: string;
     quantity?: string;
+    unitId?: UnitId;
+    packageQuantity?: number;
+    packageUnitId?: UnitId;
     categoryId?: string;
     wanted?: boolean;
-    shops: { shopId: string; }[];
+    shops: ItemShop[];
     storages: { storageId: string; }[];
+}
+
+export interface ItemShop {
+    shopId: string;
+    price?: number;
+    unitId?: UnitId;
 }
 
 export function itemListStyle(theme: MD3Theme): ViewStyle {
@@ -20,7 +71,7 @@ export function itemListStyle(theme: MD3Theme): ViewStyle {
     };
 }
 
-export function isItem(o: (undefined | Category |Item)): o is Item {
+export function isItem(o: (undefined | Category | Item)): o is Item {
     const item = o as Item;
     return (item?.wanted !== undefined)
         || ((item?.shops !== undefined) && (item?.storages !== undefined));

@@ -1,7 +1,7 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './store';
 import { Category, defaultCategories } from './data/categories';
-import { defaultItems, Item } from './data/items';
+import { defaultItems, Item, UnitId, units } from './data/items';
 import { defaultShops, Shop } from './data/shops';
 import { defaultStorages, Storage } from './data/storages';
 
@@ -151,6 +151,25 @@ export const itemsSlice = createSlice({
                 item.name = action.payload.name;
             }
         },
+        setItemPackageQuantity: (state, action: PayloadAction<{ itemId: string, packageQuantity: number | undefined }>) => {
+            const item = state.items.find(x => x.id === action.payload.itemId);
+            if (item) {
+                item.packageQuantity = action.payload.packageQuantity;
+            }
+        },
+        setItemPackageUnit: (state, action: PayloadAction<{ itemId: string, packageUnitId: UnitId }>) => {
+            const item = state.items.find(x => x.id === action.payload.itemId);
+            if (item) {
+                item.packageUnitId = action.payload.packageUnitId;
+                const unit = units.find(u => u.id === action.payload.packageUnitId);
+                if (unit?.group) {
+                    const unit2 = units.find(u => u.id === item.unitId);
+                    if (unit.group !== unit2?.group) {
+                        item.unitId = item.packageUnitId;
+                    }
+                }
+            }
+        },
         setItemShop: (state, action: PayloadAction<{ itemId: string, shopId: string, checked: boolean }>) => {
             if (action.payload.shopId !== allShop.id) {
                 const item = state.items.find(x => x.id === action.payload.itemId);
@@ -165,6 +184,21 @@ export const itemsSlice = createSlice({
                 }
             }
         },
+        setItemShopPrice: (state, action: PayloadAction<{ itemId: string, shopId: string, price?: number, unitId?: UnitId }>) => {
+            if (action.payload.shopId !== allShop.id) {
+                const item = state.items.find(x => x.id === action.payload.itemId);
+                if (item) {
+                    let shop = item.shops.find(x => x.shopId === action.payload.shopId);
+                    if (!shop) {
+                        shop = { shopId: action.payload.shopId };
+                        item.shops.push(shop);
+                    }
+                    shop.price = action.payload.price;
+                    shop.unitId = action.payload.unitId;
+                    console.log(shop)
+                }
+            }
+        },
         setItemStorage: (state, action: PayloadAction<{ itemId: string, storageId: string, checked: boolean }>) => {
             const item = state.items.find(x => x.id === action.payload.itemId);
             if (item) {
@@ -174,6 +208,19 @@ export const itemsSlice = createSlice({
                 }
                 else if (!action.payload.checked && (storageIndex !== -1)) {
                     item.storages.splice(storageIndex, 1);
+                }
+            }
+        },
+        setItemUnit: (state, action: PayloadAction<{ itemId: string, unitId: UnitId }>) => {
+            const item = state.items.find(x => x.id === action.payload.itemId);
+            if (item) {
+                item.unitId = action.payload.unitId;
+                const unit = units.find(u => u.id === action.payload.unitId);
+                if (unit?.group) {
+                    const unit2 = units.find(u => u.id === item.packageUnitId);
+                    if (unit.group !== unit2?.group) {
+                        item.packageUnitId = item.unitId;
+                    }
                 }
             }
         },
@@ -341,9 +388,13 @@ export const {
     setItemQuantity,
     setItemCategory,
     setItemName,
+    setItemPackageQuantity,
+    setItemPackageUnit,
     setItems,
     setItemShop,
+    setItemShopPrice,
     setItemStorage,
+    setItemUnit,
     setItemWanted,
 
     // Shops
