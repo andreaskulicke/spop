@@ -41,14 +41,6 @@ export default function App() {
     );
 }
 
-const storeNames = {
-    categories: "categories",
-    items: "items",
-    shops: "shops",
-    storages: "storages",
-    settings: "settings",
-};
-
 function AppWithStore() {
     const colorScheme = useColorScheme();
     const settings = useAppSelector(state => state.settings);

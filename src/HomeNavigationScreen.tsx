@@ -1,9 +1,9 @@
+import { CategoriesNavigationScreen } from './CategoriesNavigationScreen';
 import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
 import { Icon } from 'react-native-paper';
-import { StoragesNavigationScreen } from './StoragesNavigationScreen';
 import { ShopsNavigationScreen } from './ShopsNavigationScreen';
+import { StoragesNavigationScreen } from './StoragesNavigationScreen';
 import React from 'react';
-import { CategoriesNavigationScreen } from './CategoriesNavigationScreen';
 
 export type TabParamList = {
     StoragesEntry: undefined;

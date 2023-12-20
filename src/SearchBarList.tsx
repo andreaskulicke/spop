@@ -58,7 +58,11 @@ export function SearchBarList(props: {
     }, [filter]);
 
     return (
-        <KeyboardAvoidingView behavior="height" style={{ flex: 1 }}>
+        <KeyboardAvoidingView
+            behavior="position"
+            keyboardVerticalOffset={32}
+            style={{ flex: 1 }}
+        >
             <SearchBar
                 text={filter?.text}
                 onChange={handleSearchChange}
