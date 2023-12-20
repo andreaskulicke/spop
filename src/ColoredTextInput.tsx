@@ -7,21 +7,15 @@ export function ColoredTextInput(props: {
     onChange?: (text: string) => void;
 }) {
     const theme = useTheme();
-    const [backgroundColor, setBackgroundColor] = useState(theme.colors.elevation.level0);
     const [value, setValue] = useState(props.value);
     const ref = useRef<TextInput>(null);
 
     function handleBlur(e: NativeSyntheticEvent<TextInputFocusEventData>): void {
-        setBackgroundColor(theme.colors.elevation.level0);
         props.onChange?.(value ?? "");
     }
 
     function handleChangeText(text: string): void {
         setValue(text);
-    }
-
-    function handleFocus(): void {
-        setBackgroundColor(theme.colors.elevation.level3);
     }
 
     useEffect(() => {
@@ -34,12 +28,11 @@ export function ColoredTextInput(props: {
                 <TextInput
                     ref={ref}
                     selectTextOnFocus
-                    style={{ backgroundColor: backgroundColor, color: theme.colors.onBackground, minWidth: 56, maxWidth: "60%", marginHorizontal: 8 }}
+                    style={{ backgroundColor: theme.colors.elevation.level0, color: theme.colors.onBackground, minWidth: 56, maxWidth: "60%", marginHorizontal: 8 }}
                     textAlign="right"
                     value={value}
                     onBlur={handleBlur}
                     onChangeText={handleChangeText}
-                    onFocus={handleFocus}
                 />
             </View>
         </TouchableOpacity>

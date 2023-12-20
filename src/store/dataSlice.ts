@@ -90,7 +90,9 @@ export const itemsSlice = createSlice({
         addItem: (state, action: PayloadAction<{ item: Item, shop?: Shop, storage?: Storage }>) => {
             let item = state.items.find(x => x.id === action.payload.item.id);
             if (item) {
-                item.quantity = action.payload.item.quantity;
+                if (action.payload.item.quantity) {
+                    item.quantity = action.payload.item.quantity;
+                }
                 item.categoryId = item.categoryId ?? action.payload.storage?.defaultCategoryId;
                 item.wanted = true;
             } else {
