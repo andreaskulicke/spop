@@ -37,6 +37,7 @@ export function ShoppingListItem(props: {
     let description = "";
     if (props.shopId !== allShop.id) {
         description = props.item.shops
+            .filter(x => x.checked)
             .map(x => shops.find(s => s.id === x.shopId)?.name)
             .filter(x => !!x)
             .join(", ");
@@ -72,7 +73,7 @@ export function ShoppingListItem(props: {
                                 </Tooltip>
                         }
                         {
-                            (props.shopId !== allShop.id) && (props.item.shops.length === 0)
+                            (props.shopId !== allShop.id) && (props.item.shops.filter(x => x.checked).length === 0)
                             && <Tooltip title="Zum Shop hinzufügen">
                                 <IconButton
                                     {...p}

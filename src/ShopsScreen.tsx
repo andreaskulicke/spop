@@ -47,7 +47,7 @@ export function ShopsScreen(props: {
     }
 
     function handleRenderItem(params: RenderItemParams<Shop>): ReactNode {
-        const count = items.filter(i => i.wanted && i.shops.find(s => s.shopId === params.item.id)).length;
+        const count = items.filter(i => i.wanted && i.shops.find(s => s.checked && (s.shopId === params.item.id))).length;
         return (
             params.item.stopper
                 ? <ScaleDecorator activeScale={2}>
@@ -116,7 +116,7 @@ export function ShopsScreen(props: {
                 left={p => getShopSvg(allShop, p)}
                 right={p => {
                     const count = items.filter(i => i.wanted).length;
-                    const unassignedCount = items.filter(i => i.wanted && ((i.shops?.length ?? 0) === 0)).length;
+                    const unassignedCount = items.filter(i => i.wanted && ((i.shops?.filter(x => x.checked).length ?? 0) === 0)).length;
                     return (
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
                             <Tooltip title="Gewünschte Dinge und ohne Shop">

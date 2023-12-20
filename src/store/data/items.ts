@@ -58,6 +58,7 @@ export interface Item {
 }
 
 export interface ItemShop {
+    checked?: boolean;
     shopId: string;
     price?: number;
     unitId?: UnitId;
@@ -78,21 +79,4 @@ export function isItem(o: (undefined | Category | Item)): o is Item {
 }
 
 export const defaultItems: Item[] = [
-    {
-        id: "Gurken",
-        name: "Gurken",
-        quantity: "2",
-        shops: [],
-        storages: [
-            {
-                "storageId": "fridge"
-            }
-        ]
-    },
-    {
-        id: "Tomaten",
-        name: "Tomaten",
-        shops: [],
-        storages: []
-    }
 ];

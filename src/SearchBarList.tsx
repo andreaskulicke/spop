@@ -22,7 +22,7 @@ export function SearchBarList(props: {
         id: uuid.v4() as string,
         name: "",
         quantity: "",
-        shops: (!props.shop || (props.shop.id === allShop.id)) ? [] : [{ shopId: props.shop.id }],
+        shops: (!props.shop || (props.shop.id === allShop.id)) ? [] : [{ checked: true, shopId: props.shop.id }],
         storages: (!props.storage || (props.storage.id === allStorage.id)) ? [] : [{ storageId: props.storage.id }],
     });
 

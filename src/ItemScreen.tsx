@@ -4,7 +4,7 @@ import { AvatarText } from "./AvatarText";
 import { Calculator } from "./Calculator";
 import { CategoryMenu } from "./CategoryMenu";
 import { Keyboard, ScrollView, Text, View } from "react-native";
-import { NavigationProp, RouteProp, ThemeProvider } from "@react-navigation/native";
+import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { StatusBarView } from "./StatusBarView";
 import { ItemShop, UnitId, units } from "./store/data/items";
@@ -12,7 +12,6 @@ import { UnitSelection } from "./UnitSelection";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import React, { useEffect, useState } from "react";
 import uuid from 'react-native-uuid';
-import { Shop } from "./store/data/shops";
 
 export function ItemScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -244,7 +243,7 @@ export function ItemScreen(props: {
                     >
                         <Card.Title
                             title="Shops"
-                            subtitle={shops.filter(x => item.shops.find(y => y.shopId === x.id)).map(x => x.name).join(", ")}
+                            subtitle={shops.filter(x => item.shops.find(y => y.checked && (y.shopId === x.id))).map(x => x.name).join(", ")}
                             right={p =>
                                 <View style={{ flexDirection: "row" }}>
                                     <IconButton
@@ -303,8 +302,8 @@ export function ItemScreen(props: {
                                                     />
                                             }
                                             <Checkbox
-                                                status={currentItemShop ? "checked" : "unchecked"}
-                                                onPress={() => handleShopCheck(s.id, !currentItemShop)}
+                                                status={currentItemShop?.checked ? "checked" : "unchecked"}
+                                                onPress={() => handleShopCheck(s.id, !currentItemShop?.checked)}
                                             />
                                         </View>
                                     );

@@ -101,9 +101,13 @@ export const itemsSlice = createSlice({
                 };
                 state.items.unshift(item);
             }
-            if (action.payload.shop && (action.payload.shop.id !== allShop.id)
-                && !item.shops.find(x => x.shopId === action.payload.shop?.id)) {
-                item.shops.push({ shopId: action.payload.shop.id });
+            if (action.payload.shop && (action.payload.shop.id !== allShop.id)) {
+                let s = item.shops.find(x => x.shopId === action.payload.shop?.id);
+                if (!s) {
+                    s = { shopId: action.payload.shop.id };
+                    item.shops.push(s);
+                }
+                s.checked = true;
             }
             if (action.payload.storage && (action.payload.storage.id !== allStorage.id)
                 && !item.storages.find(x => x.storageId === action.payload.storage?.id)) {
@@ -174,13 +178,12 @@ export const itemsSlice = createSlice({
             if (action.payload.shopId !== allShop.id) {
                 const item = state.items.find(x => x.id === action.payload.itemId);
                 if (item) {
-                    const shopIndex = item.shops.findIndex(x => x.shopId === action.payload.shopId);
-                    if (action.payload.checked && (shopIndex === -1)) {
-                        item.shops.push({ shopId: action.payload.shopId });
+                    let shop = item.shops.find(x => x.shopId === action.payload.shopId);
+                    if (!shop) {
+                        shop = { shopId: action.payload.shopId };
+                        item.shops.push(shop);
                     }
-                    else if (!action.payload.checked && (shopIndex !== -1)) {
-                        item.shops.splice(shopIndex, 1);
-                    }
+                    shop.checked = action.payload.checked;
                 }
             }
         },
@@ -195,7 +198,6 @@ export const itemsSlice = createSlice({
                     }
                     shop.price = action.payload.price;
                     shop.unitId = action.payload.unitId;
-                    console.log(shop)
                 }
             }
         },
@@ -464,7 +466,7 @@ export function selectItemsWantedWithShop(shop: Shop) {
                 }
             }
 
-            const itemsForThisShop = items.filter(i => i.wanted && (shop.id === allShop.id || i.shops.find(x => s.has(x.shopId))))
+            const itemsForThisShop = items.filter(i => i.wanted && (shop.id === allShop.id || i.shops.find(x => x.checked && s.has(x.shopId))))
                 .filter(x => (x.categoryId === undefined) || cats.find(c => c?.id === x.categoryId));
             const itemsForThisShop2 = groupByCategoryId(cats, itemsForThisShop);
             const itemsForThisShop3 = Object.keys(itemsForThisShop2).flatMap(x => [cats.find(c => c?.id === x), ...itemsForThisShop2[x]]);
@@ -483,13 +485,13 @@ export function selectItemsWantedWithShop(shop: Shop) {
 export function selectItemsWantedWithoutShop() {
     return createSelector(
         [selectItems],
-        items => items.filter(x => x.wanted && (x.shops.length === 0)));
+        items => items.filter(x => x.wanted && (x.shops.filter(x => x.checked).length === 0)));
 }
 
 export function selectItemsNotWantedWithShop(shopId: string) {
     return createSelector(
         [selectItems],
-        items => items.filter(x => !x.wanted && ((shopId === allShop.id) || x.shops.find(x => x.shopId === shopId))));
+        items => items.filter(x => !x.wanted && ((shopId === allShop.id) || x.shops.find(x => x.checked && (x.shopId === shopId)))));
 }
 
 export function selectItemsWithCategory(categoryId: string | undefined) {
