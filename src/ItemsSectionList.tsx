@@ -2,9 +2,10 @@ import { Category } from './store/data/categories';
 import { CategorySection } from './CategorySection';
 import { Item, isItem } from './store/data/items';
 import { ListSection } from './ListSection';
-import { SectionList, SectionListData, SectionListRenderItemInfo } from 'react-native';
+import { SectionList, SectionListData, SectionListRenderItemInfo, View } from 'react-native';
 import React, { JSXElementConstructor, ReactElement, useEffect, useRef, useState } from 'react';
 import sectionListGetItemLayout from 'react-native-section-list-get-item-layout'
+import { Divider } from 'react-native-paper';
 
 export type ItemsSectionListItem = undefined | Category | Item;
 
@@ -83,8 +84,8 @@ export function ItemsSectionList(props: {
     const headerHeight = 52;
     const sectionHeaderHeight = 52;
     const sectionFooterHeight = 0;
-    const categoryHeight = 52;
-    const itemHeight = 72;
+    const categoryHeight = 52 + 2;
+    const itemHeight = 64 + 2;
 
     // const offsets: { length: number; offset: number; id: string }[] = [{ length: headerHeight, offset: 0, id: "" }];
     // for (let sectionIndex = 0; sectionIndex < data.length; sectionIndex++) {
@@ -111,6 +112,8 @@ export function ItemsSectionList(props: {
             sections={data}
             renderSectionHeader={handleRenderSectionHeader}
             renderItem={handleRenderItem}
+            ItemSeparatorComponent={() => <View style={{ marginTop: 2 }} />}
+            SectionSeparatorComponent={() => <View style={{ marginTop: 2 }} />}
             // getItemLayout={(d, i) => {
             //     return { ...offsets[i], index: i };
             // }}
