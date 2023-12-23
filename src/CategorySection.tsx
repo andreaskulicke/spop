@@ -15,7 +15,11 @@ export function CategorySection(props: React.PropsWithChildren<{
     }
 
     return (
-        <View>
+        <View
+            style={{
+                marginBottom: 2,
+            }}
+        >
             <View
                 style={{
                     alignItems: "center",

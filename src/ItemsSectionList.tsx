@@ -112,8 +112,6 @@ export function ItemsSectionList(props: {
             sections={data}
             renderSectionHeader={handleRenderSectionHeader}
             renderItem={handleRenderItem}
-            ItemSeparatorComponent={() => <View style={{ marginTop: 2 }} />}
-            SectionSeparatorComponent={() => <View style={{ marginTop: 2 }} />}
             // getItemLayout={(d, i) => {
             //     return { ...offsets[i], index: i };
             // }}

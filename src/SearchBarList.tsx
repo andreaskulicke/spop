@@ -59,8 +59,7 @@ export function SearchBarList(props: {
 
     return (
         <KeyboardAvoidingView
-            behavior="position"
-            keyboardVerticalOffset={32}
+            behavior="height"
             style={{ flex: 1 }}
         >
             <SearchBar

@@ -68,6 +68,7 @@ export function itemListStyle(theme: MD3Theme): ViewStyle {
     return {
         backgroundColor: theme.colors.elevation.level2,
         marginHorizontal: 4,
+        marginBottom: 2,
     };
 }
 

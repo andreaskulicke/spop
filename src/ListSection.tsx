@@ -32,7 +32,11 @@ export function ListSection(props: React.PropsWithChildren<{
     }
 
     return (
-        <View>
+        <View
+            style={{
+                marginBottom: 2,
+            }}
+        >
             <TouchableOpacity style={{ backgroundColor: theme.colors.secondaryContainer }} onPress={handlePress}>
                 <View style={{
                     alignItems: "center",
