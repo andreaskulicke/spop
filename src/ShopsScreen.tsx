@@ -79,7 +79,7 @@ export function ShopsScreen(props: {
                                 {params.item.name}
                             </Text>
                         }
-                        left={p => getShopSvg(params.item, p)}
+                        left={p => getShopSvg(params.item, { ...p, color: theme.colors.onBackground })}
                         right={p =>
                             <Text {...p} variant="labelMedium">
                                 {count}
@@ -113,7 +113,7 @@ export function ShopsScreen(props: {
             </Appbar.Header>
             <List.Item
                 title={allShop.name}
-                left={p => getShopSvg(allShop, p)}
+                left={p => getShopSvg(allShop, { ...p, color: theme.colors.onBackground })}
                 right={p => {
                     const count = items.filter(i => i.wanted).length;
                     const unassignedCount = items.filter(i => i.wanted && ((i.shops?.filter(x => x.checked).length ?? 0) === 0)).length;
