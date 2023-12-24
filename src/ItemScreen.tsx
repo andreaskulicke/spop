@@ -13,6 +13,8 @@ import { useAppDispatch, useAppSelector } from "./store/hooks";
 import React, { useEffect, useState } from "react";
 import uuid from 'react-native-uuid';
 
+type CalculatorCallSource = "quantity" | "packageQuantity" | "shop";
+
 export function ItemScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
     route: RouteProp<RootStackParamList, "Item">;
@@ -20,7 +22,15 @@ export function ItemScreen(props: {
     const [name, setName] = useState("");
     const [quantity, setQuantity] = useState("");
     const [packageQuantity, setPackageQuantity] = useState<number>();
-    const [showCalculator, setShowCalculator] = useState<{ visible: boolean; value?: number; unitId?: UnitId; shopId?: string }>({ visible: false });
+    const [showCalculator, setShowCalculator] = useState<
+        {
+            visible: boolean;
+            value?: number;
+            unitId?: UnitId;
+            shopId?: string;
+            source?: CalculatorCallSource;
+        }
+    >({ visible: false });
     const [storagesExpanded, setStoragesExpanded] = useState(false);
     const [shopsExpanded, setShopsExpanded] = useState(false);
     const item = useAppSelector(selectItem(props.route.params.id))!;
@@ -56,8 +66,18 @@ export function ItemScreen(props: {
 
     function handleCalculatorClose(values?: { value?: number; unitId?: UnitId, state?: any; }[] | undefined): void {
         setShowCalculator({ visible: false });
-        for (const value of values ?? []) {
-            dispatch(setItemShopPrice({ itemId: item.id, shopId: value.state, price: value.value, unitId: value.unitId }));
+        if (values && (values.length > 0)) {
+            const value = values[0];
+            const source = value.state.source as CalculatorCallSource;
+            if (source === "quantity") {
+                dispatch(setItemQuantity({ itemId: item.id, quantity: value.value?.toString() ?? "" }));
+                dispatch(setItemUnit({ itemId: item.id, unitId: value.unitId ?? "-" }));
+            } else if (source === "packageQuantity") {
+                dispatch(setItemPackageQuantity({ itemId: item.id, packageQuantity: value.value }));
+                dispatch(setItemPackageUnit({ itemId: item.id, packageUnitId: value.unitId ?? "-" }));
+            } else {
+                dispatch(setItemShopPrice({ itemId: item.id, shopId: value.state.shopId, price: value.value, unitId: value.unitId }));
+            }
         }
     }
 
@@ -74,13 +94,23 @@ export function ItemScreen(props: {
         dispatch(setItemWanted({ itemId: item.id, wanted: !item.wanted }))
     }
 
-    function handleShowCalculatorPress(currentItemShop: ItemShop | undefined, shopId: string): void {
+    function handleShowCalculatorPricePress(currentItemShop: ItemShop | undefined, shopId: string): void {
         setShowCalculator({
             visible: true,
             value: currentItemShop?.price,
             unitId: currentItemShop?.unitId,
             shopId: shopId,
-        })
+            source: "shop",
+        });
+    }
+
+    function handleShowCalculatorQuantityPress(value: number | undefined, unitId: UnitId | undefined, source: CalculatorCallSource): void {
+        setShowCalculator({
+            visible: true,
+            value: value,
+            unitId: unitId,
+            source: source,
+        });
     }
 
     function handleTextInputNameBlur(): void {
@@ -151,20 +181,29 @@ export function ItemScreen(props: {
                             onPress={handleCheckPress}
                         />
                     </View>
-                    <View style={{ flexDirection: "row" }}>
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
                         <TextInput
+                            keyboardType="numeric"
                             label="Menge"
                             mode="outlined"
                             selectTextOnFocus
                             style={{ flexGrow: 1, margin: 8 }}
                             value={quantity}
                             onBlur={handleTextInputQuantityBlur}
-                            onChangeText={text => setQuantity(text)}
+                            onChangeText={text => {
+                                setQuantity(text.replace(/[^0-9]/g, ""));
+                            }}
                         />
                         <UnitSelection
                             itemId={item.id}
                             value={item.unitId}
                             onValueChange={(itemId, unitId) => dispatch(setItemUnit({ itemId: itemId, unitId: unitId }))}
+                        />
+                        <IconButton
+                            icon="calculator"
+                            size={32}
+                            style={{ marginLeft: 14, marginRight: 26, marginVertical: 8 }}
+                            onPress={() => handleShowCalculatorQuantityPress(parseFloat(quantity), item.unitId, "quantity")}
                         />
                     </View>
                     <View style={{ flexDirection: "row" }}>
@@ -185,6 +224,12 @@ export function ItemScreen(props: {
                             itemId={item.id}
                             value={item.packageUnitId}
                             onValueChange={(itemId, unitId) => dispatch(setItemPackageUnit({ itemId: itemId, packageUnitId: unitId }))}
+                        />
+                        <IconButton
+                            icon="calculator"
+                            size={32}
+                            style={{ marginLeft: 14, marginRight: 26, marginVertical: 8 }}
+                            onPress={() => handleShowCalculatorQuantityPress(packageQuantity, item.packageUnitId, "packageQuantity")}
                         />
                     </View>
                     <CategoryMenu
@@ -273,15 +318,14 @@ export function ItemScreen(props: {
                                         <View {...p} style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
                                             {
                                                 currentItemShop?.price
-                                                    ?
-                                                    <TouchableRipple
+                                                    ? <TouchableRipple
                                                         style={{
                                                             justifyContent: "center",
                                                             minHeight: 36,
                                                             minWidth: 64,
                                                             paddingHorizontal: 4,
                                                         }}
-                                                        onPress={() => handleShowCalculatorPress(currentItemShop, s.id)}
+                                                        onPress={() => handleShowCalculatorPricePress(currentItemShop, s.id)}
                                                     >
                                                         <View style={{ alignItems: "center" }}>
                                                             <Text style={{ color: theme.colors.primary }}>
@@ -289,6 +333,7 @@ export function ItemScreen(props: {
                                                             </Text>
                                                             {
                                                                 currentItemShop.unitId
+                                                                && (currentItemShop.unitId !== "-")
                                                                 && (currentItemShop.unitId !== "pkg")
                                                                 && <Text style={{ color: theme.colors.primary }}>
                                                                     {`/ ${currentItemShop.unitId}`}
@@ -298,7 +343,7 @@ export function ItemScreen(props: {
                                                     </TouchableRipple>
                                                     : <AvatarText
                                                         label="€"
-                                                        onPress={() => handleShowCalculatorPress(currentItemShop, s.id)}
+                                                        onPress={() => handleShowCalculatorPricePress(currentItemShop, s.id)}
                                                     />
                                             }
                                             <Checkbox
@@ -314,7 +359,18 @@ export function ItemScreen(props: {
                     }
                 </Card>
                 <Calculator
-                    fields={[{ title: "Preis", value: showCalculator.value, unitId: showCalculator.unitId, state: showCalculator.shopId, selected: true }]}
+                    fields={[
+                        {
+                            title: ((showCalculator.source === "shop") ? "Preis" : "Menge"),
+                            value: showCalculator.value,
+                            unitId: showCalculator.unitId,
+                            state:
+                            {
+                                source: showCalculator.source,
+                                shopId: showCalculator.shopId,
+                            },
+                            selected: true,
+                        }]}
                     visible={showCalculator.visible}
                     onClose={handleCalculatorClose}
                 />

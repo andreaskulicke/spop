@@ -1,7 +1,7 @@
 import { Portal, useTheme, Modal, Button, TextInput, Divider } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { UnitId, units } from './store/data/items';
+import { UnitId, getUnitName } from './store/data/items';
 import React, { useEffect, useState } from 'react';
 
 export function Calculator(props: {
@@ -54,24 +54,29 @@ export function Calculator(props: {
                     unitIdTmp = "kg";
                     break;
                 case "/":
-                    evaluateOperation();
-                    setOperation("/");
+                    if (evaluateOperation()) {
+                        setOperation("/");
+                    }
                     break;
                 case "*":
-                    evaluateOperation();
-                    setOperation("*");
+                    if (evaluateOperation()) {
+                        setOperation("*");
+                    }
                     break;
                 case "-":
-                    evaluateOperation();
-                    setOperation("-");
+                    if (evaluateOperation()) {
+                        setOperation("-");
+                    }
                     break;
                 case "+":
-                    evaluateOperation();
-                    setOperation("+");
+                    if (evaluateOperation()) {
+                        setOperation("+");
+                    }
                     break;
                 case "%":
-                    evaluateOperation();
-                    valueTmp = (parseFloat(valueTmp.replace(",", ".")) / 100).toFixed(2).toString();
+                    if (evaluateOperation()) {
+                        valueTmp = (parseFloat(valueTmp.replace(",", ".")) / 100).toFixed(2).toString();
+                    }
                     break;
                 case ".":
                     const lastIndexOfOp = Math.max(valueTmp.lastIndexOf("/"), valueTmp.lastIndexOf("*"), valueTmp.lastIndexOf("+"), valueTmp.lastIndexOf("-"));
@@ -113,9 +118,27 @@ export function Calculator(props: {
         valuesTmp[selectedField] = { ...valuesTmp[selectedField], value: valueTmp, unitId: unitIdTmp };
         setValues(valuesTmp);
 
-        function evaluateOperation() {
-            valueTmp = new Function(`"use strict";return (${valueTmp.replaceAll(",", ".")}).toFixed(2);`)();
+        function evaluateOperation(): boolean {
+            if (valueTmp) {
+                valueTmp = new Function(`"use strict";return (${valueTmp.replaceAll(",", ".")}).toFixed(2);`)();
+                return true;
+            }
+            return false;
         }
+    }
+
+    function handleOkClose(): void {
+        const vs = values.map(x => {
+            const v = parseFloat(x.value.replace(",", "."));
+            return (
+                {
+                    value: Number.isNaN(v) ? undefined : ((v > 0) ? v : undefined),
+                    unitId: x.unitId ?? "-",
+                    state: x.state,
+                }
+            );
+        });
+        props.onClose(vs);
     }
 
     useEffect(() => {
@@ -123,19 +146,11 @@ export function Calculator(props: {
         setSelectedField((sf === -1) ? 0 : sf);
 
         setValues(props.fields?.map(x => ({
-            value: x.value?.toString().replace(".", ",") ?? "",
+            value: Number.isNaN(x.value) ? "" : x.value?.toString().replace(".", ",") ?? "",
             unitId: x.unitId,
             state: x.state,
         })) ?? []);
     }, [props.fields]);
-
-    let displayValue = values[selectedField]?.value;
-    if (operation) {
-        displayValue += ` ${operation}`;
-    }
-    if (values[selectedField]?.unitId) {
-        displayValue += ` ${units.find(unit => unit.id === values[selectedField]?.unitId)?.name ?? ""}`;
-    }
 
     return (
         <Portal>
@@ -148,36 +163,44 @@ export function Calculator(props: {
             >
                 <View style={{ backgroundColor: theme.colors.background }}>
                     {
-                        props.fields?.map((field, i) =>
-                            <View
-                                key={field.title}
-                                style={{
-                                    borderColor: (selectedField === i) ? theme.colors.outline : theme.colors.background,
-                                    borderWidth: 1,
-                                    marginBottom: 16,
-                                    marginHorizontal: 24,
-                                    marginTop: 24,
-                                    padding: 2,
-                                }}
-                            >
-                                <TouchableWithoutFeedback
-                                    onPress={() => setSelectedField(i)}
+                        props.fields?.map((field, i) => {
+                            let displayValue = values[i]?.value;
+                            if (operation) {
+                                displayValue += ` ${operation}`;
+                            }
+                            if (values[i]?.unitId) {
+                                displayValue += ` ${getUnitName(values[i]?.unitId)}`;
+                            }
+                            return (
+                                <View
+                                    key={field.title}
+                                    style={{
+                                        borderColor: (selectedField === i) ? theme.colors.outline : theme.colors.background,
+                                        borderWidth: 1,
+                                        marginBottom: 16,
+                                        marginHorizontal: 24,
+                                        marginTop: 24,
+                                        padding: 2,
+                                    }}
                                 >
-                                    <View pointerEvents="none">
-                                        <TextInput
-                                            editable={false}
-                                            label={field.title}
-                                            selectTextOnFocus
-                                            textAlign="right"
-                                            value={displayValue}
-                                            style={{
-                                                textAlign: "right",
-                                            }}
-                                        />
-                                    </View>
-                                </TouchableWithoutFeedback>
-                            </View>
-                        )
+                                    <TouchableWithoutFeedback
+                                        onPress={() => setSelectedField(i)}
+                                    >
+                                        <View pointerEvents="none">
+                                            <TextInput
+                                                editable={false}
+                                                label={field.title}
+                                                selectTextOnFocus
+                                                textAlign="right"
+                                                value={displayValue}
+                                                style={{
+                                                    textAlign: "right",
+                                                }} />
+                                        </View>
+                                    </TouchableWithoutFeedback>
+                                </View>
+                            );
+                        })
                     }
                     <View style={style.row}>
                         <UnitButton activeUnitId={values[selectedField]?.unitId} unitId="pkg" onPress={unitId => handleButtonPress(unitId)} />
@@ -218,7 +241,7 @@ export function Calculator(props: {
                     </View>
                     <View style={style.row}>
                         <Button mode="contained-tonal" style={style.actionButton} onPress={() => props.onClose()}>Abbrechen</Button>
-                        <Button mode="contained" style={style.actionButton} onPress={() => props.onClose(values.map(x => ({ value: parseFloat(x.value.replace(",", ".")), unitId: x.unitId, state: x.state })))}>OK</Button>
+                        <Button mode="contained" style={style.actionButton} onPress={handleOkClose}>OK</Button>
                         <Button mode="contained" style={style.actionButton} onPress={() => handleButtonPress("=")}>=</Button>
                     </View>
                 </View>
@@ -232,7 +255,7 @@ function UnitButton(props: {
     unitId: UnitId;
     onPress: (unitId: UnitId, unitName: string) => void;
 }) {
-    const unitName = units.find(u => u.id === props.unitId)!.name;
+    const unitName = getUnitName(props.unitId);
 
     return (
         <Button

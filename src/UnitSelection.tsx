@@ -1,5 +1,5 @@
 import { Menu, TextInput, TouchableRipple } from "react-native-paper";
-import { UnitId, units } from "./store/data/items";
+import { UnitId, getUnitName, units } from "./store/data/items";
 import React, { useState } from "react";
 
 export function UnitSelection(props: {
@@ -25,7 +25,7 @@ export function UnitSelection(props: {
                         label="Einheit"
                         mode="outlined"
                         style={{ marginRight: 8, marginVertical: 8, width: 80 }}
-                        value={(units.find(x => x.id === props.value) ?? units[0]).name}
+                        value={getUnitName(props.value, true)}
                         right={
                             <TextInput.Icon icon={menuVisible ? "chevron-up" : "chevron-down"}
                                 onPress={() => setMenuVisible(true)}

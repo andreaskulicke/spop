@@ -5,7 +5,6 @@ import { ListSection } from './ListSection';
 import { SectionList, SectionListData, SectionListRenderItemInfo, View } from 'react-native';
 import React, { JSXElementConstructor, ReactElement, useEffect, useRef, useState } from 'react';
 import sectionListGetItemLayout from 'react-native-section-list-get-item-layout'
-import { Divider } from 'react-native-paper';
 
 export type ItemsSectionListItem = undefined | Category | Item;
 

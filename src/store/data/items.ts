@@ -43,6 +43,13 @@ export const units: Unit[] = [
     },
 ];
 
+export function getUnitName(unitId: UnitId | undefined, fullName?: boolean): string {
+    if (!fullName && (unitId === "-")) {
+        return "";
+    }
+    return units.find(unit => unit.id === unitId)?.name ?? "";
+}
+
 // Item
 export interface Item {
     id: string;

@@ -3,7 +3,7 @@ import { FillListItem } from './FillListItem';
 import { Item } from './store/data/items';
 import { ItemsSectionList, ItemsSectionListSection } from './ItemsSectionList';
 import { useAppSelector } from './store/hooks';
-import React, { JSXElementConstructor, ReactElement, useEffect } from 'react';
+import React, { JSXElementConstructor, ReactElement } from 'react';
 
 export function FillList(props: {
     storageId: string;
