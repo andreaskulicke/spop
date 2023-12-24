@@ -55,7 +55,6 @@ export function ShoppingList(props: {
         dispatch(setItemWanted({ itemId: item.id, wanted: !item.wanted }));
     }
 
-
     function handleShowCalculatorPress(item: Item): void {
         setShowCalculator({
             visible: true,
