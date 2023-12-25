@@ -9,7 +9,6 @@ import { Shop } from './store/data/shops';
 import { Text, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import React, { JSXElementConstructor, ReactElement, useState } from 'react';
-import { all } from 'deepmerge';
 
 export function ShoppingList(props: {
     shop: Shop;

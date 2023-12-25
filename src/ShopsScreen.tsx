@@ -65,7 +65,7 @@ export function ShopsScreen(props: {
                                         <Icon size={8} source="trash-can" />
                                         <Icon size={8} source="chevron-down" />
                                     </View>
-                                    : <View style={{ alignItems: "center", paddingTop: 4 }}>
+                                    : <View style={{ alignItems: "center", paddingTop: 2 }}>
                                         <Icon size={16} source="tray" />
                                     </View>
                             }

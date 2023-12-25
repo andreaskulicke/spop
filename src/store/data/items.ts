@@ -44,10 +44,10 @@ export const units: Unit[] = [
 ];
 
 export function getUnitName(unitId: UnitId | undefined, fullName?: boolean): string {
-    if (!fullName && (unitId === "-")) {
+    if (!fullName && (!unitId || (unitId === "-"))) {
         return "";
     }
-    return units.find(unit => unit.id === unitId)?.name ?? "";
+    return units.find(unit => unit.id === unitId)?.name ?? "-";
 }
 
 // Item

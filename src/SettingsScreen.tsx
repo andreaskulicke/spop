@@ -1,7 +1,7 @@
 import { Appbar, Button, Card, List, RadioButton, Switch } from "react-native-paper";
 import { resetCategories, resetItems, resetShops, resetStorages, setData } from "./store/dataSlice";
 import { ColorSchemeName, ScrollView } from "react-native";
-import { setColorTheme, setSettings, setUseCalculator } from "./store/settingsSlice";
+import { setColorTheme, setSettings } from "./store/settingsSlice";
 import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -61,16 +61,6 @@ export function SettingsScreen(props: {
                                 status={settings.display.colorTheme === "dark" ? "checked" : "unchecked"}
                                 onPress={() => handleSetColor("dark")}
                             />
-                        }
-                    />
-                </Card>
-                <Card style={{ margin: 8 }}>
-                    <Card.Title title="Dinge" />
-                    <List.Item
-                        title="Rechner verwenden"
-                        description="Bei der Eingabe von Mengen"
-                        right={p =>
-                            <Switch {...p} value={settings.things.useCalculator} onValueChange={v => { dispatch(setUseCalculator(v)); }} />
                         }
                     />
                 </Card>

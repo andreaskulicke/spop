@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import { NavigationProp, RouteProp } from '@react-navigation/native';
-import { Appbar } from 'react-native-paper';
-import { RootStackParamList } from '../App';
-import { useAppSelector } from './store/hooks';
-import { ShoppingList } from './ShoppingList';
 import { allShop, selectShop } from './store/dataSlice';
-import { ShopsStackParamList } from './ShopsNavigationScreen';
+import { Appbar } from 'react-native-paper';
+import { NavigationProp, RouteProp } from '@react-navigation/native';
+import { RootStackParamList } from '../App';
 import { SearchBarList } from './SearchBarList';
+import { ShoppingList } from './ShoppingList';
+import { ShopsStackParamList } from './ShopsNavigationScreen';
 import { StatusBarView } from './StatusBarView';
+import { useAppSelector } from './store/hooks';
+import React, { useState } from 'react';
+import { View } from 'react-native';
 
 export function ShoppingScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
