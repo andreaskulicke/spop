@@ -1,12 +1,15 @@
-import { Appbar, Button, Card, List, RadioButton, Switch } from "react-native-paper";
+import { Appbar, Button, Card, List, Menu, RadioButton, TextInput, TouchableRipple } from "react-native-paper";
 import { resetCategories, resetItems, resetShops, resetStorages, setData } from "./store/dataSlice";
 import { ColorSchemeName, ScrollView } from "react-native";
-import { setColorTheme, setSettings } from "./store/settingsSlice";
+import { setColorTheme, setSettings, setTheme } from "./store/settingsSlice";
 import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
+import { getUnitName } from "./store/data/items";
+import { useState } from "react";
+import { themes } from "./store/themes/themes";
 
 export function SettingsScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -14,9 +17,21 @@ export function SettingsScreen(props: {
     const data = useAppSelector(state => state.data);
     const settings = useAppSelector(state => state.settings);
     const dispatch = useAppDispatch();
+    const [colorThemeMenuVisible, setColorThemeMenuVisible] = useState(false);
+    const [themeMenuVisible, setThemeMenuVisible] = useState(false);
 
     function handleSetColor(colorTheme: ColorSchemeName): void {
         dispatch(setColorTheme(colorTheme));
+    }
+
+    let colorSchemeLabel = "System";
+    switch (settings.display.colorTheme) {
+        case "dark":
+            colorSchemeLabel = "Dunkel";
+            break;
+        case "light":
+            colorSchemeLabel = "Hell";
+            break;
     }
 
     return (
@@ -30,39 +45,89 @@ export function SettingsScreen(props: {
                     style={{ margin: 8 }}
                 >
                     <Card.Title title="Anzeige" />
-                    <List.Item
-                        title="System"
-                        right={p =>
-                            <RadioButton
-                                {...p}
-                                value="undefined"
-                                status={settings.display.colorTheme === undefined ? "checked" : "unchecked"}
-                                onPress={() => handleSetColor(undefined)}
-                            />
+                    <Menu
+                        anchor={
+                            <TouchableRipple
+                                onPress={() => setColorThemeMenuVisible(true)}
+                            >
+                                <TextInput
+                                    editable={false}
+                                    label="Farbschema"
+                                    mode="outlined"
+                                    value={colorSchemeLabel}
+                                    style={{ margin: 8 }}
+                                    right={
+                                        <TextInput.Icon icon={colorThemeMenuVisible ? "chevron-up" : "chevron-down"}
+                                            onPress={() => setColorThemeMenuVisible(true)}
+                                        />
+                                    }
+                                />
+                            </TouchableRipple>
                         }
-                    />
-                    <List.Item
-                        title="Hell"
-                        right={p =>
-                            <RadioButton
-                                {...p}
-                                value="light"
-                                status={settings.display.colorTheme === "light" ? "checked" : "unchecked"}
-                                onPress={() => handleSetColor("light")}
-                            />
+                        anchorPosition="bottom"
+                        visible={colorThemeMenuVisible}
+                        style={{ marginLeft: 8 }}
+                        onDismiss={() => setColorThemeMenuVisible(false)}
+                    >
+                        <Menu.Item
+                            title="System"
+                            onPress={() => {
+                                setColorThemeMenuVisible(false);
+                                dispatch(setColorTheme(undefined));
+                            }}
+                        />
+                        <Menu.Item
+                            title="Hell"
+                            onPress={() => {
+                                setColorThemeMenuVisible(false);
+                                dispatch(setColorTheme("light"));
+                            }}
+                        />
+                        <Menu.Item
+                            title="Dunkel"
+                            onPress={() => {
+                                setColorThemeMenuVisible(false);
+                                dispatch(setColorTheme("dark"));
+                            }}
+                        />
+                    </Menu>
+                    <Menu
+                        anchor={
+                            <TouchableRipple
+                                onPress={() => setThemeMenuVisible(true)}
+                            >
+                                <TextInput
+                                    editable={false}
+                                    label="Schema"
+                                    mode="outlined"
+                                    value={themes.find(x => x.id === settings.display.theme)?.label}
+                                    style={{ margin: 8 }}
+                                    right={
+                                        <TextInput.Icon icon={themeMenuVisible ? "chevron-up" : "chevron-down"}
+                                            onPress={() => setThemeMenuVisible(true)}
+                                        />
+                                    }
+                                />
+                            </TouchableRipple>
                         }
-                    />
-                    <List.Item
-                        title="Dunkel"
-                        right={p =>
-                            <RadioButton
-                                {...p}
-                                value="dark"
-                                status={settings.display.colorTheme === "dark" ? "checked" : "unchecked"}
-                                onPress={() => handleSetColor("dark")}
-                            />
+                        anchorPosition="bottom"
+                        style={{ marginLeft: 8 }}
+                        visible={themeMenuVisible}
+                        onDismiss={() => setThemeMenuVisible(false)}
+                    >
+                        {
+                            themes.map(t =>
+                                <Menu.Item
+                                    key={t.id}
+                                    title={t.label}
+                                    onPress={() => {
+                                        setThemeMenuVisible(false);
+                                        dispatch(setTheme(t.id));
+                                    }}
+                                />
+                            )
                         }
-                    />
+                    </Menu>
                 </Card>
                 <Card style={{ margin: 8 }}>
                     <Card.Title title="Daten" />

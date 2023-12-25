@@ -29,7 +29,8 @@ export function UnitSelection(props: {
                         right={
                             <TextInput.Icon icon={menuVisible ? "chevron-up" : "chevron-down"}
                                 onPress={() => setMenuVisible(true)}
-                            />}
+                            />
+                        }
                     />
                 </TouchableRipple>
             }

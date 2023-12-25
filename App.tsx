@@ -12,15 +12,7 @@ import { StorageScreen } from './src/StorageScreen';
 import { store } from './src/store/store';
 import { useAppSelector } from './src/store/hooks';
 import { useColorScheme } from 'react-native';
-import merge from 'deepmerge';
-
-const { LightTheme, DarkTheme } = adaptNavigationTheme({
-    reactNavigationLight: NavigationDefaultTheme,
-    reactNavigationDark: NavigationDarkTheme,
-});
-
-const CombinedDefaultTheme = merge(MD3LightTheme, LightTheme);
-const CombinedDarkTheme = merge(MD3DarkTheme, DarkTheme);
+import { selectTheme } from './src/store/settingsSlice';
 
 export type RootStackParamList = {
     Category: { id: string };
@@ -44,10 +36,7 @@ export default function App() {
 function AppWithStore() {
     const colorScheme = useColorScheme();
     const settings = useAppSelector(state => state.settings);
-
-    const theme = ((settings.display.colorTheme ?? colorScheme) === "dark")
-        ? CombinedDarkTheme
-        : CombinedDefaultTheme;
+    const theme = useAppSelector(selectTheme((settings.display.colorTheme ?? colorScheme) === "dark"));
 
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
