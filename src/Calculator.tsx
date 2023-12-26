@@ -161,7 +161,12 @@ export function Calculator(props: {
                 }}
                 onDismiss={props.onClose}
             >
-                <View style={{ backgroundColor: theme.colors.background }}>
+                <View
+                    style={{
+                        backgroundColor: theme.colors.background,
+                        paddingVertical: 24,
+                    }}
+                >
                     {
                         props.fields?.map((field, i) => {
                             let displayValue = values[i]?.value;
@@ -176,10 +181,9 @@ export function Calculator(props: {
                                     key={field.title}
                                     style={{
                                         borderColor: (selectedField === i) ? theme.colors.outline : theme.colors.background,
-                                        borderWidth: 1,
-                                        marginBottom: 16,
+                                        borderWidth: 2,
                                         marginHorizontal: 24,
-                                        marginTop: 24,
+                                        marginBottom: 8,
                                         padding: 2,
                                     }}
                                 >
@@ -271,7 +275,7 @@ function UnitButton(props: {
 
 const style = StyleSheet.create({
     "actionButton": {
-        marginVertical: 8,
+        marginTop: 8,
         width: "30%",
     },
     "row": {

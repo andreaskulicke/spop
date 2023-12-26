@@ -12,6 +12,7 @@ import { UnitSelection } from "./UnitSelection";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import React, { useEffect, useState } from "react";
 import uuid from 'react-native-uuid';
+import { Shop } from "./store/data/shops";
 
 type CalculatorCallSource = "quantity" | "packageQuantity" | "shop";
 
@@ -27,12 +28,12 @@ export function ItemScreen(props: {
             visible: boolean;
             value?: number;
             unitId?: UnitId;
-            shopId?: string;
+            shop?: Shop;
             source?: CalculatorCallSource;
         }
     >({ visible: false });
-    const [storagesExpanded, setStoragesExpanded] = useState(false);
-    const [shopsExpanded, setShopsExpanded] = useState(false);
+    const [storagesExpanded, setStoragesExpanded] = useState(!!props.route.params.storagesId);
+    const [shopsExpanded, setShopsExpanded] = useState(!!props.route.params.shopId);
     const item = useAppSelector(selectItem(props.route.params.id))!;
     const shops = useAppSelector(selectValidShops);
     const storages = useAppSelector(state => state.data.storages);
@@ -76,7 +77,7 @@ export function ItemScreen(props: {
                 dispatch(setItemPackageQuantity({ itemId: item.id, packageQuantity: value.value }));
                 dispatch(setItemPackageUnit({ itemId: item.id, packageUnitId: value.unitId ?? "-" }));
             } else {
-                dispatch(setItemShopPrice({ itemId: item.id, shopId: value.state.shopId, price: value.value, unitId: value.unitId }));
+                dispatch(setItemShopPrice({ itemId: item.id, shopId: value.state.shop.id, price: value.value, unitId: value.unitId }));
             }
         }
     }
@@ -94,12 +95,12 @@ export function ItemScreen(props: {
         dispatch(setItemWanted({ itemId: item.id, wanted: !item.wanted }))
     }
 
-    function handleShowCalculatorPricePress(currentItemShop: ItemShop | undefined, shopId: string): void {
+    function handleShowCalculatorPricePress(currentItemShop: ItemShop | undefined, shop: Shop): void {
         setShowCalculator({
             visible: true,
             value: currentItemShop?.price,
             unitId: currentItemShop?.unitId,
-            shopId: shopId,
+            shop: shop,
             source: "shop",
         });
     }
@@ -325,7 +326,7 @@ export function ItemScreen(props: {
                                                             minWidth: 64,
                                                             paddingHorizontal: 4,
                                                         }}
-                                                        onPress={() => handleShowCalculatorPricePress(currentItemShop, s.id)}
+                                                        onPress={() => handleShowCalculatorPricePress(currentItemShop, s)}
                                                     >
                                                         <View style={{ alignItems: "center" }}>
                                                             <Text style={{ color: theme.colors.primary }}>
@@ -343,7 +344,7 @@ export function ItemScreen(props: {
                                                     </TouchableRipple>
                                                     : <AvatarText
                                                         label="€"
-                                                        onPress={() => handleShowCalculatorPricePress(currentItemShop, s.id)}
+                                                        onPress={() => handleShowCalculatorPricePress(currentItemShop, s)}
                                                     />
                                             }
                                             <Checkbox
@@ -361,13 +362,13 @@ export function ItemScreen(props: {
                 <Calculator
                     fields={[
                         {
-                            title: ((showCalculator.source === "shop") ? "Preis" : "Menge"),
+                            title: ((showCalculator.source === "shop") ? `Preis - ${showCalculator.shop?.name}` : "Menge"),
                             value: showCalculator.value,
                             unitId: showCalculator.unitId,
                             state:
                             {
                                 source: showCalculator.source,
-                                shopId: showCalculator.shopId,
+                                shop: showCalculator.shop,
                             },
                             selected: true,
                         }]}

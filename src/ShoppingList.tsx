@@ -46,7 +46,7 @@ export function ShoppingList(props: {
     }
 
     function handleItemPress(item: Item): void {
-        navigation.navigate("Item", { id: item.id });
+        navigation.navigate("Item", { id: item.id, shopId: props.shop.id });
     }
 
     function handleItemWantedPress(item: Item): void {
@@ -181,7 +181,7 @@ export function ShoppingList(props: {
                 selectedItemId={props.selectedItemId}
             />
             <Calculator
-                fields={getCalculatorFields(props.shop.id, showCalculator.item)}
+                fields={getCalculatorFields(props.shop, showCalculator.item)}
                 visible={showCalculator.visible}
                 onClose={handleCalculatorClose}
             />
@@ -189,8 +189,8 @@ export function ShoppingList(props: {
     );
 }
 
-function getCalculatorFields(shopId: string, item?: Item) {
-    const currentItemShop = item?.shops.find(x => x.shopId === shopId);
+function getCalculatorFields(shop: Shop, item?: Item) {
+    const currentItemShop = item?.shops.find(x => x.shopId === shop.id);
     const data = [
         {
             title: "Menge",
@@ -200,10 +200,10 @@ function getCalculatorFields(shopId: string, item?: Item) {
             selected: true,
         }
     ];
-    if (shopId !== allShop.id) {
+    if (shop.id !== allShop.id) {
         data.push(
             {
-                title: "Preis",
+                title: `Preis - ${shop.name}`,
                 value: currentItemShop?.price,
                 unitId: currentItemShop?.unitId,
                 state: item,

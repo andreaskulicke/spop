@@ -101,7 +101,7 @@ export function FillList(props: {
                         }
                     </View>
                 }
-                onPress={() => navigation.navigate("Item", { id: item.id })}
+                onPress={() => navigation.navigate("Item", { id: item.id, storagesId: props.storageId })}
             />
         );
     }
