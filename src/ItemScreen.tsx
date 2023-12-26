@@ -3,16 +3,17 @@ import { Appbar, Card, Checkbox, IconButton, List, TextInput, TouchableRipple, u
 import { AvatarText } from "./AvatarText";
 import { Calculator } from "./Calculator";
 import { CategoryMenu } from "./CategoryMenu";
+import { ItemShop, UnitId, units } from "./store/data/items";
 import { Keyboard, ScrollView, Text, View } from "react-native";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
+import { PriceIcon } from "./PriceIcon";
 import { RootStackParamList } from "../App";
+import { Shop } from "./store/data/shops";
 import { StatusBarView } from "./StatusBarView";
-import { ItemShop, UnitId, units } from "./store/data/items";
 import { UnitSelection } from "./UnitSelection";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import React, { useEffect, useState } from "react";
 import uuid from 'react-native-uuid';
-import { Shop } from "./store/data/shops";
 
 type CalculatorCallSource = "quantity" | "packageQuantity" | "shop";
 
@@ -329,9 +330,15 @@ export function ItemScreen(props: {
                                                         onPress={() => handleShowCalculatorPricePress(currentItemShop, s)}
                                                     >
                                                         <View style={{ alignItems: "center" }}>
-                                                            <Text style={{ color: theme.colors.primary }}>
-                                                                {`${currentItemShop.price.toString().replace(".", ",")} €`}
-                                                            </Text>
+                                                            <View style={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
+                                                                <Text style={{ color: theme.colors.primary }}>
+                                                                    {`${currentItemShop.price.toString().replace(".", ",")} €`}
+                                                                </Text>
+                                                                <PriceIcon
+                                                                    itemId={item.id}
+                                                                    shopId={currentItemShop.shopId}
+                                                                />
+                                                            </View>
                                                             {
                                                                 currentItemShop.unitId
                                                                 && (currentItemShop.unitId !== "-")

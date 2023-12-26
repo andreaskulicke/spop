@@ -9,6 +9,7 @@ import { Shop } from './store/data/shops';
 import { Text, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import React, { JSXElementConstructor, ReactElement, useState } from 'react';
+import { PriceIcon } from './PriceIcon';
 
 export function ShoppingList(props: {
     shop: Shop;
@@ -96,31 +97,13 @@ export function ShoppingList(props: {
                 right={
                     p => (
                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
-                            <TouchableRipple
-                                style={{
-                                    justifyContent: "center",
-                                    minHeight: 40,
-                                    minWidth: 64,
-                                    paddingHorizontal: 4,
-                                }}
+                            <QuantityPrice
+                                itemId={item.id}
+                                shopId={props.shop.id}
+                                quantity={quantity}
+                                price={price}
                                 onPress={() => handleShowCalculatorPress(item)}
-                            >
-                                <View style={{ alignItems: "center" }}>
-                                    {
-                                        quantity
-                                        && <Text style={{ color: theme.colors.primary }}>
-                                            {quantity}
-                                        </Text>
-                                    }
-                                    {
-                                        (props.shop.id !== allShop.id)
-                                        && price
-                                        && <Text style={{ color: theme.colors.primary }}>
-                                            {price}
-                                        </Text>
-                                    }
-                                </View>
-                            </TouchableRipple>
+                            />
                             {
                                 item.wanted
                                     ? <Tooltip title="Hab dich">
@@ -212,4 +195,48 @@ function getCalculatorFields(shop: Shop, item?: Item) {
         );
     }
     return data;
+}
+
+function QuantityPrice(props: {
+    itemId: string;
+    shopId: string;
+    quantity: string | undefined;
+    price: string | undefined;
+    onPress: () => void;
+}) {
+    const theme = useTheme();
+
+    return (
+        <TouchableRipple
+            style={{
+                justifyContent: "center",
+                minHeight: 40,
+                minWidth: 64,
+                paddingHorizontal: 4,
+            }}
+            onPress={props.onPress}
+        >
+            <View style={{ alignItems: "center" }}>
+                {
+                    props.quantity
+                    && <Text style={{ color: theme.colors.primary }}>
+                        {props.quantity}
+                    </Text>
+                }
+                {
+                    (props.shopId !== allShop.id)
+                    && props.price
+                    && <View style={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
+                        <Text style={{ color: theme.colors.primary }}>
+                            {props.price}
+                        </Text>
+                        <PriceIcon
+                            itemId={props.itemId}
+                            shopId={props.shopId}
+                        />
+                    </View>
+                }
+            </View>
+        </TouchableRipple>
+    );
 }

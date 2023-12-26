@@ -1,7 +1,7 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './store';
 import { Category, defaultCategories } from './data/categories';
-import { defaultItems, Item, UnitId, units } from './data/items';
+import { defaultItems, Item, ItemShop, UnitId, units } from './data/items';
 import { defaultShops, Shop } from './data/shops';
 import { defaultStorages, Storage } from './data/storages';
 
@@ -517,6 +517,19 @@ export function selectItem(id: string): (state: RootState) => Item | undefined {
         const item = state.data.items.find(x => x.id === id);
         return item;
     };
+}
+
+export function selecItemShopsWithMinPrice(itemId: string): (state: RootState) => ItemShop[] {
+    return createSelector(
+        [selectItem(itemId)],
+        item => {
+            if (!item) {
+                return [];
+            }
+            const prices = item.shops.filter(x => (x.price !== undefined) && (x.price !== null)).map(x => x.price!);
+            const minPrice = Math.min(...prices);
+            return item.shops.filter(x => x.price === minPrice);
+        });
 }
 
 // Shops
