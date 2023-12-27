@@ -446,7 +446,7 @@ export function selectCategory(id: string | undefined): (state: RootState) => Ca
 
 // Items
 
-export function selectItemsWantedWithShop(shop: Shop) {
+export function selectItemsWantedWithShop(shop: Shop, stopperOff?: boolean) {
     return createSelector(
         [selectItems, selectCategories, selectShops],
         (items, categories, shops) => {
@@ -456,15 +456,19 @@ export function selectItemsWantedWithShop(shop: Shop) {
 
             // Add all previous shops from last stopper
             const s = new Set();
-            for (const shopTmp of shops) {
-                if (shopTmp.id === shop.id) {
-                    s.add(shopTmp.id);
-                    break;
-                }
-                if (shopTmp.stopper) {
-                    s.clear();
-                } else {
-                    s.add(shopTmp.id);
+            if (stopperOff) {
+                s.add(shop.id)
+            } else {
+                for (const shopTmp of shops) {
+                    if (shopTmp.id === shop.id) {
+                        s.add(shopTmp.id);
+                        break;
+                    }
+                    if (shopTmp.stopper) {
+                        s.clear();
+                    } else {
+                        s.add(shopTmp.id);
+                    }
                 }
             }
 

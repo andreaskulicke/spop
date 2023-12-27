@@ -1,23 +1,24 @@
 import { allShop, selectItemsNotWantedWithShop, selectItemsWantedWithShop, selectItemsWantedWithoutShop, selectValidShops, setItemQuantity, setItemShop, setItemShopPrice, setItemUnit, setItemWanted } from './store/dataSlice';
 import { Calculator } from './Calculator';
+import { getCalculatorFields } from './getCalculatorFields';
 import { Item, UnitId, getUnitName, itemListStyle } from './store/data/items';
 import { ItemsSectionList, ItemsSectionListSection } from './ItemsSectionList';
 import { List, Tooltip, Checkbox, IconButton, useTheme, TouchableRipple } from 'react-native-paper';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { PriceIcon } from './PriceIcon';
 import { RootStackParamList } from '../App';
 import { Shop } from './store/data/shops';
 import { Text, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import React, { JSXElementConstructor, ReactElement, useState } from 'react';
-import { PriceIcon } from './PriceIcon';
-import { getCalculatorFields } from './getCalculatorFields';
 
 export function ShoppingList(props: {
     shop: Shop;
     selectedItemId?: string;
+    stopperOff?: boolean;
 }) {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-    const itemsForThisShop3 = useAppSelector(selectItemsWantedWithShop(props.shop));
+    const itemsForThisShop3 = useAppSelector(selectItemsWantedWithShop(props.shop, props.stopperOff));
     const unassigned = useAppSelector(selectItemsWantedWithoutShop());
     const recentlyUsed = useAppSelector(selectItemsNotWantedWithShop(props.shop.id));
     const shops = useAppSelector(selectValidShops);
