@@ -25,8 +25,8 @@ export interface Shop {
 
 export function getShopSvg(shop: Shop, props: { color: string, style: Style }) {
     const s: SvgProps = {
-        height: 42,
-        width: 42,
+        height: 40,
+        width: 40,
         ...props,
     };
     if (/aldi/i.test(shop.name)) {
