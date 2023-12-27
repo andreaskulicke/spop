@@ -125,7 +125,7 @@ export function FillList(props: {
     ];
 
     return (
-        <View>
+        <View style={{ flex: 1 }}>
             <ItemsSectionList
                 data={data}
                 renderItem={handleRenderItem}
