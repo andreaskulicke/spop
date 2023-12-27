@@ -153,6 +153,7 @@ export function ShoppingList(props: {
         {
             title: "Zuletzt verwendet",
             icon: "history",
+            collapsed: true,
             data: recentlyUsed,
         },
     ];

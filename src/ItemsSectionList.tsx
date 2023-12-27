@@ -11,11 +11,11 @@ export type ItemsSectionListItem = undefined | Category | Item;
 export interface ItemsSectionListSection {
     title: string;
     icon: string;
+    collapsed?: boolean;
     data: ItemsSectionListItem[];
 }
 
 interface Data extends ItemsSectionListSection {
-    collapsed?: boolean;
     onExpandChange: (expanded: boolean) => void;
 }
 
@@ -24,7 +24,7 @@ export function ItemsSectionList(props: {
     selectedItemId?: string;
     renderItem: (item: Item) => ReactElement<any, string | JSXElementConstructor<any>> | null;
 }) {
-    const [expanded, setExpanded] = useState<boolean[]>(Array(props.data.length).fill(true));
+    const [expanded, setExpanded] = useState<boolean[]>(props.data.map(x => !x.collapsed));
     const listRef = useRef<SectionList<ItemsSectionListItem, Data>>(null);
 
     function handleExpandChange(i: number, exp: boolean): void {
@@ -86,34 +86,12 @@ export function ItemsSectionList(props: {
     const categoryHeight = 52 + 2;
     const itemHeight = 64 + 2;
 
-    // const offsets: { length: number; offset: number; id: string }[] = [{ length: headerHeight, offset: 0, id: "" }];
-    // for (let sectionIndex = 0; sectionIndex < data.length; sectionIndex++) {
-    //     const section = data[sectionIndex];
-    //     offsets.push({ length: sectionHeaderHeight, offset: (offsets[offsets.length - 1].offset + offsets[offsets.length - 1].length), id: "sh:" + section.title });
-    //     for (let sectionRowIndex = 0; sectionRowIndex < section.data.length; sectionRowIndex++) {
-    //         let height = 0;
-    //         const row = section.data[sectionRowIndex];
-    //         if (isItem(row)) {
-    //             height = itemHeight;
-    //         } else {
-    //             height = categoryHeight;
-    //         }
-    //         offsets.push({ length: height, offset: (offsets[offsets.length - 1].offset + offsets[offsets.length - 1].length), id: "r: " + row?.name });
-    //     }
-    //     offsets.push({ length: sectionFooterHeight, offset: (offsets[offsets.length - 1].offset + offsets[offsets.length - 1].length), id: "sf" });
-    // }
-    // offsets.shift();
-    // console.log(offsets);
-
     return (
         <SectionList
             ref={listRef}
             sections={data}
             renderSectionHeader={handleRenderSectionHeader}
             renderItem={handleRenderItem}
-            // getItemLayout={(d, i) => {
-            //     return { ...offsets[i], index: i };
-            // }}
             getItemLayout={sectionListGetItemLayout({
                 getItemHeight: (rowData, sectionIndex, rowIndex) => {
                     return isItem(rowData) ? itemHeight : categoryHeight;
