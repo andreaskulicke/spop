@@ -18,12 +18,13 @@ export function CategorySection(props: React.PropsWithChildren<{
         <View
             style={{
                 marginBottom: 2,
+                marginHorizontal: 4,
             }}
         >
             <View
                 style={{
                     alignItems: "center",
-                    backgroundColor: theme.colors.tertiaryContainer,
+                    backgroundColor: theme.colors.secondaryContainer,
                     flexDirection: "row",
                     gap: 8,
                     padding: 16,

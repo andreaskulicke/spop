@@ -16,6 +16,7 @@ export interface ItemsSectionListSection {
 }
 
 interface Data extends ItemsSectionListSection {
+    bold?: boolean;
     onExpandChange: (expanded: boolean) => void;
 }
 
@@ -36,6 +37,7 @@ export function ItemsSectionList(props: {
     function handleRenderSectionHeader(info: { section: SectionListData<ItemsSectionListItem, Data>; }): ReactElement<any, string | JSXElementConstructor<any>> | null {
         return (
             <ListSection
+                bold={info.section.bold}
                 icon={info.section.icon}
                 title={info.section.title}
                 collapsed={info.section.collapsed}
@@ -78,7 +80,7 @@ export function ItemsSectionList(props: {
         }
     }, [props.selectedItemId]);
 
-    const data: Data[] = props.data.map((x, i) => ({ ...x, collapsed: !expanded[i], onExpandChange: (exp) => handleExpandChange(i, exp) }));
+    const data: Data[] = props.data.map((x, i) => ({ ...x, bold: (i === 0), collapsed: !expanded[i], onExpandChange: (exp) => handleExpandChange(i, exp) }));
 
     const headerHeight = 52;
     const sectionHeaderHeight = 52;

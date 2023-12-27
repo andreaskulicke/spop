@@ -3,6 +3,7 @@ import { TouchableOpacity, View } from 'react-native';
 import { Icon, IconButton, Text, useTheme } from 'react-native-paper';
 
 export function ListSection(props: React.PropsWithChildren<{
+    bold?: boolean;
     collapsed?: boolean | undefined;
     count?: number;
     icon?: string;
@@ -37,7 +38,7 @@ export function ListSection(props: React.PropsWithChildren<{
                 marginBottom: 2,
             }}
         >
-            <TouchableOpacity style={{ backgroundColor: theme.colors.secondaryContainer }} onPress={handlePress}>
+            <TouchableOpacity style={{ backgroundColor: theme.colors.primaryContainer }} onPress={handlePress}>
                 <View style={{
                     alignItems: "center",
                     flexDirection: "row",
@@ -54,7 +55,7 @@ export function ListSection(props: React.PropsWithChildren<{
                             props.icon
                             && <Icon size={16} source={props.icon} />
                         }
-                        <Text variant="titleSmall">
+                        <Text variant={props.bold ? "titleMedium" : "titleSmall"}>
                             {props.title + ((props.count !== undefined) ? ` (${props.count})` : "")}
                         </Text>
                     </View>
