@@ -1,7 +1,7 @@
 import { addItem, allStorage, allShop } from './store/dataSlice';
 import { FillFromHistoryList } from './FillFromHistoryList';
 import { Item } from './store/data/items';
-import { KeyboardAvoidingView, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native';
 import { SearchBar } from './SearchBar';
 import { Shop } from './store/data/shops';
 import { Storage } from './store/data/storages';
@@ -68,10 +68,11 @@ export function SearchBarList(props: {
                 onSubmitEditing={() => handlePress(newItem)}
             />
             {
-                !filter
+                (!filter || !filter.name)
                     ? props.list
                     : <FillFromHistoryList
                         item={newItem}
+                        shop={props.shop}
                         onPress={handlePress}
                         onIconPress={handleIconPress} />
             }

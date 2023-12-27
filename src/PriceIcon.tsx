@@ -1,4 +1,4 @@
-import { selecItemShopsWithMinPrice } from './store/dataSlice';
+import { selectItemShopsWithMinPrice } from './store/dataSlice';
 import { useTheme, Icon } from 'react-native-paper';
 import { useAppSelector } from './store/hooks';
 import React from 'react';
@@ -7,7 +7,7 @@ export function PriceIcon(props: {
     itemId: string;
     shopId: string;
 }) {
-    const itemShopsWithMinPrice = useAppSelector(selecItemShopsWithMinPrice(props.itemId));
+    const itemShopsWithMinPrice = useAppSelector(selectItemShopsWithMinPrice(props.itemId));
     const theme = useTheme();
 
     const hasMinPriceTmp = itemShopsWithMinPrice.find(x => x.shopId === props.shopId);

@@ -16,11 +16,13 @@ export function Calculator(props: {
     onClose: (values?: { value?: number; unitId?: UnitId; state?: any }[]) => void;
 }) {
     const [selectedField, setSelectedField] = useState(-1);
-    const [values, setValues] = useState<{ value: string; unitId?: UnitId, state?: any }[]>(props.fields?.map(x => ({
-        value: x.value?.toString().replace(".", ",") ?? "",
-        unitId: x.unitId,
-        state: x.state,
-    })) ?? []);
+    const [values, setValues] = useState<{ value: string; unitId?: UnitId, state?: any }[]>(props.fields
+        ?.filter(x => !!x)
+        .map(x => ({
+            value: x.value?.toString().replace(".", ",") ?? "",
+            unitId: x.unitId,
+            state: x.state,
+        })) ?? []);
     const [operation, setOperation] = useState<"+" | "-" | "*" | "/">();
     const theme = useTheme();
 
@@ -142,14 +144,16 @@ export function Calculator(props: {
     }
 
     useEffect(() => {
-        const sf = props.fields?.findIndex(x => x.selected) ?? -1;
+        const sf = props.fields?.filter(x => !!x).findIndex(x => x.selected) ?? -1;
         setSelectedField((sf === -1) ? 0 : sf);
 
-        setValues(props.fields?.map(x => ({
-            value: Number.isNaN(x.value) ? "" : x.value?.toString().replace(".", ",") ?? "",
-            unitId: x.unitId,
-            state: x.state,
-        })) ?? []);
+        setValues(props.fields
+            ?.filter(x => !!x)
+            .map(x => ({
+                value: Number.isNaN(x.value) ? "" : x.value?.toString().replace(".", ",") ?? "",
+                unitId: x.unitId,
+                state: x.state,
+            })) ?? []);
     }, [props.fields]);
 
     return (
@@ -168,43 +172,45 @@ export function Calculator(props: {
                     }}
                 >
                     {
-                        props.fields?.map((field, i) => {
-                            let displayValue = values[i]?.value;
-                            if (operation) {
-                                displayValue += ` ${operation}`;
-                            }
-                            if (values[i]?.unitId) {
-                                displayValue += ` ${getUnitName(values[i]?.unitId)}`;
-                            }
-                            return (
-                                <View
-                                    key={field.title}
-                                    style={{
-                                        borderColor: (selectedField === i) ? theme.colors.outline : theme.colors.background,
-                                        borderWidth: 2,
-                                        marginHorizontal: 24,
-                                        marginBottom: 8,
-                                        padding: 2,
-                                    }}
-                                >
-                                    <TouchableWithoutFeedback
-                                        onPress={() => setSelectedField(i)}
+                        props.fields
+                            ?.filter(x => !!x)
+                            .map((field, i) => {
+                                let displayValue = values[i]?.value;
+                                if (operation) {
+                                    displayValue += ` ${operation}`;
+                                }
+                                if (values[i]?.unitId) {
+                                    displayValue += ` ${getUnitName(values[i]?.unitId)}`;
+                                }
+                                return (
+                                    <View
+                                        key={field.title}
+                                        style={{
+                                            borderColor: (selectedField === i) ? theme.colors.outline : theme.colors.background,
+                                            borderWidth: 2,
+                                            marginHorizontal: 24,
+                                            marginBottom: 8,
+                                            padding: 2,
+                                        }}
                                     >
-                                        <View pointerEvents="none">
-                                            <TextInput
-                                                editable={false}
-                                                label={field.title}
-                                                selectTextOnFocus
-                                                textAlign="right"
-                                                value={displayValue}
-                                                style={{
-                                                    textAlign: "right",
-                                                }} />
-                                        </View>
-                                    </TouchableWithoutFeedback>
-                                </View>
-                            );
-                        })
+                                        <TouchableWithoutFeedback
+                                            onPress={() => setSelectedField(i)}
+                                        >
+                                            <View pointerEvents="none">
+                                                <TextInput
+                                                    editable={false}
+                                                    label={field.title}
+                                                    selectTextOnFocus
+                                                    textAlign="right"
+                                                    value={displayValue}
+                                                    style={{
+                                                        textAlign: "right",
+                                                    }} />
+                                            </View>
+                                        </TouchableWithoutFeedback>
+                                    </View>
+                                );
+                            })
                     }
                     <View style={style.row}>
                         <UnitButton activeUnitId={values[selectedField]?.unitId} unitId="pkg" onPress={unitId => handleButtonPress(unitId)} />

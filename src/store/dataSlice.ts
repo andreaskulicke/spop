@@ -519,7 +519,7 @@ export function selectItem(id: string): (state: RootState) => Item | undefined {
     };
 }
 
-export function selecItemShopsWithMinPrice(itemId: string): (state: RootState) => ItemShop[] {
+export function selectItemShopsWithMinPrice(itemId: string): (state: RootState) => ItemShop[] {
     return createSelector(
         [selectItem(itemId)],
         item => {

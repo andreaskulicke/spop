@@ -8,7 +8,6 @@ import { ShopsStackParamList } from './ShopsNavigationScreen';
 import { StatusBarView } from './StatusBarView';
 import { useAppSelector } from './store/hooks';
 import React, { useState } from 'react';
-import { View } from 'react-native';
 
 export function ShoppingScreen(props: {
     navigation: NavigationProp<RootStackParamList>;

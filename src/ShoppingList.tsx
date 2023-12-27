@@ -10,6 +10,7 @@ import { Text, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import React, { JSXElementConstructor, ReactElement, useState } from 'react';
 import { PriceIcon } from './PriceIcon';
+import { getCalculatorFields } from './getCalculatorFields';
 
 export function ShoppingList(props: {
     shop: Shop;
@@ -170,31 +171,6 @@ export function ShoppingList(props: {
             />
         </View>
     );
-}
-
-function getCalculatorFields(shop: Shop, item?: Item) {
-    const currentItemShop = item?.shops.find(x => x.shopId === shop.id);
-    const data = [
-        {
-            title: "Menge",
-            value: Number.parseFloat(item?.quantity ?? "0") as number | undefined,
-            unitId: item?.unitId,
-            state: item,
-            selected: true,
-        }
-    ];
-    if (shop.id !== allShop.id) {
-        data.push(
-            {
-                title: `Preis - ${shop.name}`,
-                value: currentItemShop?.price,
-                unitId: currentItemShop?.unitId,
-                state: item,
-                selected: false,
-            }
-        );
-    }
-    return data;
 }
 
 function QuantityPrice(props: {
