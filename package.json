@@ -34,6 +34,7 @@
     "@types/react": "^18.2.31",
     "@types/react-test-renderer": "^18.0.5",
     "react-native-svg-transformer": "^1.1.0",
+    "reactotron-react-native": "^5.0.4",
     "typescript": "^5.2.2"
   },
   "scripts": {

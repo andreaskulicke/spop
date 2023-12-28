@@ -14,6 +14,11 @@ import { useAppSelector } from './src/store/hooks';
 import { useColorScheme } from 'react-native';
 import { selectTheme } from './src/store/settingsSlice';
 
+// import "./ReactotronConfig";
+// if (__DEV__) {
+// import("./ReactotronConfig").then(() => console.log("Reactotron Configured"));
+// }
+
 export type RootStackParamList = {
     Category: { id: string };
     Home: undefined;
