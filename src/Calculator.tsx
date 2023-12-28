@@ -160,8 +160,11 @@ export function Calculator(props: {
         <Portal>
             <Modal
                 visible={props.visible ?? false}
-                style={{
+                contentContainerStyle={{
+                    alignSelf: "center",
                     padding: 16,
+                    minWidth: 360,
+                    maxWidth: 400,
                 }}
                 onDismiss={props.onClose}
             >
