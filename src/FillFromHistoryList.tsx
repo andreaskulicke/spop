@@ -7,6 +7,8 @@ import { selectItems, setItemShopPrice } from './store/dataSlice';
 import { Shop } from './store/data/shops';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import React, { useState } from 'react';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../App';
 
 export function FillFromHistoryList(props: {
     item: Item;
@@ -22,6 +24,7 @@ export function FillFromHistoryList(props: {
     >({ visible: false });
     const items = useAppSelector(selectItems);
     const dispatch = useAppDispatch();
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     function handleCalculatorClose(values?: { value?: number | undefined; unitId?: UnitId | undefined; state?: any; }[] | undefined): void {
         setShowCalculator({ visible: false });
@@ -30,6 +33,10 @@ export function FillFromHistoryList(props: {
             const item = value.state as Item;
             dispatch(setItemShopPrice({ itemId: item.id, shopId: props.shop!.id, price: value.value, unitId: value.unitId }))
         }
+    }
+
+    function handleLongPress(item: Item): void {
+        navigation.navigate("Item", { id: item.id, shopId: props.shop?.id })
     }
 
     function handleCalculatorPress(item: Item): void {
@@ -65,6 +72,7 @@ export function FillFromHistoryList(props: {
                         item={{ ...x, quantity: props.item.quantity }}
                         shopId={props.shop?.id}
                         onPress={props.onPress}
+                        onLongPress={handleLongPress}
                         onCalculatorPress={handleCalculatorPress}
                         onIconPress={props.onIconPress}
                     />)

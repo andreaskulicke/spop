@@ -10,11 +10,16 @@ export function FillFromHistoryListItem(props: {
     item: Item;
     shopId?: string;
     onPress?: (item: Item) => void;
+    onLongPress?: (item: Item) => void;
     onCalculatorPress?: (item: Item) => void;
     onIconPress?: (name: string, quantity: string | undefined) => void;
 }) {
     function handlePress(): void {
         props.onPress?.(props.item);
+    }
+
+    function handleLongPress(): void {
+        props.onLongPress?.(props.item);
     }
 
     function handleIconPress(): void {
@@ -55,6 +60,8 @@ export function FillFromHistoryListItem(props: {
                     <AvatarIcon icon="arrow-top-left" onPress={handleIconPress} />
                 </View>
             }
-            onPress={handlePress} />
+            onPress={handlePress}
+            onLongPress={handleLongPress}
+            />
     );
 }
