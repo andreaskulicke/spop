@@ -250,7 +250,7 @@ export function ItemScreen(props: {
                             onPress={() => setStoragesExpanded(x => !x)}
                         >
                             <Card.Title
-                                title="Storages"
+                                title="Vorratsorte"
                                 subtitle={storages.filter(x => item.storages.find(y => y.storageId === x.id)).map(x => x.name).join(", ")}
                                 right={p =>
                                     <View style={{ flexDirection: "row" }}>

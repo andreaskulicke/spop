@@ -68,7 +68,7 @@ export function StoragesScreen(props: {
     return (
         <StatusBarView>
             <Appbar.Header elevated>
-                <Appbar.Content title="Storages" />
+                <Appbar.Content title="Vorratsorte" />
                 <Appbar.Action icon="plus-outline" onPress={handleAddStoragePress} />
                 <Menu
                     anchor={<Appbar.Action icon="dots-vertical" onPress={handleDotsPress} />}

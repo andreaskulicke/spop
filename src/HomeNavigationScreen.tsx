@@ -21,7 +21,7 @@ export function HomeNavigationScreen() {
                 name="StoragesEntry"
                 options={{
                     tabBarIcon: p => <Icon {...p} size={24} source="home-plus-outline" />,
-                    tabBarLabel: "Storages",
+                    tabBarLabel: "Vorratsorte",
                 }}
             />
             <Tab.Screen

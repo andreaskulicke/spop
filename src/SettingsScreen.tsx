@@ -1,6 +1,6 @@
 import { Appbar, Button, Card, List, Menu, RadioButton, TextInput, TouchableRipple } from "react-native-paper";
-import { resetCategories, resetItems, resetShops, resetStorages, setData } from "./store/dataSlice";
-import { ColorSchemeName, ScrollView } from "react-native";
+import { resetCategories, resetItems, resetShops, resetStorages, setData, setItems, setShops, setStorages } from "./store/dataSlice";
+import { ColorSchemeName, ScrollView, View } from "react-native";
 import { setColorTheme, setSettings, setTheme } from "./store/settingsSlice";
 import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
@@ -134,15 +134,15 @@ export function SettingsScreen(props: {
                     <List.Item
                         title="Dinge"
                         right={p =>
-                            <Button {...p} mode="outlined" onPress={() => dispatch(resetItems())}>
-                                Zurücksetzten
+                            <Button {...p} compact mode="outlined" onPress={() => dispatch(setItems([]))}>
+                                Löschen
                             </Button>
                         }
                     />
                     <List.Item
                         title="Kategorien"
                         right={p =>
-                            <Button {...p} mode="outlined" onPress={() => dispatch(resetCategories())}>
+                            <Button {...p} compact mode="outlined" onPress={() => dispatch(resetCategories())}>
                                 Zurücksetzten
                             </Button>
                         }
@@ -150,35 +150,27 @@ export function SettingsScreen(props: {
                     <List.Item
                         title="Shops"
                         right={p =>
-                            <Button {...p} mode="outlined" onPress={() => dispatch(resetShops())}>
-                                Zurücksetzten
-                            </Button>
+                            <View style={{ flexDirection: "row" }}>
+                                <Button {...p} compact mode="outlined" onPress={() => dispatch(resetShops())}>
+                                    Standard
+                                </Button>
+                                <Button {...p} compact mode="outlined" onPress={() => dispatch(setShops([]))}>
+                                    Löschen
+                                </Button>
+                            </View>
                         }
                     />
                     <List.Item
-                        title="Storages"
+                        title="Vorratsorte"
                         right={p =>
-                            <Button {...p} mode="outlined" onPress={() => dispatch(resetStorages())}>
-                                Zurücksetzten
-                            </Button>
-                        }
-                    />
-                    <List.Item
-                        title="Alles in AsyncStorage"
-                        right={p =>
-                            <Button {...p} mode="outlined" onPress={async () => {
-                                const keys = await AsyncStorage.getAllKeys();
-                                await AsyncStorage.multiRemove(keys, errors => { })
-                                dispatch(setData({
-                                    categories: [...data.categories],
-                                    items: [...data.items],
-                                    shops: [...data.shops],
-                                    storages: [...data.storages],
-                                }));
-                                dispatch(setSettings({ ...settings }));
-                            }}>
-                                Löschen
-                            </Button>
+                            <View style={{ flexDirection: "row" }}>
+                                <Button {...p} compact mode="outlined" onPress={() => dispatch(resetStorages())}>
+                                    Standard
+                                </Button>
+                                <Button {...p} compact mode="outlined" onPress={() => dispatch(setStorages([]))}>
+                                    Löschen
+                                </Button>
+                            </View>
                         }
                     />
                 </Card>

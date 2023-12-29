@@ -48,7 +48,7 @@ export function StorageScreen(props: {
         <StatusBarView bottomPadding>
             <Appbar.Header elevated>
                 <Appbar.BackAction onPress={handleGoBack} />
-                <Appbar.Content title={storage?.name ?? "Storage"} />
+                <Appbar.Content title={storage?.name ?? "Vorrat"} />
                 <Appbar.Action icon="trash-can" onPress={handleDeletePress} />
             </Appbar.Header>
             <ScrollView>
