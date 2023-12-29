@@ -77,7 +77,7 @@ export function ShoppingList(props: {
 
         const currentItemShop = item.shops.find(x => x.shopId === props.shop.id);
 
-        let quantity = (item.quantity !== "0") ? item.quantity : "";
+        let quantity = (item.quantity !== "0") ? item.quantity?.toString().replace(".", ",") : "";
         if (quantity && item.unitId) {
             quantity += ` ${getUnitName(item.unitId)}`;
         }
