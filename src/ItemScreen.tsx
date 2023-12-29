@@ -4,7 +4,7 @@ import { AvatarText } from "./AvatarText";
 import { Calculator } from "./Calculator";
 import { CategoryMenu } from "./CategoryMenu";
 import { ItemShop, UnitId, units } from "./store/data/items";
-import { Keyboard, ScrollView, Text, View } from "react-native";
+import { Keyboard, KeyboardAvoidingView, ScrollView, Text, View } from "react-native";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { PriceIcon } from "./PriceIcon";
 import { RootStackParamList } from "../App";
@@ -161,228 +161,233 @@ export function ItemScreen(props: {
                 <Appbar.Content title={item?.name ?? "Item"} />
                 <Appbar.Action icon="trash-can" onPress={handleDeletePress} />
             </Appbar.Header>
-            <ScrollView>
-                <Card
-                    style={{ margin: 8 }}
-                >
-                    <Card.Title title="Allgemein" />
-                    <View style={{ flexDirection: "row", alignItems: "center", paddingRight: 8 }}>
-                        <TextInput
-                            label="Name"
-                            mode="outlined"
-                            selectTextOnFocus
-                            style={{ flexGrow: 1, margin: 8 }}
-                            value={name}
-                            onBlur={handleTextInputNameBlur}
-                            onChangeText={handleTextInputNameChange}
-                        />
-                        <Checkbox.Item
-                            label=""
-                            status={item.wanted ? "checked" : "unchecked"}
-                            style={{ marginLeft: 4, marginRight: 8, marginVertical: 8 }}
-                            onPress={handleCheckPress}
-                        />
-                    </View>
-                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <TextInput
-                            keyboardType="numeric"
-                            label="Menge"
-                            mode="outlined"
-                            selectTextOnFocus
-                            style={{ flexGrow: 1, margin: 8 }}
-                            value={quantity}
-                            onBlur={handleTextInputQuantityBlur}
-                            onChangeText={text => {
-                                setQuantity(text.replace(/[^0-9]/g, ""));
-                            }}
-                        />
-                        <UnitSelection
-                            itemId={item.id}
-                            value={item.unitId}
-                            onValueChange={(itemId, unitId) => dispatch(setItemUnit({ itemId: itemId, unitId: unitId }))}
-                        />
-                        <IconButton
-                            icon="calculator"
-                            size={32}
-                            style={{ marginLeft: 14, marginRight: 26, marginVertical: 8 }}
-                            onPress={() => handleShowCalculatorQuantityPress(parseFloat(quantity), item.unitId, "quantity")}
-                        />
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                        <TextInput
-                            keyboardType="numeric"
-                            label="Packet Menge"
-                            mode="outlined"
-                            selectTextOnFocus
-                            style={{ flexGrow: 1, margin: 8 }}
-                            value={packageQuantity?.toString() ?? ""}
-                            onBlur={handleTextInputPackageQuantityBlur}
-                            onChangeText={text => {
-                                const n = parseInt(text.replace(/[^0-9]/g, ""));
-                                setPackageQuantity(isNaN(n) ? undefined : n);
-                            }}
-                        />
-                        <UnitSelection
-                            itemId={item.id}
-                            value={item.packageUnitId}
-                            onValueChange={(itemId, unitId) => dispatch(setItemPackageUnit({ itemId: itemId, packageUnitId: unitId }))}
-                        />
-                        <IconButton
-                            icon="calculator"
-                            size={32}
-                            style={{ marginLeft: 14, marginRight: 26, marginVertical: 8 }}
-                            onPress={() => handleShowCalculatorQuantityPress(packageQuantity, item.packageUnitId, "packageQuantity")}
-                        />
-                    </View>
-                    <CategoryMenu
-                        categoryId={item.categoryId}
-                        onSetCategory={categoryId => dispatch(setItemCategory({ itemId: item.id, categoryId: categoryId }))}
-                    />
-                </Card>
-                <Card
-                    style={{ margin: 8 }}
-                >
-                    <TouchableRipple
-                        onPress={() => setStoragesExpanded(x => !x)}
+            <KeyboardAvoidingView
+                behavior="height"
+                style={{ flex: 1 }}
+            >
+                <ScrollView>
+                    <Card
+                        style={{ margin: 8 }}
                     >
-                        <Card.Title
-                            title="Storages"
-                            subtitle={storages.filter(x => item.storages.find(y => y.storageId === x.id)).map(x => x.name).join(", ")}
-                            right={p =>
-                                <View style={{ flexDirection: "row" }}>
-                                    <IconButton
-                                        {...p}
-                                        icon="plus-outline"
-                                        onPress={handleAddStoragePress}
-                                    />
-                                    <IconButton
-                                        {...p}
-                                        icon={storagesExpanded ? "chevron-up" : "chevron-down"}
-                                        onPress={() => setStoragesExpanded(x => !x)}
-                                    />
-                                </View>
-                            }
-                        />
-                    </TouchableRipple>
-                    {
-                        storagesExpanded
-                        && storages.map(s => {
-                            return <List.Item
-                                key={s.id}
-                                title={s.name}
-                                right={p => {
-                                    const checked = item.storages.find(x => x.storageId === s.id);
-                                    return <Checkbox
-                                        {...p}
-                                        status={checked ? "checked" : "unchecked"}
-                                        onPress={() => handleStorageCheck(s.id, !checked)} />;
-                                }}
-                                onPress={() => props.navigation.navigate("Storage", { id: s.id })}
-                            />;
-                        })
-                    }
-                </Card>
-                <Card
-                    style={{ margin: 8 }}
-                >
-                    <TouchableRipple
-                        onPress={() => setShopsExpanded(x => !x)}
-                    >
-                        <Card.Title
-                            title="Shops"
-                            subtitle={shops.filter(x => item.shops.find(y => y.checked && (y.shopId === x.id))).map(x => x.name).join(", ")}
-                            right={p =>
-                                <View style={{ flexDirection: "row" }}>
-                                    <IconButton
-                                        {...p}
-                                        icon="plus-outline"
-                                        onPress={handleAddShopPress}
-                                    />
-                                    <IconButton
-                                        {...p}
-                                        icon={shopsExpanded ? "chevron-up" : "chevron-down"}
-                                        onPress={() => setShopsExpanded(x => !x)}
-                                    />
-                                </View>
-                            }
-
-                        />
-                    </TouchableRipple>
-                    {
-                        shopsExpanded
-                        && shops.map(s =>
-                            <List.Item
-                                key={s.id}
-                                title={s.name}
-                                right={p => {
-                                    const currentItemShop = item.shops.find(x => x.shopId === s.id);
-                                    return (
-                                        <View {...p} style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
-                                            {
-                                                currentItemShop?.price
-                                                    ? <TouchableRipple
-                                                        style={{
-                                                            justifyContent: "center",
-                                                            minHeight: 36,
-                                                            minWidth: 64,
-                                                            paddingHorizontal: 4,
-                                                        }}
-                                                        onPress={() => handleShowCalculatorPricePress(currentItemShop, s)}
-                                                    >
-                                                        <View style={{ alignItems: "center" }}>
-                                                            <View style={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
-                                                                <Text style={{ color: theme.colors.primary }}>
-                                                                    {`${currentItemShop.price.toString().replace(".", ",")} €`}
-                                                                </Text>
-                                                                <PriceIcon
-                                                                    itemId={item.id}
-                                                                    shopId={currentItemShop.shopId}
-                                                                />
-                                                            </View>
-                                                            {
-                                                                currentItemShop.unitId
-                                                                && (currentItemShop.unitId !== "-")
-                                                                && (currentItemShop.unitId !== "pkg")
-                                                                && <Text style={{ color: theme.colors.primary }}>
-                                                                    {`/ ${currentItemShop.unitId}`}
-                                                                </Text>
-                                                            }
-                                                        </View>
-                                                    </TouchableRipple>
-                                                    : <AvatarText
-                                                        label="€"
-                                                        onPress={() => handleShowCalculatorPricePress(currentItemShop, s)}
-                                                    />
-                                            }
-                                            <Checkbox
-                                                status={currentItemShop?.checked ? "checked" : "unchecked"}
-                                                onPress={() => handleShopCheck(s.id, !currentItemShop?.checked)}
-                                            />
-                                        </View>
-                                    );
-                                }}
-                                onPress={() => props.navigation.navigate("Shop", { id: s.id })}
+                        <Card.Title title="Allgemein" />
+                        <View style={{ flexDirection: "row", alignItems: "center", paddingRight: 8 }}>
+                            <TextInput
+                                label="Name"
+                                mode="outlined"
+                                selectTextOnFocus
+                                style={{ flexGrow: 1, margin: 8 }}
+                                value={name}
+                                onBlur={handleTextInputNameBlur}
+                                onChangeText={handleTextInputNameChange}
                             />
-                        )
-                    }
-                </Card>
-                <Calculator
-                    fields={[
+                            <Checkbox.Item
+                                label=""
+                                status={item.wanted ? "checked" : "unchecked"}
+                                style={{ marginLeft: 4, marginRight: 8, marginVertical: 8 }}
+                                onPress={handleCheckPress}
+                            />
+                        </View>
+                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                            <TextInput
+                                keyboardType="numeric"
+                                label="Menge"
+                                mode="outlined"
+                                selectTextOnFocus
+                                style={{ flexGrow: 1, margin: 8 }}
+                                value={quantity}
+                                onBlur={handleTextInputQuantityBlur}
+                                onChangeText={text => {
+                                    setQuantity(text.replace(/[^0-9]/g, ""));
+                                }}
+                            />
+                            <UnitSelection
+                                itemId={item.id}
+                                value={item.unitId}
+                                onValueChange={(itemId, unitId) => dispatch(setItemUnit({ itemId: itemId, unitId: unitId }))}
+                            />
+                            <IconButton
+                                icon="calculator"
+                                size={32}
+                                style={{ marginLeft: 14, marginRight: 26, marginVertical: 8 }}
+                                onPress={() => handleShowCalculatorQuantityPress(parseFloat(quantity), item.unitId, "quantity")}
+                            />
+                        </View>
+                        <View style={{ flexDirection: "row" }}>
+                            <TextInput
+                                keyboardType="numeric"
+                                label="Packet Menge"
+                                mode="outlined"
+                                selectTextOnFocus
+                                style={{ flexGrow: 1, margin: 8 }}
+                                value={packageQuantity?.toString() ?? ""}
+                                onBlur={handleTextInputPackageQuantityBlur}
+                                onChangeText={text => {
+                                    const n = parseInt(text.replace(/[^0-9]/g, ""));
+                                    setPackageQuantity(isNaN(n) ? undefined : n);
+                                }}
+                            />
+                            <UnitSelection
+                                itemId={item.id}
+                                value={item.packageUnitId}
+                                onValueChange={(itemId, unitId) => dispatch(setItemPackageUnit({ itemId: itemId, packageUnitId: unitId }))}
+                            />
+                            <IconButton
+                                icon="calculator"
+                                size={32}
+                                style={{ marginLeft: 14, marginRight: 26, marginVertical: 8 }}
+                                onPress={() => handleShowCalculatorQuantityPress(packageQuantity, item.packageUnitId, "packageQuantity")}
+                            />
+                        </View>
+                        <CategoryMenu
+                            categoryId={item.categoryId}
+                            onSetCategory={categoryId => dispatch(setItemCategory({ itemId: item.id, categoryId: categoryId }))}
+                        />
+                    </Card>
+                    <Card
+                        style={{ margin: 8 }}
+                    >
+                        <TouchableRipple
+                            onPress={() => setStoragesExpanded(x => !x)}
+                        >
+                            <Card.Title
+                                title="Storages"
+                                subtitle={storages.filter(x => item.storages.find(y => y.storageId === x.id)).map(x => x.name).join(", ")}
+                                right={p =>
+                                    <View style={{ flexDirection: "row" }}>
+                                        <IconButton
+                                            {...p}
+                                            icon="plus-outline"
+                                            onPress={handleAddStoragePress}
+                                        />
+                                        <IconButton
+                                            {...p}
+                                            icon={storagesExpanded ? "chevron-up" : "chevron-down"}
+                                            onPress={() => setStoragesExpanded(x => !x)}
+                                        />
+                                    </View>
+                                }
+                            />
+                        </TouchableRipple>
                         {
-                            title: ((showCalculator.source === "shop") ? `Preis - ${showCalculator.shop?.name}` : "Menge"),
-                            value: showCalculator.value,
-                            unitId: showCalculator.unitId,
-                            state:
+                            storagesExpanded
+                            && storages.map(s => {
+                                return <List.Item
+                                    key={s.id}
+                                    title={s.name}
+                                    right={p => {
+                                        const checked = item.storages.find(x => x.storageId === s.id);
+                                        return <Checkbox
+                                            {...p}
+                                            status={checked ? "checked" : "unchecked"}
+                                            onPress={() => handleStorageCheck(s.id, !checked)} />;
+                                    }}
+                                    onPress={() => props.navigation.navigate("Storage", { id: s.id })}
+                                />;
+                            })
+                        }
+                    </Card>
+                    <Card
+                        style={{ margin: 8 }}
+                    >
+                        <TouchableRipple
+                            onPress={() => setShopsExpanded(x => !x)}
+                        >
+                            <Card.Title
+                                title="Shops"
+                                subtitle={shops.filter(x => item.shops.find(y => y.checked && (y.shopId === x.id))).map(x => x.name).join(", ")}
+                                right={p =>
+                                    <View style={{ flexDirection: "row" }}>
+                                        <IconButton
+                                            {...p}
+                                            icon="plus-outline"
+                                            onPress={handleAddShopPress}
+                                        />
+                                        <IconButton
+                                            {...p}
+                                            icon={shopsExpanded ? "chevron-up" : "chevron-down"}
+                                            onPress={() => setShopsExpanded(x => !x)}
+                                        />
+                                    </View>
+                                }
+
+                            />
+                        </TouchableRipple>
+                        {
+                            shopsExpanded
+                            && shops.map(s =>
+                                <List.Item
+                                    key={s.id}
+                                    title={s.name}
+                                    right={p => {
+                                        const currentItemShop = item.shops.find(x => x.shopId === s.id);
+                                        return (
+                                            <View {...p} style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
+                                                {
+                                                    currentItemShop?.price
+                                                        ? <TouchableRipple
+                                                            style={{
+                                                                justifyContent: "center",
+                                                                minHeight: 36,
+                                                                minWidth: 64,
+                                                                paddingHorizontal: 4,
+                                                            }}
+                                                            onPress={() => handleShowCalculatorPricePress(currentItemShop, s)}
+                                                        >
+                                                            <View style={{ alignItems: "center" }}>
+                                                                <View style={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
+                                                                    <Text style={{ color: theme.colors.primary }}>
+                                                                        {`${currentItemShop.price.toString().replace(".", ",")} €`}
+                                                                    </Text>
+                                                                    <PriceIcon
+                                                                        itemId={item.id}
+                                                                        shopId={currentItemShop.shopId}
+                                                                    />
+                                                                </View>
+                                                                {
+                                                                    currentItemShop.unitId
+                                                                    && (currentItemShop.unitId !== "-")
+                                                                    && (currentItemShop.unitId !== "pkg")
+                                                                    && <Text style={{ color: theme.colors.primary }}>
+                                                                        {`/ ${currentItemShop.unitId}`}
+                                                                    </Text>
+                                                                }
+                                                            </View>
+                                                        </TouchableRipple>
+                                                        : <AvatarText
+                                                            label="€"
+                                                            onPress={() => handleShowCalculatorPricePress(currentItemShop, s)}
+                                                        />
+                                                }
+                                                <Checkbox
+                                                    status={currentItemShop?.checked ? "checked" : "unchecked"}
+                                                    onPress={() => handleShopCheck(s.id, !currentItemShop?.checked)}
+                                                />
+                                            </View>
+                                        );
+                                    }}
+                                    onPress={() => props.navigation.navigate("Shop", { id: s.id })}
+                                />
+                            )
+                        }
+                    </Card>
+                    <Calculator
+                        fields={[
                             {
-                                source: showCalculator.source,
-                                shop: showCalculator.shop,
-                            },
-                            selected: true,
-                        }]}
-                    visible={showCalculator.visible}
-                    onClose={handleCalculatorClose}
-                />
-            </ScrollView>
+                                title: ((showCalculator.source === "shop") ? `Preis - ${showCalculator.shop?.name}` : "Menge"),
+                                value: showCalculator.value,
+                                unitId: showCalculator.unitId,
+                                state:
+                                {
+                                    source: showCalculator.source,
+                                    shop: showCalculator.shop,
+                                },
+                                selected: true,
+                            }]}
+                        visible={showCalculator.visible}
+                        onClose={handleCalculatorClose}
+                    />
+                </ScrollView>
+            </KeyboardAvoidingView>
         </StatusBarView>
     );
 }

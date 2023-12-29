@@ -48,6 +48,7 @@ export function ListSection(props: React.PropsWithChildren<{
                         alignItems: "center",
                         flex: 1,
                         flexDirection: "row",
+                        flexWrap: "nowrap",
                         gap: 8,
                         justifyContent: "center",
                     }}>
