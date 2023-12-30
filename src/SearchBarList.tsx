@@ -8,6 +8,8 @@ import { Storage } from './store/data/storages';
 import { useAppDispatch } from './store/hooks';
 import React, { useEffect, useState } from 'react';
 import uuid from 'react-native-uuid';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../App';
 
 export function SearchBarList(props: {
     list: React.ReactNode;
@@ -16,8 +18,6 @@ export function SearchBarList(props: {
     onItemPress?: (itemId: string) => void;
 }) {
     const [filter, setFilter] = useState<{ text: string; name?: string; quantity?: string; }>();
-    const dispatch = useAppDispatch();
-
     const [newItem, setNewItem] = useState<Item>({
         id: uuid.v4() as string,
         name: "",
@@ -25,6 +25,8 @@ export function SearchBarList(props: {
         shops: (!props.shop || (props.shop.id === allShop.id)) ? [] : [{ checked: true, shopId: props.shop.id }],
         storages: (!props.storage || (props.storage.id === allStorage.id)) ? [] : [{ storageId: props.storage.id }],
     });
+    const dispatch = useAppDispatch();
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     function handlePress(item: Item): void {
         if (item?.name) {
@@ -48,6 +50,17 @@ export function SearchBarList(props: {
     function handleSearchChange(text: string, name: string, quantity: string): void {
         setFilter({ text, name, quantity });
     }
+
+    useEffect(() => {
+        const r = (e: any) => {
+            if (filter) {
+                e.preventDefault();
+                setFilter(undefined);
+            }
+        };
+        navigation.addListener("beforeRemove", r);
+        return () => navigation.removeListener("beforeRemove", r);
+    })
 
     useEffect(() => {
         setNewItem(v => ({
