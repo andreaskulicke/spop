@@ -73,6 +73,7 @@ export function SearchBarList(props: {
                     : <FillFromHistoryList
                         item={newItem}
                         shop={props.shop}
+                        storage={props.storage}
                         onPress={handlePress}
                         onIconPress={handleIconPress} />
             }

@@ -22,7 +22,7 @@ import { selectTheme } from './src/store/settingsSlice';
 export type RootStackParamList = {
     Category: { id: string };
     Home: undefined;
-    Item: { id: string, storagesId?: string; shopId?: string; };
+    Item: { id: string, storageId?: string; shopId?: string; };
     Settings: undefined;
     Shop: { id: string };
     Storage: { id: string };

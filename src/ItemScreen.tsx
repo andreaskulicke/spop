@@ -33,7 +33,7 @@ export function ItemScreen(props: {
             source?: CalculatorCallSource;
         }
     >({ visible: false });
-    const [storagesExpanded, setStoragesExpanded] = useState(!!props.route.params.storagesId);
+    const [storagesExpanded, setStoragesExpanded] = useState(!!props.route.params.storageId);
     const [shopsExpanded, setShopsExpanded] = useState(!!props.route.params.shopId);
     const item = useAppSelector(selectItem(props.route.params.id))!;
     const shops = useAppSelector(selectValidShops);

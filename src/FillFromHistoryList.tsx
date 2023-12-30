@@ -3,16 +3,18 @@ import { FillFromHistoryListItem } from './FillFromHistoryListItem';
 import { getCalculatorFields } from './getCalculatorFields';
 import { Item, UnitId } from './store/data/items';
 import { Keyboard, ScrollView } from 'react-native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../App';
 import { selectItems, setItemShopPrice } from './store/dataSlice';
 import { Shop } from './store/data/shops';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import React, { useState } from 'react';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../App';
+import { Storage } from './store/data/storages';
 
 export function FillFromHistoryList(props: {
     item: Item;
     shop?: Shop;
+    storage?: Storage;
     onPress?: (item: Item) => void;
     onIconPress?: (name: string, quantity: string | undefined) => void;
 }) {
@@ -36,7 +38,7 @@ export function FillFromHistoryList(props: {
     }
 
     function handleLongPress(item: Item): void {
-        navigation.navigate("Item", { id: item.id, shopId: props.shop?.id })
+        navigation.navigate("Item", { id: item.id, shopId: props.shop?.id, storageId: props.storage?.id })
     }
 
     function handleCalculatorPress(item: Item): void {
