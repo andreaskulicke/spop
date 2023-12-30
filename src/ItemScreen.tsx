@@ -44,6 +44,7 @@ export function ItemScreen(props: {
     function handleGoBack() {
         handleTextInputNameBlur();
         handleTextInputQuantityBlur();
+        handleTextInputPackageQuantityBlur();
         props.navigation.goBack();
     }
 
@@ -147,6 +148,15 @@ export function ItemScreen(props: {
             dispatch(setItemPackageQuantity({ itemId: item.id, packageQuantity: packageQuantity }));
         }
     }
+
+    useEffect(() => {
+        const s = Keyboard.addListener("keyboardDidHide", () => {
+            handleTextInputNameBlur();
+            handleTextInputQuantityBlur();
+            handleTextInputPackageQuantityBlur();
+        });
+        return () => s.remove();
+    });
 
     useEffect(() => {
         setName(item?.name ?? "");

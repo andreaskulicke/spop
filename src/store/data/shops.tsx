@@ -68,13 +68,13 @@ export function getShopSvg(shop: Shop, props: { color: string, style: Style }) {
 export const defaultShops: Shop[] = [
     {
         id: "fruitmarket",
-        name: "Lohhofer Obstmarkt",
+        name: "Obstmarkt",
         defaultCategoryId: "fruits_vegetables",
         categoryIds: ["fruits_vegetables"],
     },
     {
-        id: "polster",
-        name: "Polster",
+        id: "backery",
+        name: "Bäcker",
         defaultCategoryId: "bakery",
         categoryIds: ["bakery"],
     },

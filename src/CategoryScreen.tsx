@@ -1,6 +1,6 @@
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
-import { ScrollView, View } from "react-native";
+import { Keyboard, ScrollView, View } from "react-native";
 import { Appbar, Card, Portal, TextInput, Dialog } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { deleteCategory, selectCategory, setCategoryIcon, setCategoryName } from "./store/dataSlice";
@@ -51,6 +51,11 @@ export function CategoryScreen(props: {
     function handleTextInputNameChange(text: string): void {
         setName(text);
     }
+
+    useEffect(() => {
+        const s = Keyboard.addListener("keyboardDidHide", () => handleTextInputNameBlur());
+        return () => s.remove();
+    });
 
     useEffect(() => {
         setName(category?.name ?? "");

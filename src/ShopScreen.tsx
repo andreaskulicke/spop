@@ -6,10 +6,10 @@ import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 import { ReactNode, useEffect, useState } from "react";
 import { RootStackParamList } from "../App";
-import { selectShop, addCategory, addShopCategory, setShopCategoryShow, deleteShop, setShopName, setShopCategories, setShopDefaultCategory, selectCategories, setStorageName } from "./store/dataSlice";
+import { selectShop, addCategory, addShopCategory, setShopCategoryShow, deleteShop, setShopName, setShopCategories, setShopDefaultCategory, selectCategories } from "./store/dataSlice";
 import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { View } from "react-native";
+import { Keyboard, View } from "react-native";
 import uuid from 'react-native-uuid';
 
 export function ShopScreen(props: {
@@ -65,6 +65,11 @@ export function ShopScreen(props: {
     function handleTextInputNameChange(text: string): void {
         setName(text);
     }
+
+    useEffect(() => {
+        const s = Keyboard.addListener("keyboardDidHide", () => handleTextInputNameBlur());
+        return () => s.remove();
+    });
 
     useEffect(() => {
         setName(shop?.name ?? "");

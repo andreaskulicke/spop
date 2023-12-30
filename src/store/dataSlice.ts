@@ -1,9 +1,9 @@
-import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from './store';
 import { Category, defaultCategories } from './data/categories';
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { defaultItems, Item, ItemShop, UnitId, units } from './data/items';
-import { defaultShops, Shop } from './data/shops';
-import { defaultStorages, Storage } from './data/storages';
+import { RootState } from './store';
+import { Shop } from './data/shops';
+import { Storage } from './data/storages';
 
 export interface Data {
     categories: Category[];
@@ -16,8 +16,8 @@ export interface Data {
 const initialState: Data = {
     categories: defaultCategories,
     items: defaultItems,
-    shops: defaultShops,
-    storages: defaultStorages,
+    shops: [],
+    storages: [],
 }
 
 function initializeShopCategoryIds(data: Data, shop: Shop) {
@@ -167,10 +167,10 @@ export const itemsSlice = createSlice({
             const item = state.items.find(x => x.id === action.payload.itemId);
             if (item) {
                 item.packageUnitId = action.payload.packageUnitId;
-                const unit = units.find(u => u.id === action.payload.packageUnitId);
-                if (unit?.group) {
-                    const unit2 = units.find(u => u.id === item.unitId);
-                    if (unit.group !== unit2?.group) {
+                const packageUnit = units.find(u => u.id === action.payload.packageUnitId);
+                if (packageUnit?.group) {
+                    const unit = units.find(u => u.id === item.unitId);
+                    if (unit?.group && (packageUnit.group !== unit?.group)) {
                         item.unitId = item.packageUnitId;
                     }
                 }
@@ -221,8 +221,8 @@ export const itemsSlice = createSlice({
                 item.unitId = action.payload.unitId;
                 const unit = units.find(u => u.id === action.payload.unitId);
                 if (unit?.group) {
-                    const unit2 = units.find(u => u.id === item.packageUnitId);
-                    if (unit.group !== unit2?.group) {
+                    const packageUnit = units.find(u => u.id === item.packageUnitId);
+                    if (unit.group !== packageUnit?.group) {
                         item.packageUnitId = item.unitId;
                     }
                 }

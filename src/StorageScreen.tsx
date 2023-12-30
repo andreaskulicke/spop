@@ -1,6 +1,6 @@
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
-import { ScrollView } from "react-native";
+import { Keyboard, ScrollView } from "react-native";
 import { Appbar, Card, TextInput } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { selectStorage, deleteStorage, setStorageName, setStorageDefaultCategory, selectCategories } from "./store/dataSlice";
@@ -39,6 +39,11 @@ export function StorageScreen(props: {
     function handleTextInputNameChange(text: string): void {
         setName(text);
     }
+
+    useEffect(() => {
+        const s = Keyboard.addListener("keyboardDidHide", () => handleTextInputNameBlur());
+        return () => s.remove();
+    });
 
     useEffect(() => {
         setName(storage?.name ?? "");

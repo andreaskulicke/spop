@@ -26,6 +26,14 @@ export function Calculator(props: {
     const [operation, setOperation] = useState<"+" | "-" | "*" | "/">();
     const theme = useTheme();
 
+    function evaluateCalculateOperation(value: string): [boolean, string] {
+        if (value) {
+            const valueTmp = new Function(`"use strict";return (${value.replaceAll(",", ".")}).toFixed(2);`)();
+            return [true, valueTmp];
+        }
+        return [false, value];
+    }
+
     function handleButtonPress(enteredValue: number | string): void {
         let valueTmp = values[selectedField].value;
         let unitIdTmp = values[selectedField].unitId;
@@ -121,16 +129,18 @@ export function Calculator(props: {
         setValues(valuesTmp);
 
         function evaluateOperation(): boolean {
-            if (valueTmp) {
-                valueTmp = new Function(`"use strict";return (${valueTmp.replaceAll(",", ".")}).toFixed(2);`)();
-                return true;
-            }
-            return false;
+            const v = evaluateCalculateOperation(valueTmp);
+            valueTmp = v[1];
+            return v[0];
         }
     }
 
     function handleOkClose(): void {
-        const vs = values.map(x => {
+        const valueTmp = evaluateCalculateOperation(values[selectedField].value)[1];
+        const valuesTmp = [...values];
+        valuesTmp[selectedField] = { ...valuesTmp[selectedField], value: valueTmp };
+
+        const vs = valuesTmp.map(x => {
             const v = parseFloat(x.value.replace(",", "."));
             return (
                 {
