@@ -172,7 +172,7 @@ export function Calculator(props: {
                 visible={props.visible ?? false}
                 contentContainerStyle={{
                     alignSelf: "center",
-                    padding: 16,
+                    padding: 12,
                     minWidth: 360,
                     maxWidth: 400,
                 }}
@@ -181,7 +181,7 @@ export function Calculator(props: {
                 <View
                     style={{
                         backgroundColor: theme.colors.background,
-                        paddingVertical: 24,
+                        paddingVertical: 12,
                     }}
                 >
                     {

@@ -43,6 +43,13 @@ export const units: Unit[] = [
     },
 ];
 
+export function getPackageQuantityUnit(item: Item): string {
+    if (item.packageQuantity != undefined) {
+        return `${item.packageQuantity}${getUnitName(item.packageUnitId)}`;
+    }
+    return "";
+}
+
 export function getUnitName(unitId: UnitId | undefined, fullName?: boolean): string {
     if (!fullName && (!unitId || (unitId === "-"))) {
         return "";

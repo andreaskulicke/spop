@@ -1,7 +1,7 @@
 import { allShop, selectItemsNotWantedWithShop, selectItemsWantedWithShop, selectItemsWantedWithoutShop, selectValidShops, setItemQuantity, setItemShop, setItemShopPrice, setItemUnit, setItemWanted } from './store/dataSlice';
 import { Calculator } from './Calculator';
 import { getCalculatorFields } from './getCalculatorFields';
-import { Item, UnitId, getUnitName, itemListStyle } from './store/data/items';
+import { Item, UnitId, getPackageQuantityUnit, getUnitName, itemListStyle } from './store/data/items';
 import { ItemsSectionList, ItemsSectionListSection } from './ItemsSectionList';
 import { List, Tooltip, Checkbox, IconButton, useTheme, TouchableRipple } from 'react-native-paper';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
@@ -11,6 +11,7 @@ import { Shop } from './store/data/shops';
 import { Text, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import React, { JSXElementConstructor, ReactElement, useState } from 'react';
+import { withSeparator } from './withSeparator';
 
 export function ShoppingList(props: {
     shop: Shop;
@@ -66,14 +67,14 @@ export function ShoppingList(props: {
 
     function handleRenderItem(item: Item): ReactElement<any, string | JSXElementConstructor<any>> | null {
 
-        let description = "";
-        if (props.shop.id !== allShop.id) {
-            description = item.shops
+        const description = withSeparator(
+            getPackageQuantityUnit(item),
+            " - ",
+            item.shops
                 .filter(x => x.checked)
                 .map(x => shops.find(s => s.id === x.shopId)?.name)
                 .filter(x => !!x)
-                .join(", ");
-        }
+                .join(", "));
 
         const currentItemShop = item.shops.find(x => x.shopId === props.shop.id);
 
@@ -167,7 +168,7 @@ export function ShoppingList(props: {
                 selectedItemId={props.selectedItemId}
             />
             <Calculator
-                fields={getCalculatorFields(props.shop, showCalculator.item)}
+                fields={getCalculatorFields(showCalculator.item, props.shop)}
                 visible={showCalculator.visible}
                 onClose={handleCalculatorClose}
             />

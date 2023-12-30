@@ -2,7 +2,7 @@ import { allShop } from './store/dataSlice';
 import { Item } from './store/data/items';
 import { Shop } from './store/data/shops';
 
-export function getCalculatorFields(shop: Shop | undefined, item: Item | undefined) {
+export function getCalculatorFields(item: Item | undefined, shop?: Shop) {
     const currentItemShop = item?.shops.find(x => x.shopId === shop?.id);
     const hasPriceField = shop && (shop.id !== allShop.id);
     const data = [
@@ -11,9 +11,18 @@ export function getCalculatorFields(shop: Shop | undefined, item: Item | undefin
             value: Number.parseFloat(item?.quantity ?? "0") as number | undefined,
             unitId: item?.unitId,
             state: item,
-            selected: !hasPriceField,
+            selected: !shop,
         }
     ];
+    data.push(
+        {
+            title: "Packet Menge",
+            value: item?.packageQuantity,
+            unitId: item?.packageUnitId,
+            state: item,
+            selected: false,
+        }
+    );
     if (hasPriceField) {
         data.push(
             {
@@ -21,7 +30,7 @@ export function getCalculatorFields(shop: Shop | undefined, item: Item | undefin
                 value: currentItemShop?.price,
                 unitId: currentItemShop?.unitId,
                 state: item,
-                selected: hasPriceField,
+                selected: true,
             }
         );
     }

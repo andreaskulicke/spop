@@ -1,6 +1,6 @@
 import { allStorage, selectItems, setItemQuantity, setItemStorage, setItemUnit, setItemWanted } from './store/dataSlice';
 import { Calculator } from './Calculator';
-import { Item, UnitId, getUnitName, itemListStyle } from './store/data/items';
+import { Item, UnitId, getPackageQuantityUnit, getUnitName, itemListStyle } from './store/data/items';
 import { ItemsSectionList, ItemsSectionListSection } from './ItemsSectionList';
 import { List, IconButton, Tooltip, useTheme, TouchableRipple } from 'react-native-paper';
 import { RootStackParamList } from '../App';
@@ -8,6 +8,8 @@ import { Text, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import React, { JSXElementConstructor, ReactElement, useState } from 'react';
+import { getCalculatorFields } from './getCalculatorFields';
+import { withSeparator } from './withSeparator';
 
 export function FillList(props: {
     storageId: string;
@@ -48,13 +50,13 @@ export function FillList(props: {
 
     function handleRenderItem(item: Item): ReactElement<any, string | JSXElementConstructor<any>> | null {
 
-        let description = "";
-        if (props.storageId !== allStorage.id) {
-            description = item.storages
+        const description = withSeparator(
+            getPackageQuantityUnit(item),
+            " - ",
+            item.storages
                 .map(x => storages.find(s => s.id === x.storageId)?.name)
                 .filter(x => !!x)
-                .join(", ");
-        }
+                .join(", "));
 
 
         let quantity = (item.quantity !== "0") ? item.quantity?.toString().replace(".", ",") : "";
@@ -132,14 +134,7 @@ export function FillList(props: {
                 selectedItemId={props.selectedItemId}
             />
             <Calculator
-                fields={[
-                    {
-                        title: "Menge",
-                        value: parseFloat(showCalculator.item?.quantity ?? "0"),
-                        unitId: showCalculator.item?.unitId,
-                        state: showCalculator.item,
-                    }
-                ]}
+                fields={getCalculatorFields(showCalculator.item)}
                 visible={showCalculator.visible}
                 onClose={handleCalculatorClose}
             />

@@ -78,7 +78,7 @@ export function FillFromHistoryList(props: {
                     />)
             }
             <Calculator
-                fields={[getCalculatorFields(props.shop, showCalculator.item)[1]]}
+                fields={getCalculatorFields(showCalculator.item, props.shop).slice(1)}
                 visible={showCalculator.visible}
                 onClose={handleCalculatorClose}
             />
