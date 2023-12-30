@@ -143,7 +143,7 @@ export function SettingsScreen(props: {
                         title="Kategorien"
                         right={p =>
                             <Button {...p} compact mode="outlined" onPress={() => dispatch(resetCategories())}>
-                                Zurücksetzten
+                                Standard
                             </Button>
                         }
                     />

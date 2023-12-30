@@ -22,7 +22,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.andreaskulicke.spop"
+      "package": "com.andreaskulicke.spop",
+      "versionCode": "1.0.1"
     },
     "web": {
       "favicon": "./assets/favicon.png"
