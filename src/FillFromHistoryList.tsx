@@ -5,7 +5,7 @@ import { Item, UnitId } from './store/data/items';
 import { Keyboard, ScrollView } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
-import { selectItems, setItemShopPrice } from './store/dataSlice';
+import { selectItems, setItemPackageQuantity, setItemPackageUnit, setItemShopPrice } from './store/dataSlice';
 import { Shop } from './store/data/shops';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import React, { useState } from 'react';
@@ -30,10 +30,18 @@ export function FillFromHistoryList(props: {
 
     function handleCalculatorClose(values?: { value?: number | undefined; unitId?: UnitId | undefined; state?: any; }[] | undefined): void {
         setShowCalculator({ visible: false });
-        if (values && (values.length > 0)) {
-            const value = values[0];
-            const item = value.state as Item;
-            dispatch(setItemShopPrice({ itemId: item.id, shopId: props.shop!.id, price: value.value, unitId: value.unitId }))
+        if (values) {
+            if (values.length > 0) {
+                const value = values[0];
+                const item = value.state as Item;
+                dispatch(setItemPackageQuantity({ itemId: item.id, packageQuantity: value.value }));
+                dispatch(setItemPackageUnit({ itemId: item.id, packageUnitId: value.unitId ?? "-" }));
+            }
+            if (values.length > 1) {
+                const value = values[1];
+                const item = value.state as Item;
+                dispatch(setItemShopPrice({ itemId: item.id, shopId: props.shop!.id, price: value.value, unitId: value.unitId }))
+            }
         }
     }
 

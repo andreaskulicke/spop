@@ -1,4 +1,4 @@
-import { allShop, selectItemsNotWantedWithShop, selectItemsWantedWithShop, selectItemsWantedWithoutShop, selectValidShops, setItemQuantity, setItemShop, setItemShopPrice, setItemUnit, setItemWanted } from './store/dataSlice';
+import { allShop, selectItemsNotWantedWithShop, selectItemsWantedWithShop, selectItemsWantedWithoutShop, selectValidShops, setItemPackageQuantity, setItemPackageUnit, setItemQuantity, setItemShop, setItemShopPrice, setItemUnit, setItemWanted } from './store/dataSlice';
 import { Calculator } from './Calculator';
 import { getCalculatorFields } from './getCalculatorFields';
 import { Item, UnitId, getPackageQuantityUnit, getUnitName, itemListStyle } from './store/data/items';
@@ -34,13 +34,21 @@ export function ShoppingList(props: {
         setShowCalculator({ visible: false });
         if (values) {
             if (values.length > 0) {
-                const item = values[0].state as Item;
-                dispatch(setItemQuantity({ itemId: item.id, quantity: values[0].value?.toString() ?? "" }));
-                dispatch(setItemUnit({ itemId: item.id, unitId: values[0].unitId ?? "-" }));
+                const value = values[0];
+                const item = value.state as Item;
+                dispatch(setItemQuantity({ itemId: item.id, quantity: value.value?.toString() ?? "" }));
+                dispatch(setItemUnit({ itemId: item.id, unitId: value.unitId ?? "-" }));
             }
             if (values.length > 1) {
-                const item = values[1].state as Item;
-                dispatch(setItemShopPrice({ itemId: item.id, shopId: props.shop.id, price: values[1].value, unitId: values[1].unitId }));
+                const value = values[1];
+                const item = value.state as Item;
+                dispatch(setItemPackageQuantity({ itemId: item.id, packageQuantity: value.value }));
+                dispatch(setItemPackageUnit({ itemId: item.id, packageUnitId: value.unitId ?? "-" }));
+            }
+            if (values.length > 2) {
+                const value = values[2];
+                const item = value.state as Item;
+                dispatch(setItemShopPrice({ itemId: item.id, shopId: props.shop.id, price: value.value, unitId: value.unitId }));
             }
         }
     }

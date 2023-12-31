@@ -1,4 +1,4 @@
-import { allStorage, selectItems, setItemQuantity, setItemStorage, setItemUnit, setItemWanted } from './store/dataSlice';
+import { allStorage, selectItems, setItemPackageQuantity, setItemPackageUnit, setItemQuantity, setItemStorage, setItemUnit, setItemWanted } from './store/dataSlice';
 import { Calculator } from './Calculator';
 import { Item, UnitId, getPackageQuantityUnit, getUnitName, itemListStyle } from './store/data/items';
 import { ItemsSectionList, ItemsSectionListSection } from './ItemsSectionList';
@@ -34,10 +34,19 @@ export function FillList(props: {
 
     function handleCalculatorClose(values?: { value?: number; unitId?: UnitId, state?: any; }[] | undefined): void {
         setShowCalculator({ visible: false });
-        if (values && values.length > 0) {
-            const item = values[0].state as Item;
-            dispatch(setItemQuantity({ itemId: item.id, quantity: values[0].value?.toString() ?? "" }));
-            dispatch(setItemUnit({ itemId: item.id, unitId: values[0].unitId ?? "-" }));
+        if (values) {
+            if (values.length > 0) {
+                const value = values[0];
+                const item = value.state as Item;
+                dispatch(setItemQuantity({ itemId: item.id, quantity: value.value?.toString() ?? "" }));
+                dispatch(setItemUnit({ itemId: item.id, unitId: value.unitId ?? "-" }));
+            }
+            if (values.length > 1) {
+                const value = values[1];
+                const item = value.state as Item;
+                dispatch(setItemPackageQuantity({ itemId: item.id, packageQuantity: value.value }));
+                dispatch(setItemPackageUnit({ itemId: item.id, packageUnitId: value.unitId ?? "-" }));
+            }
         }
     }
 
