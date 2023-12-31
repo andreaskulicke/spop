@@ -5,7 +5,7 @@ import { NavigationProp } from "@react-navigation/native";
 import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 import { ReactNode, useState } from "react";
 import { RootStackParamList } from "../App";
-import { Shop, getShopSvg } from "./store/data/shops";
+import { Shop, getShopImage } from "./store/data/shops";
 import { ShopsStackParamList } from "./ShopsNavigationScreen";
 import { StatusBarView } from "./StatusBarView";
 import { TouchableWithoutFeedback, View } from "react-native";
@@ -79,7 +79,7 @@ export function ShopsScreen(props: {
                                 {params.item.name}
                             </Text>
                         }
-                        left={p => getShopSvg(params.item, { ...p, color: theme.colors.onBackground })}
+                        left={p => getShopImage(params.item, theme, { ...p })}
                         right={p =>
                             <Text {...p} variant="labelMedium">
                                 {count}
@@ -113,7 +113,7 @@ export function ShopsScreen(props: {
             </Appbar.Header>
             <List.Item
                 title={allShop.name}
-                left={p => getShopSvg(allShop, { ...p, color: theme.colors.onBackground })}
+                left={p => getShopImage(allShop, theme, { ...p })}
                 right={p => {
                     const count = items.filter(i => i.wanted).length;
                     const unassignedCount = items.filter(i => i.wanted && ((i.shops?.filter(x => x.checked).length ?? 0) === 0)).length;

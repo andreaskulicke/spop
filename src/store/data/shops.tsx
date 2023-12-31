@@ -1,5 +1,7 @@
+import { Avatar, MD3Theme } from "react-native-paper";
 import { categoryIds } from "./categories";
 import { Style } from "react-native-paper/lib/typescript/components/List/utils";
+import { StyleProp, ViewStyle } from "react-native";
 import { SvgProps } from "react-native-svg";
 import AldiSvg from "../icons/Aldi.svg";
 import BaeckerSvg from "../icons/Baecker.svg";
@@ -23,46 +25,87 @@ export interface Shop {
     stopper?: boolean;
 }
 
-export function getShopSvg(shop: Shop, props: { color: string, style: Style }) {
+export function getShopImage(shop: Shop, theme: MD3Theme, props: { style: Style }) {
+
     const s: SvgProps = {
-        height: 40,
-        width: 40,
-        ...props,
+        height: 28,
+        width: 28,
     };
+
+    const avatarBackgroundProps = getAvatarProps(theme.colors.background);
+
+    function getAvatarProps(backgroundColor: string) {
+        const imageStyle: StyleProp<ViewStyle> = {
+            backgroundColor: theme.colors.background,
+            alignItems: "center",
+            justifyContent: "center",
+            marginLeft: 16,
+        };
+        return {
+            size: 40,
+            style: {
+                ...imageStyle,
+                backgroundColor: backgroundColor,
+            }
+        }
+    }
+
+    function getAvatarBorderProps(backgroundColor: string) {
+        return {
+            ...avatarBackgroundProps,
+            style: {
+                ...avatarBackgroundProps.style,
+                borderColor: backgroundColor,
+                borderWidth: 2,
+            }
+        }
+    }
+
     if (/aldi/i.test(shop.name)) {
-        return <AldiSvg {...s} />;
+        return <Avatar.Image {...getAvatarProps("#00005f")} source={() => <AldiSvg {...s} />} />;
     }
     if (/baecker|bäcker|backer|polster/i.test(shop.name)) {
-        return <BaeckerSvg {...s} />;
+        return <Avatar.Image {...getAvatarProps("#2163ad")} source={() => <BaeckerSvg {...s} />} />;
     }
     if (/dm/i.test(shop.name)) {
-        return <DmSvg {...s} />;
+        return <Avatar.Image {...getAvatarProps("#fec700")} source={() => <DmSvg {...s} />} />;
     }
     if (/edeka/i.test(shop.name)) {
-        return <EdekaSvg {...s} />;
+        return <Avatar.Image {...getAvatarProps("#FFD400")} source={() => <EdekaSvg {...s} />} />;
     }
     if (/hornbach/i.test(shop.name)) {
-        return <HornbachSvg {...s} />;
+        return <Avatar.Image {...getAvatarProps("#f7911a")} source={() => <HornbachSvg {...s} />} />;
     }
     if (/lidl/i.test(shop.name)) {
-        return <LidlSvg {...s} />;
+        return <Avatar.Image {...getAvatarProps("#0050aa")} source={() => <LidlSvg {...s} />} />;
     }
     if (/mueller|müller|muller/i.test(shop.name)) {
-        return <MuellerSvg {...s} />;
+        return <Avatar.Image {...getAvatarBorderProps("#f16426")} source={() => <MuellerSvg {...s} />} />;
     }
     if (/norma/i.test(shop.name)) {
-        return <NormaSvg {...s} />;
+        return <Avatar.Image {...getAvatarProps("#D60F19")} source={() => <NormaSvg {...s} />} />;
     }
     if (/obi/i.test(shop.name)) {
-        return <ObiSvg {...s} />;
+        return <Avatar.Image {...getAvatarBorderProps("#ff7313")} source={() => <ObiSvg {...s} />} />;
     }
     if (/rewe/i.test(shop.name)) {
-        return <ReweSvg {...s} />;
+        return <Avatar.Image {...getAvatarProps("#cc071e")} source={() => <ReweSvg {...s} />} />;
     }
     if (/rossman/i.test(shop.name)) {
-        return <RossmannSvg {...s} />;
+        return <Avatar.Image {...avatarBackgroundProps} source={() => <RossmannSvg height={avatarBackgroundProps.size} width={avatarBackgroundProps.size} />} />;
     }
-    return <UnknownSvg {...s} />;
+    return (
+        <Avatar.Image
+            {...avatarBackgroundProps}
+            style={{
+                ...avatarBackgroundProps.style,
+                borderColor: theme.colors.elevation.level2,
+                borderStyle: "dashed",
+                borderWidth: 1,
+            }}
+            source={() => <UnknownSvg {...s} color={theme.colors.onBackground} />}
+        />
+    );
 }
 
 export const defaultShops: Shop[] = [
