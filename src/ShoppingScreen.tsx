@@ -1,5 +1,5 @@
 import { allShop, selectShop } from './store/dataSlice';
-import { Appbar } from 'react-native-paper';
+import { Appbar, useTheme } from 'react-native-paper';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
 import { SearchBarList } from './SearchBarList';
@@ -17,6 +17,7 @@ export function ShoppingScreen(props: {
     const [selectedItemId, setSelectedItemId] = useState("");
     const [stopperOff, setStopperOff] = useState(false);
     const shop = useAppSelector(selectShop(props.route.params.id));
+    const theme = useTheme();
 
     function handleEditPress(): void {
         props.navigation.navigate("Shop", { id: shop.id });
@@ -35,7 +36,7 @@ export function ShoppingScreen(props: {
                     (shop.id !== allShop.id)
                         && stopperOff
                         ? <Appbar.Action icon="tray" onPress={handleStopperPress} />
-                        : <Appbar.Action icon={() => <TrayOff />} onPress={handleStopperPress} />
+                        : <Appbar.Action icon={() => <TrayOff color={theme.colors.onBackground} />} onPress={handleStopperPress} />
                 }
                 {
                     (shop.id !== allShop.id)

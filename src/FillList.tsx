@@ -85,11 +85,11 @@ export function FillList(props: {
                                 justifyContent: "center",
                                 minHeight: 40,
                                 minWidth: 64,
-                                paddingHorizontal: 4,
+                                paddingHorizontal: 8,
                             }}
                             onPress={() => handleShowCalculatorPress(item)}
                         >
-                            <View style={{ alignItems: "center" }}>
+                            <View style={{ alignItems: "flex-end" }}>
                                 <Text style={{ color: theme.colors.primary }}>
                                     {quantity}
                                 </Text>
@@ -124,7 +124,7 @@ export function FillList(props: {
             data: itemsForThisStorage,
         },
         {
-            title: "Ohne Storage",
+            title: "Ohne Vorratsort",
             icon: "home-remove-outline",
             data: unassigned,
         },

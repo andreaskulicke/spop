@@ -199,11 +199,11 @@ function QuantityPrice(props: {
                 justifyContent: "center",
                 minHeight: 40,
                 minWidth: 64,
-                paddingHorizontal: 4,
+                paddingHorizontal: 20,
             }}
             onPress={props.onPress}
         >
-            <View style={{ alignItems: "center" }}>
+            <View style={{ alignItems: "flex-end" }}>
                 {
                     props.quantity
                     && <Text style={{ color: theme.colors.primary }}>
