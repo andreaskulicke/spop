@@ -2,8 +2,8 @@ import { Category, defaultCategories } from './data/categories';
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { defaultItems, Item, ItemShop, UnitId, units } from './data/items';
 import { RootState } from './store';
-import { Shop } from './data/shops';
-import { Storage } from './data/storages';
+import { Shop, defaultShops } from './data/shops';
+import { Storage, defaultStorages } from './data/storages';
 
 export interface Data {
     categories: Category[];
@@ -68,7 +68,7 @@ export const itemsSlice = createSlice({
             }
         },
         resetCategories: (state) => {
-            state.categories = initialState.categories;
+            state.categories = defaultCategories;
         },
         setCategories: (state, action: PayloadAction<Category[]>) => {
             state.categories = action.payload;
@@ -133,7 +133,7 @@ export const itemsSlice = createSlice({
             }
         },
         resetItems: (state) => {
-            state.items = initialState.items;
+            state.items = defaultItems;
         },
         setItems: (state, action: PayloadAction<Item[]>) => {
             state.items = action.payload;
@@ -274,7 +274,7 @@ export const itemsSlice = createSlice({
             }
         },
         resetShops: (state) => {
-            state.shops = initialState.shops;
+            state.shops = defaultShops;
         },
         setShops: (state, action: PayloadAction<Shop[]>) => {
             let index = action.payload.length - 1
@@ -353,7 +353,7 @@ export const itemsSlice = createSlice({
             }
         },
         resetStorages: (state, action: PayloadAction<void>) => {
-            state.storages = initialState.storages;
+            state.storages = defaultStorages;
         },
         setStorages: (state, action: PayloadAction<Storage[]>) => {
             state.storages = action.payload;
@@ -540,7 +540,7 @@ export function selectItemShopsWithMinPrice(itemId: string): (state: RootState) 
 
 export const allShop: Shop = {
     id: "_",
-    name: "Alle",
+    name: "Alle Dinge",
 }
 
 export function selectShops(state: RootState): Shop[] {
@@ -563,7 +563,7 @@ export function selectShop(id: string): (state: RootState) => Shop {
 
 export const allStorage: Storage = {
     id: "_",
-    name: "Alle",
+    name: "Alle Dinge",
 }
 
 export function selectStorage(id: string): (state: RootState) => Storage {
