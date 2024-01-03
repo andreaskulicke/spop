@@ -95,7 +95,7 @@ export function StoragesScreen(props: {
                 }
                 onPress={() => handleStoragePress(allStorage.id)}
             />
-            <Divider />
+            <Divider style={{ marginBottom: 12 }} />
             <NestableScrollContainer>
                 <NestableDraggableFlatList
                     data={storages}

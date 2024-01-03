@@ -129,7 +129,7 @@ export function ShopsScreen(props: {
                 }
                 onPress={() => handleShopPress(allShop.id)}
             />
-            <Divider />
+            <Divider style={{ marginBottom: 24 }} />
             <NestableScrollContainer style={{ flex: 1 }} >
                 <NestableDraggableFlatList
                     data={shops}
