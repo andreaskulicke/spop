@@ -17,6 +17,7 @@ export const categoryIds = [
     "pickled_preserves",
     "sauces",
     "spices",
+    "stationary",
     "sweets",
 ] as const;
 
@@ -46,6 +47,7 @@ export const categoryIcons = [
     "muffin",
     "noodles",
     "peanut-outline",
+    "pen",
     "pig-variant-outline",
     "pizza",
     "popcorn",
@@ -154,6 +156,11 @@ export const defaultCategories: Category[] = [
         id: "household",
         icon: "home-outline",
         name: "Haushalt",
+    },
+    {
+        id: "stationary",
+        icon: "pen",
+        name: "Schreibwaren",
     },
     {
         id: "freezer",
