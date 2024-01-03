@@ -1,4 +1,4 @@
-import { Category, defaultCategories } from './data/categories';
+import { Category, defaultCategories, emptyCategory } from './data/categories';
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { defaultItems, Item, ItemShop, UnitId, units } from './data/items';
 import { RootState } from './store';
@@ -148,7 +148,7 @@ export const itemsSlice = createSlice({
         setItemCategory: (state, action: PayloadAction<{ itemId: string, categoryId: string | undefined }>) => {
             const item = state.items.find(x => x.id === action.payload.itemId);
             if (item) {
-                item.categoryId = action.payload.categoryId;
+                item.categoryId = (action.payload.categoryId === emptyCategory.id) ? undefined : action.payload.categoryId;
             }
         },
         setItemName: (state, action: PayloadAction<{ itemId: string, name: string }>) => {

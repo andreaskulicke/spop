@@ -66,6 +66,12 @@ export interface Category {
     name: string;
 }
 
+export const emptyCategory: Category = {
+    id: "emptyCategory",
+    icon: "dots-horizontal",
+    name: "Keine Kategorie",
+};
+
 export const defaultCategories: Category[] = [
     {
         id: "fruits_vegetables",

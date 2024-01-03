@@ -1,5 +1,6 @@
 import { addCategory, selectSortedCategories } from "./store/dataSlice";
 import { CategoryIcon } from "./CategoryIcon";
+import { emptyCategory } from "./store/data/categories";
 import { IconButton, Menu, TextInput, TouchableRipple } from "react-native-paper";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
@@ -61,7 +62,7 @@ export function CategoryMenu(props: {
                     onDismiss={() => setCategoryMenuVisible(false)}
                 >
                     {
-                        categories.map(x => (
+                        [emptyCategory, ...categories,].map(x => (
                             <Menu.Item
                                 key={x.id}
                                 contentStyle={{ marginLeft: 32 }}
