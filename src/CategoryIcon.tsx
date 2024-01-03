@@ -1,5 +1,5 @@
 import { StyleProp, ViewStyle } from "react-native";
-import { IconButton } from "react-native-paper";
+import { IconButton, useTheme } from "react-native-paper";
 
 export function CategoryIcon(props: {
     icon: string | undefined;
@@ -7,6 +7,8 @@ export function CategoryIcon(props: {
     style?: StyleProp<ViewStyle>;
     onPress?: () => void;
 }) {
+    const theme = useTheme();
+
     return (
         <IconButton
             icon={props.icon ?? "dots-horizontal"}
@@ -16,6 +18,7 @@ export function CategoryIcon(props: {
                 ...(props.selected ? {
                     borderWidth: 1,
                 } : {}),
+                backgroundColor: theme.colors.elevation.level3,
             }}
             onPress={props.onPress}
         />

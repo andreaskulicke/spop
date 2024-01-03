@@ -32,11 +32,11 @@ export function getShopImage(shop: Shop, theme: MD3Theme, props: { style: Style 
         width: 28,
     };
 
-    const avatarBackgroundProps = getAvatarProps(theme.colors.background);
+    const avatarBackgroundProps = getAvatarProps(theme.colors.onPrimary);
 
     function getAvatarProps(backgroundColor: string) {
         const imageStyle: StyleProp<ViewStyle> = {
-            backgroundColor: theme.colors.background,
+            backgroundColor: theme.colors.elevation.level3,
             alignItems: "center",
             justifyContent: "center",
             marginLeft: 16,
@@ -50,12 +50,12 @@ export function getShopImage(shop: Shop, theme: MD3Theme, props: { style: Style 
         }
     }
 
-    function getAvatarBorderProps(backgroundColor: string) {
+    function getAvatarBorderProps(borderColor: string) {
         return {
             ...avatarBackgroundProps,
             style: {
                 ...avatarBackgroundProps.style,
-                borderColor: backgroundColor,
+                borderColor: borderColor,
                 borderWidth: 2,
             }
         }
@@ -92,18 +92,17 @@ export function getShopImage(shop: Shop, theme: MD3Theme, props: { style: Style 
         return <Avatar.Image {...getAvatarProps("#cc071e")} source={() => <ReweSvg {...s} />} />;
     }
     if (/rossman/i.test(shop.name)) {
-        return <Avatar.Image {...avatarBackgroundProps} source={() => <RossmannSvg height={avatarBackgroundProps.size} width={avatarBackgroundProps.size} />} />;
+        return (
+            <Avatar.Image
+                {...avatarBackgroundProps}
+                source={() => <RossmannSvg height={avatarBackgroundProps.size + 8} width={avatarBackgroundProps.size + 10} />}
+            />
+        );
     }
     return (
         <Avatar.Image
             {...avatarBackgroundProps}
-            style={{
-                ...avatarBackgroundProps.style,
-                borderColor: theme.colors.elevation.level2,
-                borderStyle: "dashed",
-                borderWidth: 1,
-            }}
-            source={() => <UnknownSvg {...s} color={theme.colors.onBackground} />}
+            source={() => <UnknownSvg {...s} color={theme.colors.primary} />}
         />
     );
 }
