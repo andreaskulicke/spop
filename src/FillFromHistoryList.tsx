@@ -1,22 +1,22 @@
 import { Calculator } from './Calculator';
 import { FillFromHistoryListItem } from './FillFromHistoryListItem';
 import { getCalculatorFields } from './getCalculatorFields';
-import { Item, UnitId } from './store/data/items';
+import { Item, UnitId, replaceUnitIdIfEmpty } from './store/data/items';
 import { Keyboard, ScrollView } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
 import { selectItems, setItemPackageQuantity, setItemPackageUnit, setItemShopPrice } from './store/dataSlice';
 import { Shop } from './store/data/shops';
+import { Storage } from './store/data/storages';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import React, { useState } from 'react';
-import { Storage } from './store/data/storages';
 
 export function FillFromHistoryList(props: {
     item: Item;
     shop?: Shop;
     storage?: Storage;
     onPress?: (item: Item) => void;
-    onIconPress?: (name: string, quantity: string | undefined) => void;
+    onIconPress?: (name: string, quantity: number | undefined, unitId: UnitId | undefined) => void;
 }) {
     const [showCalculator, setShowCalculator] = useState<
         {
@@ -79,7 +79,7 @@ export function FillFromHistoryList(props: {
                     .filter(x => transformToSearchName(x.name).includes(itemName))
                     .map(x => <FillFromHistoryListItem
                         key={x.id}
-                        item={{ ...x, quantity: props.item.quantity }}
+                        item={{ ...x, quantity: props.item.quantity, unitId: replaceUnitIdIfEmpty(props.item.unitId, x.unitId) }}
                         shopId={props.shop?.id}
                         onPress={props.onPress}
                         onLongPress={handleLongPress}

@@ -14,6 +14,7 @@ import { UnitSelection } from "./UnitSelection";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import React, { useEffect, useState } from "react";
 import uuid from 'react-native-uuid';
+import { numberToString } from "./numberToString";
 
 type CalculatorCallSource = "quantity" | "packageQuantity" | "shop";
 
@@ -22,7 +23,7 @@ export function ItemScreen(props: {
     route: RouteProp<RootStackParamList, "Item">;
 }) {
     const [name, setName] = useState("");
-    const [quantity, setQuantity] = useState("");
+    const [quantity, setQuantity] = useState<number>();
     const [packageQuantity, setPackageQuantity] = useState<number>();
     const [showCalculator, setShowCalculator] = useState<
         {
@@ -73,7 +74,7 @@ export function ItemScreen(props: {
             const value = values[0];
             const source = value.state.source as CalculatorCallSource;
             if (source === "quantity") {
-                dispatch(setItemQuantity({ itemId: item.id, quantity: value.value?.toString() ?? "" }));
+                dispatch(setItemQuantity({ itemId: item.id, quantity: value.value }));
                 dispatch(setItemUnit({ itemId: item.id, unitId: value.unitId ?? "-" }));
             } else if (source === "packageQuantity") {
                 dispatch(setItemPackageQuantity({ itemId: item.id, packageQuantity: value.value }));
@@ -129,17 +130,7 @@ export function ItemScreen(props: {
 
     function handleTextInputQuantityBlur(): void {
         if (item) {
-            let q = quantity.trim().toLowerCase();
-            let u = "";
-            const pattern = new RegExp(`(\\d+)(${units.map(u => u.name.toLowerCase()).join("|")})`);
-            const match = q.match(pattern);
-            if (match) {
-                q = match[1];
-                u = match[2];
-                dispatch(setItemUnit({ itemId: item.id, unitId: units.find(x => x.name.toLowerCase() === u)?.id ?? units[0].id }));
-            }
-            dispatch(setItemQuantity({ itemId: item.id, quantity: q }));
-            setQuantity(q);
+            dispatch(setItemQuantity({ itemId: item.id, quantity: quantity }));
         }
     }
 
@@ -160,7 +151,7 @@ export function ItemScreen(props: {
 
     useEffect(() => {
         setName(item?.name ?? "");
-        setQuantity(item?.quantity ?? "");
+        setQuantity(item?.quantity);
         setPackageQuantity(item?.packageQuantity);
     }, [item])
 
@@ -204,10 +195,10 @@ export function ItemScreen(props: {
                                 mode="outlined"
                                 selectTextOnFocus
                                 style={{ flexGrow: 1, margin: 8 }}
-                                value={quantity}
+                                value={numberToString(quantity)}
                                 onBlur={handleTextInputQuantityBlur}
                                 onChangeText={text => {
-                                    setQuantity(text.replace(/[^0-9]/g, ""));
+                                    setQuantity(parseFloat(text.replace(/[^0-9]/g, "")));
                                 }}
                             />
                             <UnitSelection
@@ -219,7 +210,7 @@ export function ItemScreen(props: {
                                 icon="calculator"
                                 size={32}
                                 style={{ marginLeft: 14, marginRight: 26, marginVertical: 8 }}
-                                onPress={() => handleShowCalculatorQuantityPress(parseFloat(quantity), item.unitId, "quantity")}
+                                onPress={() => handleShowCalculatorQuantityPress(quantity, item.unitId, "quantity")}
                             />
                         </View>
                         <View style={{ flexDirection: "row" }}>
@@ -346,7 +337,7 @@ export function ItemScreen(props: {
                                                             <View style={{ alignItems: "center" }}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
                                                                     <Text style={{ color: theme.colors.primary }}>
-                                                                        {`${currentItemShop.price.toString().replace(".", ",")} €`}
+                                                                        {`${numberToString(currentItemShop.price)} €`}
                                                                     </Text>
                                                                     <PriceIcon
                                                                         itemId={item.id}

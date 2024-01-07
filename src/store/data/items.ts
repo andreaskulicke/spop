@@ -43,6 +43,17 @@ export const units: Unit[] = [
     },
 ];
 
+export function getQuantityUnit(item: Item): string {
+    let s = "";
+    if (item.quantity) {
+        s = `${item.quantity} `;
+    }
+    if (item.unitId) {
+        s += getUnitName(item.unitId);
+    }
+    return s;
+}
+
 export function getPackageQuantityUnit(item: Item): string {
     if (item.packageQuantity != undefined) {
         return `${item.packageQuantity}${getUnitName(item.packageUnitId)}`;
@@ -57,11 +68,18 @@ export function getUnitName(unitId: UnitId | undefined, fullName?: boolean): str
     return units.find(unit => unit.id === unitId)?.name ?? "-";
 }
 
+export function replaceUnitIdIfEmpty(unitId: UnitId | undefined, replaceWithUnitId: UnitId | undefined): UnitId | undefined {
+    if (unitId && (unitId !== "-")) {
+        return unitId;
+    }
+    return replaceWithUnitId;
+}
+
 // Item
 export interface Item {
     id: string;
     name: string;
-    quantity?: string;
+    quantity?: number;
     unitId?: UnitId;
     packageQuantity?: number;
     packageUnitId?: UnitId;

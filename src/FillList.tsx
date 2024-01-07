@@ -10,6 +10,7 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import React, { JSXElementConstructor, ReactElement, useState } from 'react';
 import { getCalculatorFields } from './getCalculatorFields';
 import { withSeparator } from './withSeparator';
+import { quantityToString } from './numberToString';
 
 export function FillList(props: {
     storageId: string;
@@ -38,7 +39,7 @@ export function FillList(props: {
             if (values.length > 0) {
                 const value = values[0];
                 const item = value.state as Item;
-                dispatch(setItemQuantity({ itemId: item.id, quantity: value.value?.toString() ?? "" }));
+                dispatch(setItemQuantity({ itemId: item.id, quantity: value.value }));
                 dispatch(setItemUnit({ itemId: item.id, unitId: value.unitId ?? "-" }));
             }
             if (values.length > 1) {
@@ -68,7 +69,7 @@ export function FillList(props: {
                 .join(", "));
 
 
-        let quantity = (item.quantity !== "0") ? item.quantity?.toString().replace(".", ",") : "";
+        let quantity = quantityToString(item.quantity);
         if (quantity && item.unitId) {
             quantity += ` ${getUnitName(item.unitId)}`;
         }

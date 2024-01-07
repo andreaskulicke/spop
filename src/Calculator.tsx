@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { UnitId, getUnitName } from './store/data/items';
 import React, { useEffect, useState } from 'react';
+import { numberToString } from './numberToString';
 
 export function Calculator(props: {
     fields: {
@@ -19,7 +20,7 @@ export function Calculator(props: {
     const [values, setValues] = useState<{ value: string; unitId?: UnitId, state?: any }[]>(props.fields
         ?.filter(x => !!x)
         .map(x => ({
-            value: x.value?.toString().replace(".", ",") ?? "",
+            value: numberToString(x.value),
             unitId: x.unitId,
             state: x.state,
         })) ?? []);
@@ -160,7 +161,7 @@ export function Calculator(props: {
         setValues(props.fields
             ?.filter(x => !!x)
             .map(x => ({
-                value: Number.isNaN(x.value) ? "" : x.value?.toString().replace(".", ",") ?? "",
+                value: numberToString(x.value),
                 unitId: x.unitId,
                 state: x.state,
             })) ?? []);

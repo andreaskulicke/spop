@@ -88,10 +88,13 @@ export const itemsSlice = createSlice({
 
         // Items
         addItem: (state, action: PayloadAction<{ item: Item, shop?: Shop, storage?: Storage }>) => {
-            let item = state.items.find(x => x.id === action.payload.item.id);
+            let item = state.items.find(x => x.name.toLowerCase() === action.payload.item.name.trim().toLowerCase());
             if (item) {
                 if (action.payload.item.quantity) {
                     item.quantity = action.payload.item.quantity;
+                }
+                if (action.payload.item.unitId) {
+                    item.unitId = action.payload.item.unitId;
                 }
                 item.categoryId = item.categoryId ?? action.payload.storage?.defaultCategoryId;
                 item.wanted = true;
@@ -101,6 +104,7 @@ export const itemsSlice = createSlice({
                     categoryId: action.payload.item.categoryId ?? action.payload.shop?.defaultCategoryId ?? action.payload.storage?.defaultCategoryId,
                     wanted: true,
                 };
+                item.name = item.name.trim();
                 state.items.unshift(item);
             }
             if (action.payload.shop && (action.payload.shop.id !== allShop.id)) {
@@ -139,7 +143,7 @@ export const itemsSlice = createSlice({
             state.items = action.payload;
         },
 
-        setItemQuantity: (state, action: PayloadAction<{ itemId: string, quantity: string }>) => {
+        setItemQuantity: (state, action: PayloadAction<{ itemId: string, quantity: number | undefined }>) => {
             const item = state.items.find(x => x.id === action.payload.itemId);
             if (item) {
                 item.quantity = action.payload.quantity;
@@ -452,7 +456,7 @@ export function selectItemsWantedWithShop(shop: Shop, stopperOff?: boolean) {
         (items, categories, shops) => {
             const c = new Map(categories.map(x => [x.id, x]));
             const cats = [undefined as (Category | undefined)]
-                .concat(shop.categoryIds?.filter(x => !!x).map(x => c.get(x)) ?? categories);
+                .concat(shop.categoryIds?.filter(x => !!x).map(x => c.get(x)) ?? categories.sort((a, b) => a.name.localeCompare(b.name)));
 
             // Add all previous shops from last stopper
             const s = new Set();

@@ -10,8 +10,9 @@ import { RootStackParamList } from '../App';
 import { Shop } from './store/data/shops';
 import { Text, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
-import React, { JSXElementConstructor, ReactElement, useState } from 'react';
 import { withSeparator } from './withSeparator';
+import React, { JSXElementConstructor, ReactElement, useState } from 'react';
+import { numberToString, quantityToString } from './numberToString';
 
 export function ShoppingList(props: {
     shop: Shop;
@@ -19,7 +20,7 @@ export function ShoppingList(props: {
     stopperOff?: boolean;
 }) {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-    const itemsForThisShop3 = useAppSelector(selectItemsWantedWithShop(props.shop, props.stopperOff));
+    const itemsForThisShop = useAppSelector(selectItemsWantedWithShop(props.shop, props.stopperOff));
     const unassigned = useAppSelector(selectItemsWantedWithoutShop());
     const recentlyUsed = useAppSelector(selectItemsNotWantedWithShop(props.shop.id));
     const shops = useAppSelector(selectValidShops);
@@ -36,7 +37,7 @@ export function ShoppingList(props: {
             if (values.length > 0) {
                 const value = values[0];
                 const item = value.state as Item;
-                dispatch(setItemQuantity({ itemId: item.id, quantity: value.value?.toString() ?? "" }));
+                dispatch(setItemQuantity({ itemId: item.id, quantity: value.value }));
                 dispatch(setItemUnit({ itemId: item.id, unitId: value.unitId ?? "-" }));
             }
             if (values.length > 1) {
@@ -86,12 +87,12 @@ export function ShoppingList(props: {
 
         const currentItemShop = item.shops.find(x => x.shopId === props.shop.id);
 
-        let quantity = (item.quantity !== "0") ? item.quantity?.toString().replace(".", ",") : "";
+        let quantity = quantityToString(item.quantity);
         if (quantity && item.unitId) {
             quantity += ` ${getUnitName(item.unitId)}`;
         }
 
-        let price = currentItemShop?.price?.toString().replace(".", ",");
+        let price = numberToString(currentItemShop?.price);
         if (price) {
             price += " €";
             const unitName = getUnitName(currentItemShop?.unitId);
@@ -153,7 +154,7 @@ export function ShoppingList(props: {
         {
             title: "Dinge",
             icon: "cart",
-            data: itemsForThisShop3,
+            data: itemsForThisShop,
         },
         {
             title: "Ohne Shop",

@@ -34,9 +34,9 @@ export function ShoppingScreen(props: {
                 <Appbar.Content title={shop?.name ?? allShop.name} />
                 {
                     (shop.id !== allShop.id)
-                        && stopperOff
+                    && (stopperOff
                         ? <Appbar.Action icon="tray" onPress={handleStopperPress} />
-                        : <Appbar.Action icon={() => <TrayOff color={theme.colors.onBackground} />} onPress={handleStopperPress} />
+                        : <Appbar.Action icon={() => <TrayOff color={theme.colors.onBackground} />} onPress={handleStopperPress} />)
                 }
                 {
                     (shop.id !== allShop.id)

@@ -8,7 +8,7 @@ export function getCalculatorFields(item: Item | undefined, shop?: Shop) {
     const data = [
         {
             title: "Menge",
-            value: Number.parseFloat(item?.quantity ?? "0") as number | undefined,
+            value: item?.quantity,
             unitId: item?.unitId,
             state: item,
             selected: !shop,

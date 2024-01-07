@@ -1,15 +1,16 @@
 import { addItem, allStorage, allShop } from './store/dataSlice';
 import { FillFromHistoryList } from './FillFromHistoryList';
-import { Item } from './store/data/items';
+import { Item, UnitId } from './store/data/items';
 import { KeyboardAvoidingView } from 'react-native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { parseQuantityUnit, quantityToString } from './numberToString';
+import { RootStackParamList } from '../App';
 import { SearchBar } from './SearchBar';
 import { Shop } from './store/data/shops';
 import { Storage } from './store/data/storages';
 import { useAppDispatch } from './store/hooks';
 import React, { useEffect, useState } from 'react';
 import uuid from 'react-native-uuid';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../App';
 
 export function SearchBarList(props: {
     list: React.ReactNode;
@@ -21,7 +22,7 @@ export function SearchBarList(props: {
     const [newItem, setNewItem] = useState<Item>({
         id: uuid.v4() as string,
         name: "",
-        quantity: "",
+        quantity: undefined,
         shops: (!props.shop || (props.shop.id === allShop.id)) ? [] : [{ checked: true, shopId: props.shop.id }],
         storages: (!props.storage || (props.storage.id === allStorage.id)) ? [] : [{ storageId: props.storage.id }],
     });
@@ -30,9 +31,10 @@ export function SearchBarList(props: {
 
     function handlePress(item: Item): void {
         if (item?.name) {
+            const [q, u] = parseQuantityUnit(filter?.quantity);
             dispatch(addItem(
                 {
-                    item: { ...item, quantity: filter?.quantity },
+                    item: { ...item, quantity: q, unitId: u },
                     shop: props.shop,
                     storage: props.storage,
                 }));
@@ -42,9 +44,9 @@ export function SearchBarList(props: {
         }
     }
 
-    function handleIconPress(name: string, quantity: string | undefined): void {
+    function handleIconPress(name: string, quantity: number | undefined, unitId: UnitId | undefined): void {
         name = name.trim() + " ";
-        setFilter({ text: quantity ? `${quantity} ${name}` : name, name, quantity });
+        setFilter({ text: quantity ? `${quantity}${unitId} ${name}` : name, name, quantity: quantityToString(quantity) + unitId });
     }
 
     function handleSearchChange(text: string, name: string, quantity: string): void {
@@ -63,10 +65,12 @@ export function SearchBarList(props: {
     })
 
     useEffect(() => {
+        const [q, u] = parseQuantityUnit(filter?.quantity);
         setNewItem(v => ({
             ...v,
             name: filter?.name ?? filter?.text ?? "",
-            quantity: filter?.quantity ?? "",
+            quantity: q,
+            unitId: u,
         }));
     }, [filter]);
 

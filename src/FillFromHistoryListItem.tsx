@@ -1,8 +1,9 @@
 import { allShop } from "./store/dataSlice";
 import { AvatarIcon } from "./AvatarIcon";
 import { AvatarText } from './AvatarText';
-import { Item } from './store/data/items';
+import { Item, UnitId, getQuantityUnit } from './store/data/items';
 import { List, Text, TouchableRipple, useTheme } from 'react-native-paper';
+import { numberToString } from "./numberToString";
 import { View } from 'react-native';
 import React from 'react';
 
@@ -12,7 +13,7 @@ export function FillFromHistoryListItem(props: {
     onPress?: (item: Item) => void;
     onLongPress?: (item: Item) => void;
     onCalculatorPress?: (item: Item) => void;
-    onIconPress?: (name: string, quantity: string | undefined) => void;
+    onIconPress?: (name: string, quantity: number | undefined, unitId: UnitId | undefined) => void;
 }) {
     const theme = useTheme();
 
@@ -25,7 +26,7 @@ export function FillFromHistoryListItem(props: {
     }
 
     function handleIconPress(): void {
-        props.onIconPress?.(props.item.name, props.item.quantity);
+        props.onIconPress?.(props.item.name, props.item.quantity, props.item.unitId);
     }
 
     const price = props.item.shops.find(x => x.shopId === props.shopId)?.price;
@@ -44,7 +45,7 @@ export function FillFromHistoryListItem(props: {
                             onPress={() => props.onCalculatorPress?.(props.item)}
                         >
                             <Text style={{ color: theme.colors.primary, paddingHorizontal: 8, paddingVertical: 8 }}>
-                                {price.toString().replace(".", ",")} €
+                                {numberToString(price)} €
                             </Text>
                         </TouchableRipple>
                     }
@@ -58,7 +59,7 @@ export function FillFromHistoryListItem(props: {
                         />
                     }
 
-                    <Text style={{ marginHorizontal: 16 }}>{props.item.quantity}</Text>
+                    <Text style={{ marginHorizontal: 16 }}>{getQuantityUnit(props.item)}</Text>
                     <AvatarIcon icon="arrow-top-left" onPress={handleIconPress} />
                 </View>
             }
