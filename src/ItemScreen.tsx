@@ -14,7 +14,7 @@ import { UnitSelection } from "./UnitSelection";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import React, { useEffect, useState } from "react";
 import uuid from 'react-native-uuid';
-import { numberToString } from "./numberToString";
+import { numberToString, stringToNumber } from "./numberToString";
 
 type CalculatorCallSource = "quantity" | "packageQuantity" | "shop";
 
@@ -23,8 +23,8 @@ export function ItemScreen(props: {
     route: RouteProp<RootStackParamList, "Item">;
 }) {
     const [name, setName] = useState("");
-    const [quantity, setQuantity] = useState<number>();
-    const [packageQuantity, setPackageQuantity] = useState<number>();
+    const [quantity, setQuantity] = useState<string>();
+    const [packageQuantity, setPackageQuantity] = useState<string>();
     const [showCalculator, setShowCalculator] = useState<
         {
             visible: boolean;
@@ -130,14 +130,22 @@ export function ItemScreen(props: {
 
     function handleTextInputQuantityBlur(): void {
         if (item) {
-            dispatch(setItemQuantity({ itemId: item.id, quantity: quantity }));
+            dispatch(setItemQuantity({ itemId: item.id, quantity: stringToNumber(quantity) }));
         }
     }
 
     function handleTextInputPackageQuantityBlur(): void {
         if (item) {
-            dispatch(setItemPackageQuantity({ itemId: item.id, packageQuantity: packageQuantity }));
+            dispatch(setItemPackageQuantity({ itemId: item.id, packageQuantity: stringToNumber(packageQuantity) }));
         }
+    }
+
+    function transformQuantity(text: string): string {
+        let newText = text.replace(/[^0-9,\.]/g, "").replace(".", ",");
+        if (newText.endsWith(",")) {
+            newText = newText.replaceAll(",", "") + ",";
+        }
+        return newText;
     }
 
     useEffect(() => {
@@ -151,8 +159,8 @@ export function ItemScreen(props: {
 
     useEffect(() => {
         setName(item?.name ?? "");
-        setQuantity(item?.quantity);
-        setPackageQuantity(item?.packageQuantity);
+        setQuantity(numberToString(item?.quantity));
+        setPackageQuantity(numberToString(item?.packageQuantity));
     }, [item])
 
     return (
@@ -195,10 +203,10 @@ export function ItemScreen(props: {
                                 mode="outlined"
                                 selectTextOnFocus
                                 style={{ flexGrow: 1, margin: 8 }}
-                                value={numberToString(quantity)}
+                                value={quantity}
                                 onBlur={handleTextInputQuantityBlur}
                                 onChangeText={text => {
-                                    setQuantity(parseFloat(text.replace(/[^0-9]/g, "")));
+                                    setQuantity(transformQuantity(text));
                                 }}
                             />
                             <UnitSelection
@@ -210,7 +218,7 @@ export function ItemScreen(props: {
                                 icon="calculator"
                                 size={32}
                                 style={{ marginLeft: 14, marginRight: 26, marginVertical: 8 }}
-                                onPress={() => handleShowCalculatorQuantityPress(quantity, item.unitId, "quantity")}
+                                onPress={() => handleShowCalculatorQuantityPress(stringToNumber(quantity), item.unitId, "quantity")}
                             />
                         </View>
                         <View style={{ flexDirection: "row" }}>
@@ -220,11 +228,10 @@ export function ItemScreen(props: {
                                 mode="outlined"
                                 selectTextOnFocus
                                 style={{ flexGrow: 1, margin: 8 }}
-                                value={packageQuantity?.toString() ?? ""}
+                                value={packageQuantity}
                                 onBlur={handleTextInputPackageQuantityBlur}
                                 onChangeText={text => {
-                                    const n = parseInt(text.replace(/[^0-9]/g, ""));
-                                    setPackageQuantity(isNaN(n) ? undefined : n);
+                                    setPackageQuantity(transformQuantity(text));
                                 }}
                             />
                             <UnitSelection
@@ -236,7 +243,7 @@ export function ItemScreen(props: {
                                 icon="calculator"
                                 size={32}
                                 style={{ marginLeft: 14, marginRight: 26, marginVertical: 8 }}
-                                onPress={() => handleShowCalculatorQuantityPress(packageQuantity, item.packageUnitId, "packageQuantity")}
+                                onPress={() => handleShowCalculatorQuantityPress(stringToNumber(packageQuantity), item.packageUnitId, "packageQuantity")}
                             />
                         </View>
                         <CategoryMenu
