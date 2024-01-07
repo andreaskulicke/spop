@@ -2,9 +2,9 @@ import { ColorSchemeName } from 'react-native';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from './store';
 import { ThemeName, themes, ThemeType } from './themes/themes';
-import { yellowDark, yellowLight } from './themes/yellow';
 
 export interface Settings {
+    version: string;
     display: {
         colorTheme: ColorSchemeName;
         theme: ThemeName;
@@ -13,6 +13,7 @@ export interface Settings {
 
 // Define the initial state using that type
 const initialState: Settings = {
+    version: "1.0.0",
     display: {
         colorTheme: undefined,
         theme: "default",

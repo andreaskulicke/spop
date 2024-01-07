@@ -6,6 +6,7 @@ import { Shop, defaultShops } from './data/shops';
 import { Storage, defaultStorages } from './data/storages';
 
 export interface Data {
+    version: string;
     categories: Category[];
     items: Item[];
     shops: Shop[];
@@ -14,6 +15,7 @@ export interface Data {
 
 // Define the initial state using that type
 const initialState: Data = {
+    version: "1.0.0",
     categories: defaultCategories,
     items: defaultItems,
     shops: [],
