@@ -1,27 +1,28 @@
-import { Appbar, Button, Card, List, Menu, RadioButton, TextInput, TouchableRipple } from "react-native-paper";
-import { resetCategories, resetItems, resetShops, resetStorages, setData, setItems, setShops, setStorages } from "./store/dataSlice";
-import { ColorSchemeName, ScrollView, View } from "react-native";
-import { setColorTheme, setSettings, setTheme } from "./store/settingsSlice";
-import { StatusBarView } from "./StatusBarView";
-import { useAppDispatch, useAppSelector } from "./store/hooks";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Appbar, Button, Card, Icon, List, Menu, Text, TextInput, TouchableRipple } from "react-native-paper";
+import { Linking, ScrollView, View } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
+import { resetCategories, resetShops, resetStorages, setItems, setShops, setStorages } from "./store/dataSlice";
 import { RootStackParamList } from "../App";
-import { getUnitName } from "./store/data/items";
-import { useState } from "react";
+import { setColorTheme, setTheme } from "./store/settingsSlice";
+import { StatusBarView } from "./StatusBarView";
 import { themes } from "./store/themes/themes";
+import { useAppDispatch, useAppSelector } from "./store/hooks";
+import { useState } from "react";
+import packageJson from "../package.json";
 
 export function SettingsScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
 }) {
-    const data = useAppSelector(state => state.data);
     const settings = useAppSelector(state => state.settings);
     const dispatch = useAppDispatch();
     const [colorThemeMenuVisible, setColorThemeMenuVisible] = useState(false);
     const [themeMenuVisible, setThemeMenuVisible] = useState(false);
 
-    function handleSetColor(colorTheme: ColorSchemeName): void {
-        dispatch(setColorTheme(colorTheme));
+    async function handleFeebackPress(): Promise<void> {
+        const url = `mailto:andreaskulicke.apps@gmx.de?subject=Spop ${packageJson.version}`;
+        if (await Linking.canOpenURL(url)) {
+            Linking.openURL(url);
+        }
     }
 
     let colorSchemeLabel = "System";
@@ -171,6 +172,22 @@ export function SettingsScreen(props: {
                                     Löschen
                                 </Button>
                             </View>
+                        }
+                    />
+                </Card>
+                <Card style={{ margin: 8 }}>
+                    <Card.Title title="Info" />
+                    <List.Item
+                        title="Feeback"
+                        right={p => <Icon {...p} size={24} source="email-send-outline" />}
+                        onPress={handleFeebackPress}
+                    />
+                    <List.Item
+                        title="Version"
+                        right={p =>
+                            <Text {...p}>
+                                {packageJson.version}
+                            </Text>
                         }
                     />
                 </Card>
