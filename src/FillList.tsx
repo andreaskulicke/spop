@@ -1,16 +1,16 @@
 import { allStorage, selectItems, setItemPackageQuantity, setItemPackageUnit, setItemQuantity, setItemStorage, setItemUnit, setItemWanted } from './store/dataSlice';
 import { Calculator } from './Calculator';
+import { getCalculatorFields } from './getCalculatorFields';
 import { Item, UnitId, getPackageQuantityUnit, getUnitName, itemListStyle } from './store/data/items';
 import { ItemsSectionList, ItemsSectionListSection } from './ItemsSectionList';
 import { List, IconButton, Tooltip, useTheme, TouchableRipple } from 'react-native-paper';
+import { quantityToString } from './numberToString';
 import { RootStackParamList } from '../App';
 import { Text, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import React, { JSXElementConstructor, ReactElement, useState } from 'react';
-import { getCalculatorFields } from './getCalculatorFields';
 import { withSeparator } from './withSeparator';
-import { quantityToString } from './numberToString';
+import React, { JSXElementConstructor, ReactElement, useState } from 'react';
 
 export function FillList(props: {
     storageId: string;
@@ -28,8 +28,7 @@ export function FillList(props: {
     }>({ visible: false });
 
     const itemsForThisStorage = items.filter(x => ((props.storageId === allStorage.id) || x.storages.find(x => x.storageId === props.storageId)) && x.wanted);
-    const unassigned = items
-        .filter(x => (x.storages.length === 0) && x.wanted);
+    const unassigned = items.filter(x => (x.storages.length === 0)).sort((a, b) => a.wanted ? (b.wanted ? 0 : -1) : (!b.wanted) ? 0 : 1);
     const recentlyUsed = items
         .filter(x => ((props.storageId === allStorage.id) || x.storages.find(x => x.storageId === props.storageId)) && !x.wanted);
 

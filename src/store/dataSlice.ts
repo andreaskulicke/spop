@@ -494,10 +494,13 @@ export function selectItemsWantedWithShop(shop: Shop, stopperOff?: boolean) {
         });
 }
 
-export function selectItemsWantedWithoutShop() {
+export function selectItemsNotWantedWithoutShop() {
     return createSelector(
         [selectItems],
-        items => items.filter(x => x.wanted && (x.shops.filter(x => x.checked).length === 0)));
+        items => items
+            .filter(x => (x.shops.filter(x => x.checked).length === 0))
+            .sort((a, b) => a.wanted ? (b.wanted ? 0 : -1) : (!b.wanted ? 0 : 1))
+    );
 }
 
 export function selectItemsNotWantedWithShop(shopId: string) {

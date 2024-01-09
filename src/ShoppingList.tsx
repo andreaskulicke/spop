@@ -1,10 +1,11 @@
-import { allShop, selectItemsNotWantedWithShop, selectItemsWantedWithShop, selectItemsWantedWithoutShop, selectValidShops, setItemPackageQuantity, setItemPackageUnit, setItemQuantity, setItemShop, setItemShopPrice, setItemUnit, setItemWanted } from './store/dataSlice';
+import { allShop, selectItemsNotWantedWithShop, selectItemsWantedWithShop, selectItemsNotWantedWithoutShop, selectValidShops, setItemPackageQuantity, setItemPackageUnit, setItemQuantity, setItemShop, setItemShopPrice, setItemUnit, setItemWanted } from './store/dataSlice';
 import { Calculator } from './Calculator';
 import { getCalculatorFields } from './getCalculatorFields';
 import { Item, UnitId, getPackageQuantityUnit, getUnitName, itemListStyle } from './store/data/items';
 import { ItemsSectionList, ItemsSectionListSection } from './ItemsSectionList';
 import { List, Tooltip, Checkbox, IconButton, useTheme, TouchableRipple } from 'react-native-paper';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { numberToString, quantityToString } from './numberToString';
 import { PriceIcon } from './PriceIcon';
 import { RootStackParamList } from '../App';
 import { Shop } from './store/data/shops';
@@ -12,7 +13,6 @@ import { Text, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { withSeparator } from './withSeparator';
 import React, { JSXElementConstructor, ReactElement, useState } from 'react';
-import { numberToString, quantityToString } from './numberToString';
 
 export function ShoppingList(props: {
     shop: Shop;
@@ -21,7 +21,7 @@ export function ShoppingList(props: {
 }) {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const itemsForThisShop = useAppSelector(selectItemsWantedWithShop(props.shop, props.stopperOff));
-    const unassigned = useAppSelector(selectItemsWantedWithoutShop());
+    const unassigned = useAppSelector(selectItemsNotWantedWithoutShop());
     const recentlyUsed = useAppSelector(selectItemsNotWantedWithShop(props.shop.id));
     const shops = useAppSelector(selectValidShops);
     const dispatch = useAppDispatch();
