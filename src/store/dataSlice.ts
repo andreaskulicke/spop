@@ -508,8 +508,15 @@ export function selectItemsNotWantedWithShop(shopId: string) {
 
 export function selectItemsWithCategory(categoryId: string | undefined) {
     return createSelector(
-        [selectItems],
-        items => items.filter(x => x.categoryId === categoryId));
+        [selectItems, selectCategories],
+        (items, categories) => {
+            const c = new Map(categories.map(x => [x.id, x]));
+            let categoryIdTmp = categoryId;
+            if (categoryIdTmp) {
+                categoryIdTmp = c.get(categoryIdTmp) ? categoryIdTmp : undefined;
+            }
+            return items.filter(x => !!categoryIdTmp ? (x.categoryId === categoryIdTmp) : (!x.categoryId || !c.get(x.categoryId)));
+        });
 }
 
 export function selectItemsWithDifferentCategory(categoryId: string | undefined) {

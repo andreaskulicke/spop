@@ -3,7 +3,7 @@ import { Appbar, Tooltip, Menu, Divider, List } from "react-native-paper";
 import { CategoriesStackParamList } from "./CategoriesNavigationScreen";
 import { Category } from "./store/data/categories";
 import { CategoryIcon } from "./CategoryIcon";
-import { Count } from "./Count";
+import { CategoryCount, Count } from "./Count";
 import { FlatList } from "react-native-gesture-handler";
 import { JSXElementConstructor, ReactElement, useState } from "react";
 import { ListRenderItemInfo } from "react-native";
@@ -42,7 +42,7 @@ export function CategoriesScreen(props: {
                 key={info.item.id}
                 title={info.item.name}
                 left={p => <CategoryIcon {...p} icon={info.item.icon} />}
-                right={p => <Count {...p} count={getCount(info.item.id)} />}
+                right={p => <CategoryCount {...p} categoryId={info.item.id} />}
                 onPress={() => props.navigation.navigate("CategoryItems", { id: info.item.id })}
             />
         );
@@ -67,7 +67,7 @@ export function CategoriesScreen(props: {
             <List.Item
                 title="Nicht zugewiesen"
                 left={p => <CategoryIcon {...p} icon="check-all" />}
-                right={p => <Count {...p} count={getCount(undefined)} />}
+                right={p => <CategoryCount {...p} categoryId={undefined} />}
                 onPress={() => props.navigation.navigate("CategoryItems", { id: undefined })}
             />
             <Divider />
