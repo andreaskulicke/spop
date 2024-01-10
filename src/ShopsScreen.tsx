@@ -1,10 +1,11 @@
-import { addShop, addShopStopper, allShop, selectShops, setShops } from "./store/dataSlice";
+import { addShop, addShopStopper, allShop, allStorage, selectShops, setShops } from "./store/dataSlice";
 import { Appbar, List, Menu, useTheme, Text, Divider, Badge, Tooltip, Icon } from "react-native-paper";
 import { Count } from "./Count";
 import { NavigationProp } from "@react-navigation/native";
 import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 import { ReactNode, useState } from "react";
 import { RootStackParamList } from "../App";
+import { SearchBarList } from "./SearchBarList";
 import { Shop, getShopImage } from "./store/data/shops";
 import { ShopsStackParamList } from "./ShopsNavigationScreen";
 import { StatusBarView } from "./StatusBarView";
@@ -111,36 +112,44 @@ export function ShopsScreen(props: {
                     <Menu.Item leadingIcon="cog-outline" title="Einstellungen" onPress={handleSettingsPress} />
                 </Menu>
             </Appbar.Header>
-            <List.Item
-                title={allShop.name}
-                left={p => getShopImage(allShop, theme, { ...p })}
-                right={p => {
-                    const count = items.filter(i => i.wanted).length;
-                    const unassignedCount = items.filter(i => i.wanted && ((i.shops?.filter(x => x.checked).length ?? 0) === 0)).length;
-                    return (
-                        <View style={{ flexDirection: "row", alignItems: "center" }}>
-                            <Tooltip title="Gewünschte Dinge und ohne Shop">
-                                <Count {...p} count={count} />
-                            </Tooltip>
-                            <Badge visible={unassignedCount > 0} style={{ position: "absolute", top: 0, right: -20 }}>{unassignedCount}</Badge>
-                        </View>
-                    );
+            <SearchBarList
+                list={
+                    <View>
+                        <Divider />
+                        <List.Item
+                            title={allShop.name}
+                            left={p => getShopImage(allShop, theme, { ...p })}
+                            right={p => {
+                                const count = items.filter(i => i.wanted).length;
+                                const unassignedCount = items.filter(i => i.wanted && ((i.shops?.filter(x => x.checked).length ?? 0) === 0)).length;
+                                return (
+                                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                        <Tooltip title="Gewünschte Dinge und ohne Shop">
+                                            <Count {...p} count={count} />
+                                        </Tooltip>
+                                        <Badge visible={unassignedCount > 0} style={{ position: "absolute", top: 0, right: -20 }}>{unassignedCount}</Badge>
+                                    </View>
+                                );
+                            }
+                            }
+                            onPress={() => handleShopPress(allShop.id)}
+                        />
+                        <Divider />
+                        <NestableScrollContainer>
+                            <NestableDraggableFlatList
+                                data={shops}
+                                keyExtractor={x => x.id}
+                                renderItem={handleRenderItem}
+                                onDragEnd={({ data }) => {
+                                    setDraggingStopper("");
+                                    dispatch(setShops(data));
+                                }}
+                            />
+                        </NestableScrollContainer>
+                    </View>
                 }
-                }
-                onPress={() => handleShopPress(allShop.id)}
+                shop={allShop}
             />
-            <Divider style={{ marginBottom: 24 }} />
-            <NestableScrollContainer style={{ flex: 1 }} >
-                <NestableDraggableFlatList
-                    data={shops}
-                    keyExtractor={x => x.id}
-                    renderItem={handleRenderItem}
-                    onDragEnd={({ data }) => {
-                        setDraggingStopper("");
-                        dispatch(setShops(data));
-                    }}
-                />
-            </NestableScrollContainer>
         </StatusBarView>
     );
 }

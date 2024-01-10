@@ -45,7 +45,13 @@ export function ShoppingScreen(props: {
 
             </Appbar.Header>
             <SearchBarList
-                list={<ShoppingList shop={shop} selectedItemId={selectedItemId} stopperOff={stopperOff} />}
+                list={
+                    <ShoppingList
+                        shop={shop}
+                        selectedItemId={selectedItemId}
+                        stopperOff={stopperOff}
+                    />
+                }
                 shop={shop}
                 onItemPress={itemId => setSelectedItemId(itemId)}
             />

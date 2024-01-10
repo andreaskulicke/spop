@@ -98,7 +98,9 @@ export const itemsSlice = createSlice({
                 if (action.payload.item.unitId) {
                     item.unitId = action.payload.item.unitId;
                 }
-                item.categoryId = item.categoryId ?? action.payload.storage?.defaultCategoryId;
+                item.categoryId = action.payload.item.categoryId
+                    ?? item.categoryId
+                    ?? action.payload.storage?.defaultCategoryId;
                 item.wanted = true;
             } else {
                 item = {
@@ -458,7 +460,7 @@ export function selectItemsWantedWithShop(shop: Shop, stopperOff?: boolean) {
         (items, categories, shops) => {
             const c = new Map(categories.map(x => [x.id, x]));
             const cats = [undefined as (Category | undefined)]
-                .concat(shop.categoryIds?.filter(x => !!x).map(x => c.get(x)) ?? categories.sort((a, b) => a.name.localeCompare(b.name)));
+                .concat(shop.categoryIds?.filter(x => !!x).map(x => c.get(x)) ?? [...categories].sort((a, b) => a.name.localeCompare(b.name)));
 
             // Add all previous shops from last stopper
             const s = new Set();

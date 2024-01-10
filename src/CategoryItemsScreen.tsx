@@ -9,6 +9,7 @@ import { RootStackParamList } from "../App";
 import { View } from "react-native";
 import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
+import { SearchBarList } from "./SearchBarList";
 
 export function CategoryItemsScreen(props: {
     navigation: NavigationProp<RootStackParamList & CategoriesStackParamList>;
@@ -57,12 +58,12 @@ export function CategoryItemsScreen(props: {
 
     const data: ItemsSectionListSection[] = [
         {
-            title: "Nicht zugewiesen",
+            title: "Ohne Kategorie",
             icon: "dots-horizontal",
             data: itemsNoCategory,
         },
         {
-            title: "Dinge aus anderen Kategorien",
+            title: "Andere Kategorien",
             icon: "shape",
             data: itemsDifferentCategory,
         },
@@ -70,8 +71,8 @@ export function CategoryItemsScreen(props: {
 
     if (category) {
         data.unshift({
-            title: "Dinge",
-            icon: "cart",
+            title: category.name,
+            icon: category.icon,
             data: itemsCategory,
         });
     }
@@ -86,9 +87,14 @@ export function CategoryItemsScreen(props: {
                     && <Appbar.Action icon="pencil-outline" onPress={handleEditPress} />
                 }
             </Appbar.Header>
-            <ItemsSectionList
-                data={data}
-                renderItem={handleRenderItem}
+            <SearchBarList
+                list={
+                    <ItemsSectionList
+                        data={data}
+                        renderItem={handleRenderItem}
+                    />
+                }
+                category={category}
             />
         </StatusBarView>
     )

@@ -1,4 +1,5 @@
 import { addItem, allStorage, allShop } from './store/dataSlice';
+import { Category, emptyCategory } from './store/data/categories';
 import { FillFromHistoryList } from './FillFromHistoryList';
 import { Item, UnitId } from './store/data/items';
 import { KeyboardAvoidingView } from 'react-native';
@@ -14,15 +15,19 @@ import uuid from 'react-native-uuid';
 
 export function SearchBarList(props: {
     list: React.ReactNode;
+    category?: Category;
     shop?: Shop;
     storage?: Storage;
     onItemPress?: (itemId: string) => void;
 }) {
+    const categoryId = (!props.category || props.category.id === emptyCategory.id) ? undefined : props.category.id;
+
     const [filter, setFilter] = useState<{ text: string; name?: string; quantity?: string; }>();
     const [newItem, setNewItem] = useState<Item>({
         id: uuid.v4() as string,
         name: "",
         quantity: undefined,
+        categoryId: categoryId,
         shops: (!props.shop || (props.shop.id === allShop.id)) ? [] : [{ checked: true, shopId: props.shop.id }],
         storages: (!props.storage || (props.storage.id === allStorage.id)) ? [] : [{ storageId: props.storage.id }],
     });
@@ -34,7 +39,7 @@ export function SearchBarList(props: {
             const [q, u] = parseQuantityUnit(filter?.quantity);
             dispatch(addItem(
                 {
-                    item: { ...item, quantity: q, unitId: u },
+                    item: { ...item, categoryId: categoryId ?? item.categoryId, quantity: q, unitId: u },
                     shop: props.shop,
                     storage: props.storage,
                 }));

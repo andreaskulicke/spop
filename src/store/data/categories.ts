@@ -1,5 +1,5 @@
 export const categoryIds = [
-    "backing",
+    "baking",
     "bakery",
     "canned_fruits",
     "cereals",
@@ -124,7 +124,7 @@ export const defaultCategories: Category[] = [
         name: "Süßigkeiten",
     },
     {
-        id: "backing",
+        id: "baking",
         icon: "muffin",
         name: "Backen",
     },

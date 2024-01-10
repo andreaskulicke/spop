@@ -7,6 +7,7 @@ import { NavigationProp } from "@react-navigation/native";
 import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 import { ReactNode, useState } from "react";
 import { RootStackParamList } from "../App";
+import { SearchBarList } from "./SearchBarList";
 import { StatusBarView } from "./StatusBarView";
 import { Storage } from "./store/data/storages";
 import { StoragesStackParamList } from "./StoragesNavigationScreen";
@@ -79,31 +80,39 @@ export function StoragesScreen(props: {
                     <Menu.Item leadingIcon="cog-outline" title="Einstellungen" onPress={handleSettingsPress} />
                 </Menu>
             </Appbar.Header>
-            <List.Item
-                title={allStorage.name}
-                left={p => <CategoryIcon {...p} icon="check-all" />}
-                right={p => {
-                    const count = items.items.filter(i => i.wanted).length;
-                    const unassignedCount = items.items.filter(i => i.wanted && ((i.storages?.length ?? 0) === 0)).length;
-                    return <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <Tooltip title="Gewünschte Dinge und ohne Vorratsort">
-                            <Count {...p} count={count} />
-                        </Tooltip>
-                        <Badge visible={unassignedCount > 0} style={{ position: "absolute", top: 0, right: -20 }}>{unassignedCount}</Badge>
-                    </View>;
+            <SearchBarList
+                list={
+                    <View>
+                        <Divider />
+                        <List.Item
+                            title={allStorage.name}
+                            left={p => <CategoryIcon {...p} icon="check-all" />}
+                            right={p => {
+                                const count = items.items.filter(i => i.wanted).length;
+                                const unassignedCount = items.items.filter(i => i.wanted && ((i.storages?.length ?? 0) === 0)).length;
+                                return <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                    <Tooltip title="Gewünschte Dinge und ohne Vorratsort">
+                                        <Count {...p} count={count} />
+                                    </Tooltip>
+                                    <Badge visible={unassignedCount > 0} style={{ position: "absolute", top: 0, right: -20 }}>{unassignedCount}</Badge>
+                                </View>;
+                            }
+                            }
+                            onPress={() => handleStoragePress(allStorage.id)}
+                        />
+                        <Divider />
+                        <NestableScrollContainer>
+                            <NestableDraggableFlatList
+                                data={storages}
+                                keyExtractor={x => x.id}
+                                renderItem={handleRenderItem}
+                                onDragEnd={({ data }) => dispatch(setStorages(data))}
+                            />
+                        </NestableScrollContainer>
+                    </View>
                 }
-                }
-                onPress={() => handleStoragePress(allStorage.id)}
+                storage={allStorage}
             />
-            <Divider style={{ marginBottom: 12 }} />
-            <NestableScrollContainer>
-                <NestableDraggableFlatList
-                    data={storages}
-                    keyExtractor={x => x.id}
-                    renderItem={handleRenderItem}
-                    onDragEnd={({ data }) => dispatch(setStorages(data))}
-                />
-            </NestableScrollContainer>
         </StatusBarView>
     );
 }

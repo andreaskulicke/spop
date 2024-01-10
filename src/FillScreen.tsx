@@ -31,7 +31,12 @@ export function FillScreen(props: {
                 }
             </Appbar.Header>
             <SearchBarList
-                list={<FillList storageId={storage.id} selectedItemId={selectedItemId} />}
+                list={
+                    <FillList
+                        storageId={storage.id}
+                        selectedItemId={selectedItemId}
+                    />
+                }
                 storage={storage}
                 onItemPress={itemId => setSelectedItemId(itemId)}
             />
