@@ -11,7 +11,7 @@ export function SearchBar(props: {
 
     function handleSearchChangeText(text: string) {
         const t = text.trimStart();
-        const m = t.match("^(?<pre>\\d+[^ ]*)? *(?<name>.*?) *(?<post>\\d+[^ ]*)? *$");
+        const m = t.match("^(?<pre>\\d+[^ ]*)? *(?<name>.*?) *(?<post>\\d+[^ ]*$)?$");
         if (m && m.groups) {
             // console.log("name='" + m.groups["name"] + "'")
             // console.log("pre='" + m.groups["pre"] + "'")
