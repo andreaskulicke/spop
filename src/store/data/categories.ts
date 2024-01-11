@@ -15,12 +15,14 @@ export const categoryIds = [
     "noodles",
     "nuts",
     "pickled_preserves",
+    "rice",
     "sauces",
     "spices",
     "stationary",
     "sweets",
 ] as const;
 
+// https://static.enapter.com/rn/icons/material-community.html
 export const categoryIcons = [
     "baguette",
     "barley",
@@ -132,6 +134,11 @@ export const defaultCategories: Category[] = [
         id: "noodles",
         icon: "noodles",
         name: "Nudeln",
+    },
+    {
+        id: "rice",
+        icon: "rice",
+        name: "Reis & Bohnen",
     },
     {
         id: "sauces",

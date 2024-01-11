@@ -17,7 +17,7 @@ Spop Ist eine App um wöchentliche Haushaltseinkäufe erträglicher zu machen.
 
 Schon wieder so eine Shopping App?
 
-Ja, richtig, noch eine, aber... Bei der hier dreht es sich alles um die "Dinge". Dinge, die eingekauft werden sollen und nicht um "Listen". Und das möglichst schnell, einfach, unkompliziert und immer wieder. 
+Ja, richtig, noch eine, aber... Bei der hier dreht es sich alles um die "Dinge". Dinge, die eingekauft werden sollen und nicht um "Listen". Und das möglichst schnell, einfach, unkompliziert und jede Woche immer wieder. 
 
 Oookay, toll, und was soll das heißen?
 
@@ -35,7 +35,7 @@ In Spop gibt es für jeden erstellten Vorratsort eine eigene Historie. Damit las
 
 Einkaufen - Shops
 
-Meistens fahre ich beim Einkaufen die selben Shops in der selben Reihenfolge ab. Vom Günstigen zu den weniger Günstigen (Aldi - Edeka). Oder vom Spezielleren zum Allgemeinen (Obstladen - Supermarkt). Was ich in dem einen nicht bekomme, kaufe ich dann im nächsten. Dafür gibt es in Spop mehrere Shops. Die nicht abgehakten Dinge im früheren Shop werden in den Folgenden angezeigt - bis zu einem Stopper.
+Meistens fahre ich beim Einkaufen die selben Shops in der selben Reihenfolge ab. Vom Günstigen zu den weniger Günstigen (Aldi - Edeka). Oder vom Spezielleren zum Allgemeinen (Obstladen - Supermarkt). Was ich in dem einen nicht bekomme, kaufe ich dann im nächsten. Dafür gibt es in Spop mehrere Shops. Die nicht abgehakten Dinge im früheren Shop werden in den Folgenden angezeigt - sie fallen durch - bis zu einem Stopper.
 Jeder Shop hat eine eigene Reihenfolge der Kategorien, um die Sortierung der Dinge im Shop festlegen zu können. 
 Pro Shop gibt es einen Preis, den man eingeben kann. Der Günstigste wird hervor gehoben. 
 
