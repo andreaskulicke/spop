@@ -48,6 +48,8 @@ export function CategoriesScreen(props: {
         );
     }
 
+    const heightOfAllThingsListItem = 68;
+
     return (
         <StatusBarView>
             <Appbar.Header elevated>
@@ -66,10 +68,11 @@ export function CategoriesScreen(props: {
             </Appbar.Header>
             <SearchBarList
                 list={
-                    <View>
+                    <View style={{ paddingBottom: heightOfAllThingsListItem }}>
                         <Divider />
                         <List.Item
                             title="Nicht zugewiesen"
+                            style={{ height: heightOfAllThingsListItem }}
                             left={p => <CategoryIcon {...p} icon="check-all" />}
                             right={p => <CategoryCount {...p} categoryId={undefined} />}
                             onPress={() => props.navigation.navigate("CategoryItems", { id: undefined })}

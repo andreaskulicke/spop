@@ -2,7 +2,7 @@ import { addItem, allStorage, allShop } from './store/dataSlice';
 import { Category, emptyCategory } from './store/data/categories';
 import { FillFromHistoryList } from './FillFromHistoryList';
 import { Item, UnitId } from './store/data/items';
-import { KeyboardAvoidingView } from 'react-native';
+import { KeyboardAvoidingView, View } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { parseQuantityUnit, quantityToString } from './numberToString';
 import { RootStackParamList } from '../App';
@@ -89,16 +89,22 @@ export function SearchBarList(props: {
                 onChange={handleSearchChange}
                 onSubmitEditing={() => handlePress(newItem)}
             />
-            {
-                (!filter || !filter.name)
-                    ? props.list
-                    : <FillFromHistoryList
-                        item={newItem}
-                        shop={props.shop}
-                        storage={props.storage}
-                        onPress={handlePress}
-                        onIconPress={handleIconPress} />
-            }
+            <View
+                style={{
+                    flex: 1,
+                }}
+            >
+                {
+                    (!filter || !filter.name)
+                        ? props.list
+                        : <FillFromHistoryList
+                            item={newItem}
+                            shop={props.shop}
+                            storage={props.storage}
+                            onPress={handlePress}
+                            onIconPress={handleIconPress} />
+                }
+            </View>
         </KeyboardAvoidingView>
     );
 }

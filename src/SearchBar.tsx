@@ -33,7 +33,7 @@ export function SearchBar(props: {
             mode="bar"
             placeholder="Will haben"
             value={searchQuery}
-            style={{ backgroundColor: theme.colors.elevation.level2, margin: 4 }}
+            style={{ backgroundColor: theme.colors.elevation.level2, margin: 4, height: 64 }}
             onChangeText={handleSearchChangeText}
             onSubmitEditing={props.onSubmitEditing}
         />

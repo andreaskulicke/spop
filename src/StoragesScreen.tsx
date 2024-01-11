@@ -66,6 +66,8 @@ export function StoragesScreen(props: {
         );
     }
 
+    const heightOfAllThingsListItem = 68;
+
     return (
         <StatusBarView>
             <Appbar.Header elevated>
@@ -82,10 +84,11 @@ export function StoragesScreen(props: {
             </Appbar.Header>
             <SearchBarList
                 list={
-                    <View>
+                    <View style={{ paddingBottom: heightOfAllThingsListItem }}>
                         <Divider />
                         <List.Item
                             title={allStorage.name}
+                            style={{ height: heightOfAllThingsListItem }}
                             left={p => <CategoryIcon {...p} icon="check-all" />}
                             right={p => {
                                 const count = items.items.filter(i => i.wanted).length;

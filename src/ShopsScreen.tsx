@@ -12,6 +12,7 @@ import { StatusBarView } from "./StatusBarView";
 import { TouchableWithoutFeedback, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import uuid from 'react-native-uuid';
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 export function ShopsScreen(props: {
     navigation: NavigationProp<RootStackParamList & ShopsStackParamList>;
@@ -93,6 +94,8 @@ export function ShopsScreen(props: {
         );
     }
 
+    const heightOfAllThingsListItem = 68;
+
     return (
         <StatusBarView>
             <Appbar.Header elevated>
@@ -114,10 +117,11 @@ export function ShopsScreen(props: {
             </Appbar.Header>
             <SearchBarList
                 list={
-                    <View>
+                    <View style={{ paddingBottom: heightOfAllThingsListItem }}>
                         <Divider />
                         <List.Item
                             title={allShop.name}
+                            style={{ height: heightOfAllThingsListItem }}
                             left={p => getShopImage(allShop, theme, { ...p })}
                             right={p => {
                                 const count = items.filter(i => i.wanted).length;
