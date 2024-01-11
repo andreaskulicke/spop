@@ -1,4 +1,3 @@
-import { ExpoConfig, ConfigContext } from 'expo/config';
 import { withAndroidManifest } from '@expo/config-plugins';
 
 const withAndroidQueries = config => {
@@ -19,6 +18,6 @@ const withAndroidQueries = config => {
         });
 };
 
-export default function ({ config }: ConfigContext): ExpoConfig {
+export default function ({ config }) {
     return withAndroidQueries(config);
 };
