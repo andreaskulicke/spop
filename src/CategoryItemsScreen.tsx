@@ -81,7 +81,7 @@ export function CategoryItemsScreen(props: {
         <StatusBarView>
             <Appbar.Header elevated>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
-                <Appbar.Content title={category?.name ?? allShop.name} />
+                <Appbar.Content title={category?.name ?? "Nicht zugewiesen"} />
                 {
                     category
                     && <Appbar.Action icon="pencil-outline" onPress={handleEditPress} />

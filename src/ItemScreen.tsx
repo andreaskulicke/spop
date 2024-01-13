@@ -6,6 +6,7 @@ import { CategoryMenu } from "./CategoryMenu";
 import { ItemShop, UnitId, units } from "./store/data/items";
 import { Keyboard, KeyboardAvoidingView, ScrollView, Text, View } from "react-native";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
+import { numberToString, stringToNumber } from "./numberToString";
 import { PriceIcon } from "./PriceIcon";
 import { RootStackParamList } from "../App";
 import { Shop } from "./store/data/shops";
@@ -14,7 +15,6 @@ import { UnitSelection } from "./UnitSelection";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import React, { useEffect, useState } from "react";
 import uuid from 'react-native-uuid';
-import { numberToString, stringToNumber } from "./numberToString";
 
 type CalculatorCallSource = "quantity" | "packageQuantity" | "shop";
 

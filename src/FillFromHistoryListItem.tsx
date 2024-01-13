@@ -6,6 +6,7 @@ import { List, Text, TouchableRipple, useTheme } from 'react-native-paper';
 import { numberToString } from "./numberToString";
 import { View } from 'react-native';
 import React from 'react';
+import { PriceIcon } from "./PriceIcon";
 
 export function FillFromHistoryListItem(props: {
     item: Item;
@@ -44,9 +45,15 @@ export function FillFromHistoryListItem(props: {
                         && <TouchableRipple
                             onPress={() => props.onCalculatorPress?.(props.item)}
                         >
-                            <Text style={{ color: theme.colors.primary, paddingHorizontal: 8, paddingVertical: 8 }}>
-                                {numberToString(price)} €
-                            </Text>
+                            <View style={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
+                                <Text style={{ color: theme.colors.primary, paddingLeft: 8, paddingVertical: 8 }}>
+                                    {numberToString(price)} €
+                                </Text>
+                                <PriceIcon
+                                    itemId={props.item.id}
+                                    shopId={props.shopId}
+                                />
+                            </View>
                         </TouchableRipple>
                     }
                     {

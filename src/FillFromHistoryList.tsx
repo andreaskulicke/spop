@@ -77,6 +77,7 @@ export function FillFromHistoryList(props: {
             {
                 items
                     .filter(x => transformToSearchName(x.name).includes(itemName))
+                    .sort((a, b) => a.name.length - b.name.length)
                     .map(x => <FillFromHistoryListItem
                         key={x.id}
                         item={{ ...x, quantity: props.item.quantity, unitId: replaceUnitIdIfEmpty(props.item.unitId, x.unitId) }}

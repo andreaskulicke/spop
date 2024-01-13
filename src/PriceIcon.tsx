@@ -5,7 +5,7 @@ import React from 'react';
 
 export function PriceIcon(props: {
     itemId: string;
-    shopId: string;
+    shopId: string | undefined;
 }) {
     const item = useAppSelector(selectItem(props.itemId));
     const itemShopsWithMinPrice = useAppSelector(selectItemShopsWithMinPrice(props.itemId));
@@ -17,7 +17,7 @@ export function PriceIcon(props: {
     return (
         (numberOfShopsWithPrices > 1)
             ? <Icon
-                color={hasMinPriceTmp ? theme.colors.primary : theme.colors.error}
+                color={hasMinPriceTmp ? "green" : theme.colors.error}
                 source={hasMinPriceTmp ? "arrow-up" : "arrow-down"}
                 size={16}
             />
