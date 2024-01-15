@@ -1,8 +1,9 @@
-import { addCategory, selectSortedCategories } from "./store/dataSlice";
+import { addCategory, selectItems, selectSortedCategories } from "./store/dataSlice";
 import { Appbar, Tooltip, Menu, Divider, List } from "react-native-paper";
+import { AreaItemTitle } from "./AreaItemTitle";
 import { CategoriesStackParamList } from "./CategoriesNavigationScreen";
 import { Category } from "./store/data/categories";
-import { CategoryCount } from "./Count";
+import { Count } from "./Count";
 import { CategoryIcon } from "./CategoryIcon";
 import { FlatList } from "react-native-gesture-handler";
 import { JSXElementConstructor, ReactElement, useState } from "react";
@@ -11,6 +12,7 @@ import { NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { SearchBarList } from "./SearchBarList";
 import { StatusBarView } from "./StatusBarView";
+import { UnassignedBadge } from "./UnassignedBadge";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import uuid from 'react-native-uuid';
 
@@ -18,6 +20,7 @@ export function CategoriesScreen(props: {
     navigation: NavigationProp<RootStackParamList & CategoriesStackParamList>;
 }) {
     const [menuVisible, setMenuVisible] = useState(false);
+    const items = useAppSelector(selectItems);
     const categories = useAppSelector(selectSortedCategories);
     const dispatch = useAppDispatch();
 
@@ -36,14 +39,19 @@ export function CategoriesScreen(props: {
         props.navigation.navigate("Settings");
     }
 
+    function handleCategoryPress(id: string | undefined): void {
+        props.navigation.navigate("CategoryItems", { id });
+    }
+
     function handleRenderItem(info: ListRenderItemInfo<Category>): ReactElement<any, string | JSXElementConstructor<any>> | null {
+        const count = items.filter(i => i.wanted && i.categoryId === info.item.id).length;
         return (
             <List.Item
                 key={info.item.id}
-                title={info.item.name}
+                title={p => <AreaItemTitle p={p} title={info.item.name} bold={count > 0} />}
                 left={p => <CategoryIcon {...p} icon={info.item.icon} />}
-                right={p => <CategoryCount {...p} categoryId={info.item.id} />}
-                onPress={() => props.navigation.navigate("CategoryItems", { id: info.item.id })}
+                right={p => <Count {...p} count={count} />}
+                onPress={() => handleCategoryPress(info.item.id)}
             />
         );
     }
@@ -71,11 +79,17 @@ export function CategoriesScreen(props: {
                     <View style={{ paddingBottom: heightOfAllThingsListItem }}>
                         <Divider />
                         <List.Item
-                            title="Nicht zugewiesen"
+                            title="Alle Dinge"
                             style={{ height: heightOfAllThingsListItem }}
                             left={p => <CategoryIcon {...p} icon="check-all" />}
-                            right={p => <CategoryCount {...p} categoryId={undefined} />}
-                            onPress={() => props.navigation.navigate("CategoryItems", { id: undefined })}
+                            right={p =>
+                                <UnassignedBadge
+                                    p={p}
+                                    tooltip="Gewünschte Dinge und ohne Kategorie"
+                                    unassignedFilter={item => !item.categoryId}
+                                />
+                            }
+                            onPress={() => handleCategoryPress(undefined)}
                         />
                         <Divider />
                         <FlatList

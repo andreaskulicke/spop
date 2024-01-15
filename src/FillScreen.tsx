@@ -33,7 +33,7 @@ export function FillScreen(props: {
             <SearchBarList
                 list={
                     <FillList
-                        storageId={storage.id}
+                        storage={storage}
                         selectedItemId={selectedItemId}
                     />
                 }

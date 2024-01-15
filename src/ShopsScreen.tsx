@@ -1,5 +1,6 @@
-import { addShop, addShopStopper, allShop, allStorage, selectShops, setShops } from "./store/dataSlice";
-import { Appbar, List, Menu, useTheme, Text, Divider, Badge, Tooltip, Icon } from "react-native-paper";
+import { addShop, addShopStopper, allShop, selectItems, selectShops, setShops } from "./store/dataSlice";
+import { Appbar, List, Menu, useTheme, Text, Divider, Tooltip, Icon } from "react-native-paper";
+import { AreaItemTitle } from "./AreaItemTitle";
 import { Count } from "./Count";
 import { NavigationProp } from "@react-navigation/native";
 import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
@@ -10,16 +11,16 @@ import { Shop, getShopImage } from "./store/data/shops";
 import { ShopsStackParamList } from "./ShopsNavigationScreen";
 import { StatusBarView } from "./StatusBarView";
 import { TouchableWithoutFeedback, View } from "react-native";
+import { UnassignedBadge } from "./UnassignedBadge";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import uuid from 'react-native-uuid';
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 export function ShopsScreen(props: {
     navigation: NavigationProp<RootStackParamList & ShopsStackParamList>;
 }) {
     const [menuVisible, setMenuVisible] = useState(false);
     const [draggingStopper, setDraggingStopper] = useState("");
-    const items = useAppSelector(state => state.data.items);
+    const items = useAppSelector(selectItems);
     const shops = useAppSelector(selectShops);
     const dispatch = useAppDispatch();
     const theme = useTheme();
@@ -76,17 +77,9 @@ export function ShopsScreen(props: {
                 </ScaleDecorator>
                 : <ScaleDecorator>
                     <List.Item
-                        title={p =>
-                            <Text {...p} variant="bodyLarge" style={{ fontWeight: (count > 0) ? "bold" : "normal" }}>
-                                {params.item.name}
-                            </Text>
-                        }
+                        title={p => <AreaItemTitle p={p} title={params.item.name} bold={count > 0} />}
                         left={p => getShopImage(params.item, theme, { ...p })}
-                        right={p =>
-                            <Text {...p} variant="labelMedium">
-                                {count}
-                            </Text>
-                        }
+                        right={p => <Count {...p} count={count} />}
                         onPress={() => handleShopPress(params.item.id)}
                         onLongPress={() => params.drag()}
                     />
@@ -123,18 +116,12 @@ export function ShopsScreen(props: {
                             title={allShop.name}
                             style={{ height: heightOfAllThingsListItem }}
                             left={p => getShopImage(allShop, theme, { ...p })}
-                            right={p => {
-                                const count = items.filter(i => i.wanted).length;
-                                const unassignedCount = items.filter(i => i.wanted && ((i.shops?.filter(x => x.checked).length ?? 0) === 0)).length;
-                                return (
-                                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                        <Tooltip title="Gewünschte Dinge und ohne Shop">
-                                            <Count {...p} count={count} />
-                                        </Tooltip>
-                                        <Badge visible={unassignedCount > 0} style={{ position: "absolute", top: 0, right: -20 }}>{unassignedCount}</Badge>
-                                    </View>
-                                );
-                            }
+                            right={p =>
+                                <UnassignedBadge
+                                    p={p}
+                                    tooltip="Gewünschte Dinge und ohne Shop"
+                                    unassignedFilter={item => (item.shops?.filter(x => x.checked).length ?? 0) === 0}
+                                />
                             }
                             onPress={() => handleShopPress(allShop.id)}
                         />

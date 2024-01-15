@@ -1,28 +1,29 @@
-import { addStorage, allStorage, setStorages } from "./store/dataSlice";
-import { Appbar, Badge, Divider, List, Menu, Text, Tooltip, useTheme } from "react-native-paper";
+import { addStorage, allStorage, selectItems, selectStorages, setStorages } from "./store/dataSlice";
+import { Appbar, Divider, List, Menu } from "react-native-paper";
+import { AreaItemTitle } from "./AreaItemTitle";
 import { AvatarText } from "./AvatarText";
 import { CategoryIcon } from "./CategoryIcon";
 import { Count } from "./Count";
 import { NavigationProp } from "@react-navigation/native";
 import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
-import { ReactNode, useState } from "react";
 import { RootStackParamList } from "../App";
 import { SearchBarList } from "./SearchBarList";
 import { StatusBarView } from "./StatusBarView";
 import { Storage } from "./store/data/storages";
 import { StoragesStackParamList } from "./StoragesNavigationScreen";
+import { UnassignedBadge } from "./UnassignedBadge";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { View } from "react-native";
+import React, { ReactNode, useState } from "react";
 import uuid from 'react-native-uuid';
 
 export function StoragesScreen(props: {
     navigation: NavigationProp<RootStackParamList & StoragesStackParamList>;
 }) {
     const [menuVisible, setMenuVisible] = useState(false);
-    const items = useAppSelector(state => state.data);
-    const storages = useAppSelector(state => state.data.storages);
+    const items = useAppSelector(selectItems);
+    const storages = useAppSelector(selectStorages);
     const dispatch = useAppDispatch();
-    const theme = useTheme();
 
     function handleDotsPress(): void {
         setMenuVisible(true);
@@ -44,21 +45,13 @@ export function StoragesScreen(props: {
     }
 
     function handleRenderItem(params: RenderItemParams<Storage>): ReactNode {
-        const count = items.items.filter(i => i.wanted && i.storages.find(s => s.storageId === params.item.id)).length;
+        const count = items.filter(i => i.wanted && i.storages.find(s => s.storageId === params.item.id)).length;
         return (
             <ScaleDecorator>
                 <List.Item
-                    title={p =>
-                        <Text {...p} variant="bodyLarge" style={{ fontWeight: (count > 0) ? "bold" : "normal" }}>
-                            {params.item.name}
-                        </Text>
-                    }
+                    title={p => <AreaItemTitle p={p} title={params.item.name} bold={count > 0} />}
                     left={p => <AvatarText {...p} label={params.item.name} />}
-                    right={p =>
-                        <Text {...p} variant="labelMedium">
-                            {count}
-                        </Text>
-                    }
+                    right={p => <Count {...p} count={count} />}
                     onPress={() => handleStoragePress(params.item.id)}
                     onLongPress={() => params.drag()}
                 />
@@ -90,16 +83,12 @@ export function StoragesScreen(props: {
                             title={allStorage.name}
                             style={{ height: heightOfAllThingsListItem }}
                             left={p => <CategoryIcon {...p} icon="check-all" />}
-                            right={p => {
-                                const count = items.items.filter(i => i.wanted).length;
-                                const unassignedCount = items.items.filter(i => i.wanted && ((i.storages?.length ?? 0) === 0)).length;
-                                return <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                    <Tooltip title="Gewünschte Dinge und ohne Vorratsort">
-                                        <Count {...p} count={count} />
-                                    </Tooltip>
-                                    <Badge visible={unassignedCount > 0} style={{ position: "absolute", top: 0, right: -20 }}>{unassignedCount}</Badge>
-                                </View>;
-                            }
+                            right={p =>
+                                <UnassignedBadge
+                                    p={p}
+                                    tooltip="Gewünschte Dinge und ohne Vorratsort"
+                                    unassignedFilter={item => (item.storages?.length ?? 0) === 0}
+                                />
                             }
                             onPress={() => handleStoragePress(allStorage.id)}
                         />

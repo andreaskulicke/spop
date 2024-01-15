@@ -1,4 +1,4 @@
-import { allShop, selectCategories, selectCategory, selectItemsWithCategory, selectItemsWithDifferentCategory, setItemCategory } from "./store/dataSlice";
+import { selectCategories, selectCategory, selectItemsNotWanted, selectItemsNotWantedWithCategory, selectItemsNotWantedWithDifferentCategory, selectItemsWanted, selectItemsWantedWithCategory, setItemCategory, setItemWanted, sortItemsByCategory } from "./store/dataSlice";
 import { Appbar, IconButton, List, useTheme } from "react-native-paper";
 import { CategoriesStackParamList } from "./CategoriesNavigationScreen";
 import { Item, itemListStyle } from "./store/data/items";
@@ -17,9 +17,12 @@ export function CategoryItemsScreen(props: {
 }) {
     const category = useAppSelector(selectCategory(props.route.params.id));
     const categories = useAppSelector(selectCategories);
-    const itemsCategory = useAppSelector(selectItemsWithCategory(category?.id));
-    const itemsNoCategory = useAppSelector(selectItemsWithCategory(undefined));
-    const itemsDifferentCategory = useAppSelector(selectItemsWithDifferentCategory(category?.id));
+    const itemsWanted = useAppSelector(selectItemsWanted);
+    const itemsWantedThisCategory = useAppSelector(selectItemsWantedWithCategory(category?.id));
+    const itemsWantedWithoutCategory = useAppSelector(selectItemsWantedWithCategory(undefined));
+    const itemsNotWanted = useAppSelector(selectItemsNotWanted);
+    const itemsNotWantedThisCategory = useAppSelector(selectItemsNotWantedWithCategory(category?.id));
+    const itemsNotWantedDifferentCategory = useAppSelector(selectItemsNotWantedWithDifferentCategory(category?.id));
     const dispatch = useAppDispatch();
     const theme = useTheme();
 
@@ -41,13 +44,18 @@ export function CategoryItemsScreen(props: {
                 style={itemListStyle(theme)}
                 right={p =>
                     <View style={{ flexDirection: "row", alignItems: "center", height: 42 }}>
+                        <IconButton
+                            {...p}
+                            icon={item.wanted ? "minus-thick" : "plus-outline"}
+                            onPress={() => dispatch(setItemWanted({ itemId: item.id, wanted: !item.wanted }))}
+                        />
+                        {
+                            !item.wanted && item.categoryId
+                            && <IconButton {...p} icon="archive-minus-outline" onPress={() => dispatch(setItemCategory({ itemId: item.id, categoryId: undefined }))} />
+                        }
                         {
                             category && (!item.categoryId || (item.categoryId !== category?.id))
                             && <IconButton {...p} icon="archive-plus-outline" onPress={() => dispatch(setItemCategory({ itemId: item.id, categoryId: category?.id }))} />
-                        }
-                        {
-                            item.categoryId
-                            && <IconButton {...p} icon="archive-minus-outline" onPress={() => dispatch(setItemCategory({ itemId: item.id, categoryId: undefined }))} />
                         }
                     </View>
                 }
@@ -56,32 +64,53 @@ export function CategoryItemsScreen(props: {
         );
     }
 
+    const c = new Map(categories.map(x => [x.id, x]));
+
     const data: ItemsSectionListSection[] = [
         {
-            title: "Ohne Kategorie",
-            icon: "dots-horizontal",
-            data: itemsNoCategory,
+            title: "Dinge",
+            icon: "cart",
+            data: !category
+                ? itemsWanted.sort((a, b) => sortItemsByCategory(c, a, b))
+                : itemsWantedThisCategory,
         },
         {
-            title: "Andere Kategorien",
-            icon: "shape",
-            data: itemsDifferentCategory,
+            title: "Ohne Kategorie",
+            icon: "archive-off-outline",
+            data: itemsWantedWithoutCategory,
         },
     ];
 
-    if (category) {
-        data.unshift({
-            title: category.name,
-            icon: category.icon,
-            data: itemsCategory,
-        });
+    if (category === undefined) {
+        data.push(
+            {
+                title: "Zuletzt",
+                icon: "history",
+                data: itemsNotWanted.sort((a, b) => sortItemsByCategory(c, a, b)),
+            },
+        );
+    } else {
+        data.push(
+            {
+                title: `Zuletzt in ${category?.name}`,
+                icon: "history",
+                collapsed: true,
+                data: itemsNotWantedThisCategory,
+            },
+            {
+                title: "Zuletzt in anderen Kategorien",
+                icon: "history",
+                collapsed: true,
+                data: itemsNotWantedDifferentCategory,
+            },
+        );
     }
 
     return (
         <StatusBarView>
             <Appbar.Header elevated>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
-                <Appbar.Content title={category?.name ?? "Nicht zugewiesen"} />
+                <Appbar.Content title={category?.name ?? "Alle Dinge"} />
                 {
                     category
                     && <Appbar.Action icon="pencil-outline" onPress={handleEditPress} />

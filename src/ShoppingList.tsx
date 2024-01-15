@@ -1,9 +1,9 @@
-import { allShop, selectItemsNotWantedWithShop, selectItemsWantedWithShop, selectItemsNotWantedWithoutShop, selectValidShops, setItemPackageQuantity, setItemPackageUnit, setItemQuantity, setItemShop, setItemShopPrice, setItemUnit, setItemWanted } from './store/dataSlice';
+import { allShop, selectItemsNotWantedWithShop, selectItemsWantedWithShop, selectValidShops, setItemPackageQuantity, setItemPackageUnit, setItemQuantity, setItemShop, setItemShopPrice, setItemUnit, setItemWanted, selectItemsWanted, selectItemsWantedWithoutShop, selectItemsNotWanted, selectItemsNotWantedWithDifferentShop } from './store/dataSlice';
 import { Calculator } from './Calculator';
 import { getCalculatorFields } from './getCalculatorFields';
 import { Item, UnitId, getPackageQuantityUnit, getUnitName, itemListStyle } from './store/data/items';
 import { ItemsSectionList, ItemsSectionListSection } from './ItemsSectionList';
-import { List, Tooltip, Checkbox, IconButton, useTheme, TouchableRipple } from 'react-native-paper';
+import { List, Checkbox, IconButton, useTheme, TouchableRipple } from 'react-native-paper';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { numberToString, quantityToString } from './numberToString';
 import { PriceIcon } from './PriceIcon';
@@ -19,13 +19,17 @@ export function ShoppingList(props: {
     selectedItemId?: string;
     stopperOff?: boolean;
 }) {
-    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-    const itemsForThisShop = useAppSelector(selectItemsWantedWithShop(props.shop, props.stopperOff));
-    const unassigned = useAppSelector(selectItemsNotWantedWithoutShop());
-    const recentlyUsed = useAppSelector(selectItemsNotWantedWithShop(props.shop.id));
     const shops = useAppSelector(selectValidShops);
+    const itemsWanted = useAppSelector(selectItemsWanted);
+    const itemsWantedThisShop = useAppSelector(selectItemsWantedWithShop(props.shop, props.stopperOff));
+    const itemsWantedWithoutShop = useAppSelector(selectItemsWantedWithoutShop);
+    const itemsNotWanted = useAppSelector(selectItemsNotWanted);
+    const itemsNotWantedThisShop = useAppSelector(selectItemsNotWantedWithShop(props.shop, props.stopperOff));
+    const itemsNotWantedDifferentShop = useAppSelector(selectItemsNotWantedWithDifferentShop(props.shop));
     const dispatch = useAppDispatch();
     const theme = useTheme();
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
     const [showCalculator, setShowCalculator] = useState<{
         visible: boolean;
         item?: Item;
@@ -54,17 +58,13 @@ export function ShoppingList(props: {
         }
     }
 
-    function handleItemAddToShopPress(item: Item): void {
-        dispatch(setItemShop({ itemId: item.id, shopId: props.shop.id, checked: true }));
-    }
-
     function handleItemPress(item: Item): void {
         navigation.navigate("Item", { id: item.id, shopId: props.shop.id });
     }
 
     function handleItemWantedPress(item: Item): void {
-        dispatch(setItemShop({ itemId: item.id, shopId: props.shop.id, checked: true }));
         dispatch(setItemWanted({ itemId: item.id, wanted: !item.wanted }));
+        dispatch(setItemShop({ itemId: item.id, shopId: props.shop.id, checked: true }));
     }
 
     function handleShowCalculatorPress(item: Item): void {
@@ -118,30 +118,25 @@ export function ShoppingList(props: {
                             />
                             {
                                 item.wanted
-                                    ? <Tooltip title="Hab dich">
-                                        <Checkbox
-                                            {...p}
-                                            status="unchecked"
-                                            onPress={() => handleItemWantedPress(item)}
-                                        />
-                                    </Tooltip>
-                                    : <Tooltip title="Will haben">
-                                        <IconButton
-                                            {...p}
-                                            icon="plus-outline"
-                                            onPress={() => handleItemWantedPress(item)}
-                                        />
-                                    </Tooltip>
+                                    ? <Checkbox
+                                        {...p}
+                                        status="unchecked"
+                                        onPress={() => handleItemWantedPress(item)}
+                                    />
+                                    : <IconButton
+                                        {...p}
+                                        icon="plus-outline"
+                                        style={{ ...(p.style), ...{ marginLeft: 0 } }}
+                                        onPress={() => handleItemWantedPress(item)}
+                                    />
                             }
                             {
-                                (props.shop.id !== allShop.id) && (item.shops.filter(x => x.checked).length === 0)
-                                && <Tooltip title="Zum Shop hinzufügen">
-                                    <IconButton
-                                        {...p}
-                                        icon="cart-plus"
-                                        onPress={() => handleItemAddToShopPress(item)}
-                                    />
-                                </Tooltip>
+                                !item.wanted && item.shops.find(x => x.checked && (x.shopId === props.shop.id))
+                                && <IconButton {...p} icon="cart-minus" onPress={() => dispatch(setItemShop({ itemId: item.id, shopId: props.shop.id, checked: false }))} />
+                            }
+                            {
+                                (props.shop.id !== allShop.id) && !item.shops.find(x => x.checked && (x.shopId === props.shop.id))
+                                && <IconButton {...p} icon="cart-plus" onPress={() => dispatch(setItemShop({ itemId: item.id, shopId: props.shop.id, checked: true }))} />
                             }
                         </View>
                     )}
@@ -154,20 +149,42 @@ export function ShoppingList(props: {
         {
             title: "Dinge",
             icon: "cart",
-            data: itemsForThisShop,
+            data: (props.shop.id === allShop.id)
+                ? itemsWanted
+                : itemsWantedThisShop,
         },
         {
             title: "Ohne Shop",
             icon: "store-off",
-            data: unassigned,
-        },
-        {
-            title: "Zuletzt verwendet",
-            icon: "history",
-            collapsed: true,
-            data: recentlyUsed,
+            data: itemsWantedWithoutShop,
         },
     ];
+
+
+    if (props.shop.id === allShop.id) {
+        data.push(
+            {
+                title: "Zuletzt",
+                icon: "history",
+                data: itemsNotWanted,
+            },
+        );
+    } else {
+        data.push(
+            {
+                title: `Zuletzt in ${props.shop?.name}`,
+                icon: "history",
+                collapsed: true,
+                data: itemsNotWantedThisShop,
+            },
+            {
+                title: "Zuletzt in anderen Shops",
+                icon: "history",
+                collapsed: true,
+                data: itemsNotWantedDifferentShop,
+            },
+        );
+    }
 
     return (
         <View style={{ flex: 1 }}>
@@ -200,7 +217,7 @@ function QuantityPrice(props: {
                 justifyContent: "center",
                 minHeight: 40,
                 minWidth: 64,
-                paddingHorizontal: 20,
+                paddingHorizontal: 16,
             }}
             onPress={props.onPress}
         >
