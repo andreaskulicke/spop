@@ -43,13 +43,15 @@ export const units: Unit[] = [
     },
 ];
 
-export function getQuantityUnit(item: Item): string {
+export function getQuantityUnit(item: Item | undefined): string {
     let s = "";
-    if (item.quantity) {
-        s = `${item.quantity} `;
-    }
-    if (item.unitId) {
-        s += getUnitName(item.unitId);
+    if (item) {
+        if (item.quantity) {
+            s = `${item.quantity} `;
+        }
+        if (item.unitId) {
+            s += getUnitName(item.unitId);
+        }
     }
     return s;
 }

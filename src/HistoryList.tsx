@@ -81,6 +81,7 @@ export function HistoryList(props: {
                     .map(x => <HistoryListItem
                         key={x.id}
                         item={{ ...x, quantity: props.item.quantity, unitId: replaceUnitIdIfEmpty(props.item.unitId, x.unitId) }}
+                        originalItem={x}
                         shopId={props.shop?.id}
                         onPress={props.onPress}
                         onLongPress={handleLongPress}

@@ -10,6 +10,7 @@ import React from 'react';
 
 export function HistoryListItem(props: {
     item: Item;
+    originalItem?: Item;
     shopId?: string;
     onPress?: (item: Item) => void;
     onLongPress?: (item: Item) => void;
@@ -35,6 +36,7 @@ export function HistoryListItem(props: {
     return (
         <List.Item
             title={props.item.name}
+            description={getQuantityUnit(props.originalItem)}
             right={p =>
                 <View
                     style={{ flexDirection: "row", alignItems: "center" }}
@@ -65,7 +67,6 @@ export function HistoryListItem(props: {
                             onPress={() => props.onCalculatorPress?.(props.item)}
                         />
                     }
-
                     <Text style={{ marginHorizontal: 16 }}>{getQuantityUnit(props.item)}</Text>
                     <AvatarIcon icon="arrow-top-left" onPress={handleIconPress} />
                 </View>
