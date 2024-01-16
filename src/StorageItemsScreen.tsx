@@ -1,6 +1,6 @@
 import { allStorage, selectStorage } from './store/dataSlice';
 import { Appbar } from 'react-native-paper';
-import { FillList } from './FillList';
+import { StorageItemsList } from './StorageItemsList';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
 import { SearchBarList } from './SearchBarList';
@@ -9,7 +9,7 @@ import { StoragesStackParamList } from './StoragesNavigationScreen';
 import { useAppSelector } from './store/hooks';
 import React, { useState } from 'react';
 
-export function FillScreen(props: {
+export function StorageItemsScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
     route: RouteProp<StoragesStackParamList, "Fill">;
 }) {
@@ -32,7 +32,7 @@ export function FillScreen(props: {
             </Appbar.Header>
             <SearchBarList
                 list={
-                    <FillList
+                    <StorageItemsList
                         storage={storage}
                         selectedItemId={selectedItemId}
                     />

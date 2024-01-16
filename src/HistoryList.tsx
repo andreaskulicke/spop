@@ -1,5 +1,5 @@
 import { Calculator } from './Calculator';
-import { FillFromHistoryListItem } from './FillFromHistoryListItem';
+import { HistoryListItem } from './HistoryListItem';
 import { getCalculatorFields } from './getCalculatorFields';
 import { Item, UnitId, replaceUnitIdIfEmpty } from './store/data/items';
 import { Keyboard, ScrollView } from 'react-native';
@@ -11,7 +11,7 @@ import { Storage } from './store/data/storages';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import React, { useState } from 'react';
 
-export function FillFromHistoryList(props: {
+export function HistoryList(props: {
     item: Item;
     shop?: Shop;
     storage?: Storage;
@@ -68,7 +68,7 @@ export function FillFromHistoryList(props: {
         <ScrollView keyboardShouldPersistTaps="always">
             {
                 props.item.name && !items.find(x => transformToSearchName(x.name) === itemName)
-                && <FillFromHistoryListItem
+                && <HistoryListItem
                     item={props.item}
                     onPress={props.onPress}
                     onIconPress={props.onIconPress}
@@ -78,7 +78,7 @@ export function FillFromHistoryList(props: {
                 items
                     .filter(x => transformToSearchName(x.name).includes(itemName))
                     .sort((a, b) => a.name.length - b.name.length)
-                    .map(x => <FillFromHistoryListItem
+                    .map(x => <HistoryListItem
                         key={x.id}
                         item={{ ...x, quantity: props.item.quantity, unitId: replaceUnitIdIfEmpty(props.item.unitId, x.unitId) }}
                         shopId={props.shop?.id}

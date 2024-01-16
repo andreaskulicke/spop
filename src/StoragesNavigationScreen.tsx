@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { FillScreen } from "./FillScreen";
+import { StorageItemsScreen } from "./StorageItemsScreen";
 import { StoragesScreen } from "./StoragesScreen";
 
 export type StoragesStackParamList = {
@@ -18,7 +18,7 @@ export function StoragesNavigationScreen() {
                 options={{ headerShown: false, statusBarHidden: false }}
             />
             <Stack.Screen
-                component={FillScreen}
+                component={StorageItemsScreen}
                 name="Fill"
                 options={{ headerShown: false, statusBarHidden: false }}
             />

@@ -1,6 +1,6 @@
 import { addItem, allStorage, allShop } from './store/dataSlice';
 import { Category, emptyCategory } from './store/data/categories';
-import { FillFromHistoryList } from './FillFromHistoryList';
+import { HistoryList } from './HistoryList';
 import { Item, UnitId } from './store/data/items';
 import { KeyboardAvoidingView, View } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
@@ -97,7 +97,7 @@ export function SearchBarList(props: {
                 {
                     (!filter || !filter.name)
                         ? props.list
-                        : <FillFromHistoryList
+                        : <HistoryList
                             item={newItem}
                             shop={props.shop}
                             storage={props.storage}

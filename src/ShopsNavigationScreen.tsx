@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { ShopsScreen } from "./ShopsScreen";
-import { ShoppingScreen } from "./ShoppingScreen";
+import { ShopItemsScreen } from "./ShopItemsScreen";
 
 export type ShopsStackParamList = {
     Shops: undefined;
@@ -18,7 +18,7 @@ export function ShopsNavigationScreen() {
                 options={{ headerShown: false }}
             />
             <Stack.Screen
-                component={ShoppingScreen}
+                component={ShopItemsScreen}
                 name="Shopping"
                 options={{ headerShown: false }}
             />

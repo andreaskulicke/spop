@@ -14,7 +14,7 @@ import { useAppDispatch, useAppSelector } from './store/hooks';
 import { withSeparator } from './withSeparator';
 import React, { JSXElementConstructor, ReactElement, useState } from 'react';
 
-export function ShoppingList(props: {
+export function ShopItemsList(props: {
     shop: Shop;
     selectedItemId?: string;
     stopperOff?: boolean;

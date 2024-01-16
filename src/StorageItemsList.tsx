@@ -13,7 +13,7 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { withSeparator } from './withSeparator';
 import React, { JSXElementConstructor, ReactElement, useState } from 'react';
 
-export function FillList(props: {
+export function StorageItemsList(props: {
     storage: Storage;
     selectedItemId?: string;
 }) {

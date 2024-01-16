@@ -3,14 +3,14 @@ import { Appbar, useTheme } from 'react-native-paper';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
 import { SearchBarList } from './SearchBarList';
-import { ShoppingList } from './ShoppingList';
+import { ShopItemsList } from './ShopItemsList';
 import { ShopsStackParamList } from './ShopsNavigationScreen';
 import { StatusBarView } from './StatusBarView';
 import { useAppSelector } from './store/hooks';
 import React, { useState } from 'react';
 import TrayOff from './store/icons/tray-off.svg';
 
-export function ShoppingScreen(props: {
+export function ShopItemsScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
     route: RouteProp<ShopsStackParamList, "Shopping">;
 }) {
@@ -46,7 +46,7 @@ export function ShoppingScreen(props: {
             </Appbar.Header>
             <SearchBarList
                 list={
-                    <ShoppingList
+                    <ShopItemsList
                         shop={shop}
                         selectedItemId={selectedItemId}
                         stopperOff={stopperOff}

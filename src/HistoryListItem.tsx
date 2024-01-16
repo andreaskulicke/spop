@@ -4,11 +4,11 @@ import { AvatarText } from './AvatarText';
 import { Item, UnitId, getQuantityUnit } from './store/data/items';
 import { List, Text, TouchableRipple, useTheme } from 'react-native-paper';
 import { numberToString } from "./numberToString";
+import { PriceIcon } from "./PriceIcon";
 import { View } from 'react-native';
 import React from 'react';
-import { PriceIcon } from "./PriceIcon";
 
-export function FillFromHistoryListItem(props: {
+export function HistoryListItem(props: {
     item: Item;
     shopId?: string;
     onPress?: (item: Item) => void;
