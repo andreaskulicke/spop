@@ -16,6 +16,10 @@ npx expo prebuild
 
 To build and submit:
 ```
-eas build -p android
+eas build -p android --auto-submit
+```
+
+Or submit only:
+```
 eas submit -p android
 ```
