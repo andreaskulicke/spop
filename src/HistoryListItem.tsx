@@ -36,7 +36,7 @@ export function HistoryListItem(props: {
     return (
         <List.Item
             title={props.item.name}
-            description={getQuantityUnit(props.originalItem)}
+            description={props.originalItem?.wanted ? getQuantityUnit(props.originalItem) : ""}
             right={p =>
                 <View
                     style={{ flexDirection: "row", alignItems: "center" }}
