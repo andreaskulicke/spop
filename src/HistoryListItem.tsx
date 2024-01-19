@@ -2,7 +2,7 @@ import { allShop } from "./store/dataSlice";
 import { AvatarIcon } from "./AvatarIcon";
 import { AvatarText } from './AvatarText';
 import { Item, UnitId, getQuantityUnitFromItem } from './store/data/items';
-import { List, Text, TouchableRipple, useTheme } from 'react-native-paper';
+import { Icon, List, Text, TouchableRipple, useTheme } from 'react-native-paper';
 import { numberToString } from "./numberToString";
 import { PriceIcon } from "./PriceIcon";
 import { View } from 'react-native';
@@ -36,7 +36,15 @@ export function HistoryListItem(props: {
     return (
         <List.Item
             title={props.item.name}
-            description={props.originalItem?.wanted ? getQuantityUnitFromItem(props.originalItem) : ""}
+            description={
+                props.originalItem?.wanted
+                && <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+                    <Icon size={16} source="cart" />
+                    <Text>
+                        {getQuantityUnitFromItem(props.originalItem)}
+                    </Text>
+                </View>
+            }
             right={p =>
                 <View
                     style={{ flexDirection: "row", alignItems: "center" }}
