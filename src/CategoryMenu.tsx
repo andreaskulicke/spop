@@ -1,7 +1,7 @@
 import { addCategory, selectSortedCategories } from "./store/dataSlice";
 import { CategoryIcon } from "./CategoryIcon";
 import { emptyCategory } from "./store/data/categories";
-import { Icon, IconButton, Menu, TextInput, TouchableRipple, useTheme } from "react-native-paper";
+import { IconButton, Menu, TextInput, TouchableRipple, useTheme } from "react-native-paper";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { useAppDispatch, useAppSelector } from "./store/hooks";

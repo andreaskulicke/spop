@@ -9,6 +9,7 @@ import { themes } from "./store/themes/themes";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { useState } from "react";
 import packageJson from "../package.json";
+import appJson from "../app.json";
 
 export function SettingsScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -186,7 +187,7 @@ export function SettingsScreen(props: {
                         title="Version"
                         right={p =>
                             <Text {...p}>
-                                {packageJson.version}
+                                {`${packageJson.version} (${appJson.expo.android.versionCode})`}
                             </Text>
                         }
                     />
