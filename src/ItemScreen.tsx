@@ -3,7 +3,7 @@ import { Appbar, Card, Checkbox, IconButton, List, TextInput, TouchableRipple, u
 import { AvatarText } from "./AvatarText";
 import { Calculator } from "./Calculator";
 import { CategoryMenu } from "./CategoryMenu";
-import { ItemShop, UnitId, units } from "./store/data/items";
+import { ItemShop, UnitId } from "./store/data/items";
 import { Keyboard, KeyboardAvoidingView, ScrollView, Text, View } from "react-native";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { numberToString, stringToNumber } from "./numberToString";

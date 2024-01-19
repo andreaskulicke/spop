@@ -1,15 +1,18 @@
-import { addItem, allStorage, allShop } from './store/dataSlice';
+import { addItem, allStorage, allShop, selectItems, selectItemByName } from './store/dataSlice';
+import { Button, Divider, List, Modal, Portal, Text, TouchableRipple, useTheme } from 'react-native-paper';
+import { Calculator } from './Calculator';
 import { Category, emptyCategory } from './store/data/categories';
 import { HistoryList } from './HistoryList';
-import { Item, UnitId } from './store/data/items';
-import { KeyboardAvoidingView, View } from 'react-native';
+import { Item, UnitId, addQuantityUnit, getQuantityUnit } from './store/data/items';
+import { Keyboard, KeyboardAvoidingView, View } from 'react-native';
+import { modalContainerStyle, modalViewStyle } from './styles';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { parseQuantityUnit, quantityToString } from './numberToString';
 import { RootStackParamList } from '../App';
 import { SearchBar } from './SearchBar';
 import { Shop } from './store/data/shops';
 import { Storage } from './store/data/storages';
-import { useAppDispatch } from './store/hooks';
+import { useAppDispatch, useAppSelector } from './store/hooks';
 import React, { useEffect, useState } from 'react';
 import uuid from 'react-native-uuid';
 
@@ -31,21 +34,42 @@ export function SearchBarList(props: {
         shops: (!props.shop || (props.shop.id === allShop.id)) ? [] : [{ checked: true, shopId: props.shop.id }],
         storages: (!props.storage || (props.storage.id === allStorage.id)) ? [] : [{ storageId: props.storage.id }],
     });
+    const items = useAppSelector(selectItems);
     const dispatch = useAppDispatch();
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
+    const [adder, setAdder] = useState<{ visible: boolean, item?: Item }>({ visible: false });
+
+    function addNewItem(item: Item): void {
+        dispatch(addItem(
+            {
+                item: item,
+                shop: props.shop,
+                storage: props.storage,
+            }));
+        setFilter(undefined);
+        setNewItem(v => ({ ...v, id: uuid.v4() as string }));
+        props.onItemPress?.(item.id);
+    }
+
+    function handleAdderClose(item?: Item): void {
+        console.log(item)
+        setAdder({ visible: false });
+        if (item) {
+            addNewItem({ ...item, categoryId: categoryId ?? item.categoryId });
+        }
+    }
+
     function handlePress(item: Item): void {
         if (item?.name) {
-            const [q, u] = parseQuantityUnit(filter?.quantity);
-            dispatch(addItem(
-                {
-                    item: { ...item, categoryId: categoryId ?? item.categoryId, quantity: q, unitId: u },
-                    shop: props.shop,
-                    storage: props.storage,
-                }));
-            setFilter(undefined);
-            setNewItem(v => ({ ...v, id: uuid.v4() as string }));
-            props.onItemPress?.(item.id);
+            const originalItem = items.find(x => x.name.toLowerCase() === item.name.trim().toLowerCase());
+            if (originalItem) {
+                Keyboard.dismiss();
+                setAdder({ visible: true, item: item });
+            } else {
+                const [q, u] = parseQuantityUnit(filter?.quantity);
+                addNewItem({ ...item, categoryId: categoryId ?? item.categoryId, quantity: q, unitId: u });
+            }
         }
     }
 
@@ -105,6 +129,157 @@ export function SearchBarList(props: {
                             onIconPress={handleIconPress} />
                 }
             </View>
+            <Adder
+                item={adder.item}
+                visible={adder.visible}
+                onClose={handleAdderClose}
+            />
         </KeyboardAvoidingView>
+    );
+}
+
+interface Data {
+    quantity?: number;
+    unitId?: UnitId;
+}
+
+type Field = "existing" | "replacePlusOne" | "replaceDouble";
+
+function Adder(props: {
+    item: Item | undefined;
+    visible?: boolean;
+    onClose: (item?: Item) => void;
+}) {
+    const originalItem = useAppSelector(selectItemByName(props.item?.name));
+    const theme = useTheme();
+
+    const [existing, setExisting] = useState<Data>();
+    const [replacePlusOne, setReplacePlusOne] = useState<Data>();
+    const [replaceDouble, setReplaceDouble] = useState<Data>();
+    const [showCalculator, setShowCalculator] = useState<
+        {
+            visible: boolean;
+            data?: Data;
+            source?: Field;
+        }
+    >({ visible: false });
+
+    function handleCalculatorClose(values?: { value?: number | undefined; unitId?: UnitId | undefined; state?: any; }[] | undefined): void {
+        setShowCalculator({ visible: false });
+        if (values) {
+            const value = values[0];
+            switch (value.state as Field) {
+                case "existing":
+                    setExisting({ quantity: value.value, unitId: value.unitId })
+                    break;
+                case "replacePlusOne":
+                    setReplacePlusOne({ quantity: value.value, unitId: value.unitId })
+                    break;
+                case "replaceDouble":
+                    setReplaceDouble({ quantity: value.value, unitId: value.unitId })
+                    break;
+            }
+        }
+    }
+
+    function handleCalculatorShow(data: Data, source: Field): void {
+        setShowCalculator({ visible: true, data: data, source: source });
+    }
+
+    function handleItemPress(data: Data | undefined): void {
+        props.onClose({ ...props.item!, quantity: data?.quantity, unitId: data?.unitId });
+    }
+
+    useEffect(() => {
+        const originalItemQuantity = (originalItem?.quantity ?? 1);
+        let plusOneQuantity;
+        let plusOneUnitId = originalItem?.unitId;
+        let doubleQuantity;
+        let doubleUnitId = props.item?.unitId ?? originalItem?.unitId;
+        if (!props.item?.quantity) {
+            // No quantity entered in new item
+            plusOneQuantity = originalItemQuantity + 1;
+            doubleQuantity = originalItemQuantity * 2;
+        } else {
+            const plusOneQuantityUnit = addQuantityUnit(
+                originalItemQuantity,
+                originalItem?.unitId,
+                props.item.quantity,
+                doubleUnitId);
+            plusOneQuantity = plusOneQuantityUnit.quantity;
+            plusOneUnitId = plusOneQuantityUnit.unitId;
+            doubleQuantity = props.item.quantity;
+        }
+        setExisting({ quantity: originalItem?.quantity, unitId: originalItem?.unitId })
+        setReplacePlusOne({ quantity: plusOneQuantity, unitId: plusOneUnitId })
+        setReplaceDouble({ quantity: doubleQuantity, unitId: doubleUnitId })
+    }, [originalItem]);
+
+    return (
+        <Portal>
+            <Modal
+                visible={!!props.visible}
+                contentContainerStyle={modalContainerStyle()}
+                onDismiss={props.onClose}
+            >
+                <View style={modalViewStyle(theme)}>
+                    <Text variant="titleMedium" style={{ textAlign: "center" }}>Bereits auf der Liste</Text>
+                    <List.Item
+                        title={props.item?.name ?? ""}
+                        right={p => <QuantityUnit data={existing} source="existing" onPress={handleCalculatorShow} />}
+                        onPress={() => handleItemPress(existing)}
+                    />
+                    <Divider />
+                    <Text variant="titleMedium" style={{ textAlign: "center" }}>Ersetzen mit</Text>
+                    <List.Item
+                        title={props.item?.name ?? ""}
+                        right={p => <QuantityUnit data={replacePlusOne} source="replacePlusOne" onPress={handleCalculatorShow} />}
+                        onPress={() => handleItemPress(replacePlusOne)}
+                    />
+                    <List.Item
+                        title={props.item?.name ?? ""}
+                        right={p => <QuantityUnit data={replaceDouble} source="replaceDouble" onPress={handleCalculatorShow} />}
+                        onPress={() => handleItemPress(replaceDouble)}
+                    />
+                    <Divider />
+                    <View style={{ flexDirection: "row", marginTop: 8 }}>
+                        <View style={{ flex: 1 }}></View>
+                        <Button mode="contained" onPress={() => props.onClose()}>Abbrechen</Button>
+                    </View>
+                </View>
+                <Calculator
+                    fields={[{ title: "Menge", value: showCalculator.data?.quantity, unitId: showCalculator.data?.unitId, state: showCalculator.source }]}
+                    visible={showCalculator.visible}
+                    onClose={handleCalculatorClose}
+                />
+            </Modal>
+        </Portal>
+    );
+}
+
+function QuantityUnit(props: {
+    data?: Data;
+    source: Field;
+    onPress: (data: Data, source: Field) => void;
+}) {
+    function handlePress(): void {
+        if (props.data) {
+            props.onPress?.(props.data, props.source);
+        }
+    }
+
+    return (
+        <TouchableRipple
+            style={{
+                paddingHorizontal: 16,
+                paddingVertical: 16,
+                position: "absolute",
+                right: 0,
+                top: -16,
+            }}
+            onPress={handlePress}
+        >
+            <Text>{getQuantityUnit(props.data?.quantity, props.data?.unitId)}</Text>
+        </TouchableRipple>
     );
 }

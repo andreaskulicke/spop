@@ -480,6 +480,17 @@ export function selectItem(id: string): (state: RootState) => Item | undefined {
     };
 }
 
+export function selectItemByName(name?: string) {
+    return createSelector(
+        [selectItems],
+        items => {
+            if (!name) {
+                return undefined;
+            }
+            return items.find(x => x.name.toLowerCase() === name.trim().toLowerCase())
+        });
+}
+
 // Items: Storages
 
 export function selectItemsWithStorage(storageId: string) {

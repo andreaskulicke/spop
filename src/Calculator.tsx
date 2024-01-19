@@ -1,9 +1,10 @@
+import { modalContainerStyle, modalViewStyle } from './styles';
+import { numberToString } from './numberToString';
 import { Portal, useTheme, Modal, Button, TextInput, Divider } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { UnitId, getUnitName } from './store/data/items';
 import React, { useEffect, useState } from 'react';
-import { numberToString } from './numberToString';
 
 export function Calculator(props: {
     fields: {
@@ -170,21 +171,11 @@ export function Calculator(props: {
     return (
         <Portal>
             <Modal
-                visible={props.visible ?? false}
-                contentContainerStyle={{
-                    alignSelf: "center",
-                    padding: 12,
-                    minWidth: 360,
-                    maxWidth: 400,
-                }}
+                visible={props.visible}
+                contentContainerStyle={modalContainerStyle()}
                 onDismiss={props.onClose}
             >
-                <View
-                    style={{
-                        backgroundColor: theme.colors.background,
-                        paddingVertical: 12,
-                    }}
-                >
+                <View style={modalViewStyle(theme)}>
                     {
                         props.fields
                             ?.filter(x => !!x)
@@ -202,8 +193,7 @@ export function Calculator(props: {
                                         style={{
                                             borderColor: (selectedField === i) ? theme.colors.outline : theme.colors.background,
                                             borderWidth: 2,
-                                            marginHorizontal: 24,
-                                            marginBottom: 8,
+                                            marginHorizontal: 8,
                                             padding: 2,
                                         }}
                                     >
@@ -302,8 +292,6 @@ const style = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         gap: 8,
-        marginVertical: 8,
-        marginHorizontal: 16
     },
     "col4": {
         width: 68,
