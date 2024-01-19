@@ -1,7 +1,7 @@
 import { addCategory, selectSortedCategories } from "./store/dataSlice";
 import { CategoryIcon } from "./CategoryIcon";
 import { emptyCategory } from "./store/data/categories";
-import { IconButton, Menu, TextInput, TouchableRipple } from "react-native-paper";
+import { Icon, IconButton, Menu, TextInput, TouchableRipple, useTheme } from "react-native-paper";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
@@ -17,6 +17,7 @@ export function CategoryMenu(props: {
     const [categoryMenuVisible, setCategoryMenuVisible] = useState(false);
     const categories = useAppSelector(selectSortedCategories);
     const dispatch = useAppDispatch();
+    const theme = useTheme();
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     function handleAddCategoryPress(): void {
@@ -35,8 +36,7 @@ export function CategoryMenu(props: {
     const category = categories.find(x => x.id === props.categoryId);
 
     return (
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <CategoryIcon icon={category?.icon} onPress={() => setCategoryMenuVisible(true)} />
+        <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 8 }}>
             <View style={{ flexGrow: 1, flexShrink: 1 }}>
                 <Menu
                     anchor={
@@ -49,6 +49,14 @@ export function CategoryMenu(props: {
                                 mode="outlined"
                                 style={{ marginVertical: 8 }}
                                 value={category?.name}
+                                left={
+                                    <TextInput.Icon
+                                        icon={category?.icon ?? "dots-horizontal"}
+                                        color={theme.colors.primary}
+                                        style={{
+                                        }}
+                                    />
+                                }
                                 right={
                                     <TextInput.Icon icon={categoryMenuVisible ? "chevron-up" : "chevron-down"}
                                         onPress={() => setCategoryMenuVisible(true)}
@@ -57,7 +65,7 @@ export function CategoryMenu(props: {
                             />
                         </TouchableRipple>
                     }
-                    anchorPosition="bottom"
+                    anchorPosition="top"
                     visible={categoryMenuVisible}
                     onDismiss={() => setCategoryMenuVisible(false)}
                 >
