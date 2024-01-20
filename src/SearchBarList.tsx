@@ -53,7 +53,6 @@ export function SearchBarList(props: {
     }
 
     function handleAdderClose(item?: Item): void {
-        console.log(item)
         setAdder({ visible: false });
         if (item) {
             addNewItem({ ...item, categoryId: categoryId ?? item.categoryId });
@@ -63,7 +62,7 @@ export function SearchBarList(props: {
     function handlePress(item: Item): void {
         if (item?.name) {
             const originalItem = items.find(x => x.name.toLowerCase() === item.name.trim().toLowerCase());
-            if (originalItem) {
+            if (originalItem?.wanted) {
                 Keyboard.dismiss();
                 setAdder({ visible: true, item: item });
             } else {
