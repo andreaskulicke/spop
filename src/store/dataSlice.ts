@@ -596,7 +596,7 @@ export function sortItemsByCategory(c: Map<string, Category>, a: Item, b: Item):
 
 // Items: Shop
 
-export function selectItemsWithShop(shop: Shop, stopperOff: boolean | undefined) {
+export function selectItemsWithShop(shop: Shop, itemFilter: (item: Item) => boolean, stopperOff: boolean | undefined, sortByCategory: boolean) {
     return createSelector(
         [selectItems, selectCategories, selectShops],
         (items, categories, shops) => {
@@ -622,14 +622,17 @@ export function selectItemsWithShop(shop: Shop, stopperOff: boolean | undefined)
                 }
             }
 
-            const itemsForThisShop = items.filter(i => (shop.id === allShop.id || i.shops.find(x => x.checked && s.has(x.shopId))))
+            const itemsForThisShop = items.filter(itemFilter)
+                .filter(i => (shop.id === allShop.id || i.shops.find(x => x.checked && s.has(x.shopId))))
                 .filter(x => (x.categoryId === undefined) || cats.find(c => c?.id === x.categoryId));
             const itemsForThisShop2 = groupByCategoryId(cats, itemsForThisShop);
             const itemsForThisShop3 = Object.keys(itemsForThisShop2).flatMap(x => [cats.find(c => c?.id === x), ...itemsForThisShop2[x]]);
             return itemsForThisShop3;
 
             function groupByCategoryId(categories: (Category | undefined)[], array: Item[]) {
-                const sortedArray = array.sort((a, b) => categories.findIndex(x => x?.id === a.categoryId) - categories.findIndex(x => x?.id === b.categoryId));
+                const sortedArray = sortByCategory
+                    ? array.sort((a, b) => categories.findIndex(x => x?.id === a.categoryId) - categories.findIndex(x => x?.id === b.categoryId))
+                    : array;
                 return sortedArray.reduce((v, x) => {
                     (v[x.categoryId!] = v[x.categoryId!] || []).push(x);
                     return v;
@@ -640,9 +643,9 @@ export function selectItemsWithShop(shop: Shop, stopperOff: boolean | undefined)
 
 export function selectItemsWantedWithShop(shop: Shop, stopperOff: boolean | undefined) {
     return createSelector(
-        [selectItemsWithShop(shop, stopperOff)],
+        [selectItemsWithShop(shop, item => !!item.wanted, stopperOff, true)],
         (items) => {
-            return items.filter(x => isItem(x) ? x.wanted : false);
+            return items;
         });
 }
 
@@ -655,9 +658,9 @@ export const selectItemsWantedWithoutShop = createSelector(
 
 export function selectItemsNotWantedWithShop(shop: Shop, stopperOff: boolean | undefined) {
     return createSelector(
-        [selectItemsWithShop(shop, stopperOff)],
+        [selectItemsWithShop(shop, item => !item.wanted, stopperOff, false)],
         (items) => {
-            return items.filter(x => isItem(x) ? !x.wanted : false);
+            return items.filter(x => isItem(x) ? true : false);
         });
 }
 

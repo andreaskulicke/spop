@@ -1,4 +1,4 @@
-import { Appbar, Card, IconButton, List, TextInput, TouchableRipple } from "react-native-paper";
+import { Appbar, Card, IconButton, List, Text, TextInput, TouchableRipple } from "react-native-paper";
 import { Category } from "./store/data/categories";
 import { CategoryIcon } from "./CategoryIcon";
 import { CategoryMenu } from "./CategoryMenu";
@@ -33,6 +33,12 @@ export function ShopScreen(props: {
         dispatch(addShopCategory({ shopId: shop.id, categoryId: id }));
         dispatch(setShopCategoryShow({ shopId: shop.id, categoryId: id, show: true }));
         props.navigation.navigate("Category", { id });
+    }
+
+    function handleAllCategoriesPress(show: boolean): void {
+        for (const c of categories) {
+            dispatch(setShopCategoryShow({ shopId: shop.id, categoryId: c.id, show: show }));
+        }
     }
 
     function handleDeletePress(): void {
@@ -132,16 +138,26 @@ export function ShopScreen(props: {
                     </TouchableRipple>
                     {
                         categoriesExpanded
-                        && <NestableDraggableFlatList
-                            data={catsShown}
-                            keyExtractor={x => x.id}
-                            renderItem={handleRenderItem}
-                            onDragEnd={({ data }) => dispatch(setShopCategories({ shopId: shop.id, categoryIds: data.map(x => x.id) }))}
-                        />
+                        && <SubSection
+                            title="Verwendet"
+                            icon="eye-off-outline"
+                            onButtonPress={() => handleAllCategoriesPress(false)}
+                        >
+                            <NestableDraggableFlatList
+                                data={catsShown}
+                                keyExtractor={x => x.id}
+                                renderItem={handleRenderItem}
+                                onDragEnd={({ data }) => dispatch(setShopCategories({ shopId: shop.id, categoryIds: data.map(x => x.id) }))}
+                            />
+                        </SubSection>
                     }
                     {
                         categoriesExpanded && (catsHidden.length > 0)
-                        && <List.Section title="Nicht verwendet">
+                        && <SubSection
+                            title="Nicht verwendet"
+                            icon="eye-outline"
+                            onButtonPress={() => handleAllCategoriesPress(true)}
+                        >
                             {
                                 catsHidden.map(x => {
                                     return (
@@ -155,10 +171,33 @@ export function ShopScreen(props: {
                                     );
                                 })
                             }
-                        </List.Section>
+                        </SubSection>
                     }
                 </Card>
             </NestableScrollContainer>
-        </StatusBarView>
+        </StatusBarView >
+    );
+}
+
+function SubSection(props: React.PropsWithChildren<{
+    title: string;
+    icon: string;
+    onButtonPress: () => void;
+}>) {
+    return (
+        <View>
+            <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 16 }}>
+                <Text variant="titleSmall">
+                    {props.title}
+                </Text>
+                <View style={{ flexGrow: 1 }}></View>
+                <IconButton
+                    icon={props.icon}
+                    style={{ marginRight: 30 }}
+                    onPress={props.onButtonPress}
+                />
+            </View>
+            {props.children}
+        </View>
     );
 }

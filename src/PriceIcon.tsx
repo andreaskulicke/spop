@@ -18,7 +18,7 @@ export function PriceIcon(props: {
         (numberOfShopsWithPrices > 1)
             ? <Icon
                 color={hasMinPriceTmp ? "green" : theme.colors.error}
-                source={hasMinPriceTmp ? "arrow-up" : "arrow-down"}
+                source={hasMinPriceTmp ? (itemShopsWithMinPrice.length === 1 ? "arrow-up" : "arrow-right") : "arrow-down"}
                 size={16}
             />
             : <></>

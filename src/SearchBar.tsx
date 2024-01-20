@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Searchbar, useTheme } from 'react-native-paper';
+import { units } from "./store/data/items";
 
 export function SearchBar(props: {
     text?: string;
@@ -11,7 +12,8 @@ export function SearchBar(props: {
 
     function handleSearchChangeText(text: string) {
         const t = text.trimStart();
-        const m = t.match("^(?<pre>\\d+[^ ]*)? *(?<name>.*?) *(?<post>\\d+[^ ]*$)?$");
+        const unitsMatch = `(${units.map(x => x.name).join("|")})`;
+        const m = t.match(`^(?<pre>\\d+[^ ]*)? *(?<name>.*?) +(?<post>\\d+${unitsMatch}?$)?$`);
         if (m && m.groups) {
             const name = m.groups["name"] + ((m.groups["pre"] && m.groups.post) ? ` ${m.groups["post"]}` : "")
             props.onChange?.(t, name, m.groups["pre"] ?? m.groups["post"]);

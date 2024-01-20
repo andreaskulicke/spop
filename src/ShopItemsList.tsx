@@ -24,7 +24,7 @@ export function ShopItemsList(props: {
     const itemsWantedThisShop = useAppSelector(selectItemsWantedWithShop(props.shop, props.stopperOff));
     const itemsWantedWithoutShop = useAppSelector(selectItemsWantedWithoutShop);
     const itemsNotWanted = useAppSelector(selectItemsNotWanted);
-    const itemsNotWantedThisShop = useAppSelector(selectItemsNotWantedWithShop(props.shop, props.stopperOff));
+    const itemsNotWantedThisShop = useAppSelector(selectItemsNotWantedWithShop(props.shop, true));
     const itemsNotWantedDifferentShop = useAppSelector(selectItemsNotWantedWithDifferentShop(props.shop));
     const dispatch = useAppDispatch();
     const theme = useTheme();
@@ -135,7 +135,7 @@ export function ShopItemsList(props: {
                                 && <IconButton {...p} icon="cart-minus" onPress={() => dispatch(setItemShop({ itemId: item.id, shopId: props.shop.id, checked: false }))} />
                             }
                             {
-                                (props.shop.id !== allShop.id) && !item.shops.find(x => x.checked && (x.shopId === props.shop.id))
+                                !item.wanted && (props.shop.id !== allShop.id) && !item.shops.find(x => x.checked && (x.shopId === props.shop.id))
                                 && <IconButton {...p} icon="cart-plus" onPress={() => dispatch(setItemShop({ itemId: item.id, shopId: props.shop.id, checked: true }))} />
                             }
                         </View>
