@@ -4,7 +4,13 @@ import { Portal, useTheme, Modal, Button, TextInput, Divider } from 'react-nativ
 import { StyleSheet, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { UnitId, getUnitName } from './store/data/items';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+
+Array.prototype.with = function <T>(index: number, value: T): T[] {
+    const a = [...this];
+    a[index] = value;
+    return a;
+}
 
 export function Calculator(props: {
     fields: {
@@ -17,7 +23,7 @@ export function Calculator(props: {
     visible: boolean;
     onClose: (values?: { value?: number; unitId?: UnitId; state?: any }[]) => void;
 }) {
-    const [selectedField, setSelectedField] = useState(-1);
+    const [selectedField, setSelectedField] = useState<{ index: number, clearOnInput?: boolean }>({ index: 0, clearOnInput: true });
     const [values, setValues] = useState<{ value: string; unitId?: UnitId, state?: any }[]>(props.fields
         ?.filter(x => !!x)
         .map(x => ({
@@ -25,7 +31,13 @@ export function Calculator(props: {
             unitId: x.unitId,
             state: x.state,
         })) ?? []);
-    const [operation, setOperation] = useState<"+" | "-" | "*" | "/">();
+    const [operation, setOperation] = useState<("+" | "-" | "*" | "/" | undefined)[]>(Array(3));
+
+    const textInputRef1 = useRef();
+    const textInputRef2 = useRef();
+    const textInputRef3 = useRef();
+    const textInputRefs = [textInputRef1, textInputRef2, textInputRef3];
+
     const theme = useTheme();
 
     function evaluateCalculateOperation(value: string): [boolean, string] {
@@ -37,15 +49,22 @@ export function Calculator(props: {
     }
 
     function handleButtonPress(enteredValue: number | string): void {
-        let valueTmp = values[selectedField].value;
-        let unitIdTmp = values[selectedField].unitId;
+        let valueTmp = values[selectedField.index].value;
+        let unitIdTmp = values[selectedField.index].unitId;
+        let operationTmp = operation[selectedField.index];
 
+        if (selectedField.clearOnInput && (enteredValue !== "=")) {
+            valueTmp = "";
+            setSelectedField(v => ({ ...v, clearOnInput: false }))
+            operationTmp = undefined;
+            setOperation(v => v.with(selectedField.index, undefined));
+        }
         if (typeof enteredValue === "string") {
             switch (enteredValue) {
                 case "AC":
                     valueTmp = "";
                     unitIdTmp = undefined;
-                    setOperation(undefined);
+                    setOperation(v => v.with(selectedField.index, undefined));
                     break;
                 case "<":
                     valueTmp = valueTmp.substring(0, valueTmp.length - 1);
@@ -67,22 +86,22 @@ export function Calculator(props: {
                     break;
                 case "/":
                     if (evaluateOperation()) {
-                        setOperation("/");
+                        setOperation(v => v.with(selectedField.index, "/"));
                     }
                     break;
                 case "*":
                     if (evaluateOperation()) {
-                        setOperation("*");
+                        setOperation(v => v.with(selectedField.index, "*"));
                     }
                     break;
                 case "-":
                     if (evaluateOperation()) {
-                        setOperation("-");
+                        setOperation(v => v.with(selectedField.index, "-"));
                     }
                     break;
                 case "+":
                     if (evaluateOperation()) {
-                        setOperation("+");
+                        setOperation(v => v.with(selectedField.index, "+"));
                     }
                     break;
                 case "%":
@@ -104,9 +123,9 @@ export function Calculator(props: {
                     break;
             }
         } else {
-            if (operation) {
-                valueTmp = `${valueTmp} ${operation} ${enteredValue}`;
-                setOperation(undefined);
+            if (operationTmp) {
+                valueTmp = `${valueTmp} ${operationTmp} ${enteredValue}`;
+                setOperation(v => v.with(selectedField.index, undefined));
             } else {
                 valueTmp = valueTmp + enteredValue;
             }
@@ -124,10 +143,10 @@ export function Calculator(props: {
         }
 
         // Toggle unit
-        unitIdTmp = (enteredValue === values[selectedField].unitId) ? undefined : unitIdTmp;
+        unitIdTmp = (enteredValue === values[selectedField.index].unitId) ? undefined : unitIdTmp;
 
         const valuesTmp = [...values];
-        valuesTmp[selectedField] = { ...valuesTmp[selectedField], value: valueTmp, unitId: unitIdTmp };
+        valuesTmp[selectedField.index] = { ...valuesTmp[selectedField.index], value: valueTmp, unitId: unitIdTmp };
         setValues(valuesTmp);
 
         function evaluateOperation(): boolean {
@@ -138,9 +157,9 @@ export function Calculator(props: {
     }
 
     function handleOkClose(): void {
-        const valueTmp = evaluateCalculateOperation(values[selectedField].value)[1];
+        const valueTmp = evaluateCalculateOperation(values[selectedField.index].value)[1];
         const valuesTmp = [...values];
-        valuesTmp[selectedField] = { ...valuesTmp[selectedField], value: valueTmp };
+        valuesTmp[selectedField.index] = { ...valuesTmp[selectedField.index], value: valueTmp };
 
         const vs = valuesTmp.map(x => {
             const v = parseFloat(x.value.replace(",", "."));
@@ -157,7 +176,9 @@ export function Calculator(props: {
 
     useEffect(() => {
         const sf = props.fields?.filter(x => !!x).findIndex(x => x.selected) ?? -1;
-        setSelectedField((sf === -1) ? 0 : sf);
+        setSelectedField(v => ({ ...v, index: (sf === -1) ? 0 : sf }));
+
+        setOperation(Array(3));
 
         setValues(props.fields
             ?.filter(x => !!x)
@@ -167,6 +188,11 @@ export function Calculator(props: {
                 state: x.state,
             })) ?? []);
     }, [props.fields]);
+
+    useEffect(() => {
+        (textInputRefs[selectedField.index]?.current as any)?.focus();
+        TextInput
+    });
 
     return (
         <Portal>
@@ -181,35 +207,37 @@ export function Calculator(props: {
                             ?.filter(x => !!x)
                             .map((field, i) => {
                                 let displayValue = values[i]?.value;
-                                if (operation) {
-                                    displayValue += ` ${operation}`;
-                                }
-                                if (values[i]?.unitId) {
-                                    displayValue += ` ${getUnitName(values[i]?.unitId)}`;
+                                if (operation[i]) {
+                                    displayValue += ` ${operation[i]}`;
                                 }
                                 return (
                                     <View
                                         key={field.title}
                                         style={{
-                                            borderColor: (selectedField === i) ? theme.colors.outline : theme.colors.background,
+                                            borderColor: (selectedField.index === i) ? theme.colors.outline : theme.colors.background,
                                             borderWidth: 2,
                                             marginHorizontal: 8,
                                             padding: 2,
                                         }}
                                     >
                                         <TouchableWithoutFeedback
-                                            onPress={() => setSelectedField(i)}
+                                            onPress={() => setSelectedField(v => ({ index: i, clearOnInput: true }))}
                                         >
                                             <View pointerEvents="none">
                                                 <TextInput
-                                                    editable={false}
+                                                    cursorColor={theme.colors.outlineVariant}
+                                                    editable
+                                                    inputMode="none"
                                                     label={field.title}
-                                                    selectTextOnFocus
+                                                    ref={(r: any) => textInputRefs[i].current = r}
+                                                    selection={{ start: 0, end: (selectedField.index === i && selectedField.clearOnInput) ? displayValue.length : 0 }}
                                                     textAlign="right"
                                                     value={displayValue}
                                                     style={{
                                                         textAlign: "right",
-                                                    }} />
+                                                    }}
+                                                    right={<TextInput.Affix text={(values[i]?.unitId) ? ` ${getUnitName(values[i]?.unitId)}` : " "} />}
+                                                />
                                             </View>
                                         </TouchableWithoutFeedback>
                                     </View>
@@ -217,16 +245,16 @@ export function Calculator(props: {
                             })
                     }
                     <View style={style.row}>
-                        <UnitButton activeUnitId={values[selectedField]?.unitId} unitId="pkg" onPress={unitId => handleButtonPress(unitId)} />
+                        <UnitButton activeUnitId={values[selectedField.index]?.unitId} unitId="pkg" onPress={unitId => handleButtonPress(unitId)} />
                         <Button mode="text" compact style={style.col4}>{""}</Button>
                         <Button mode="outlined" compact style={style.col4} onPress={() => handleButtonPress("<")}>{"<"}</Button>
                         <Button mode="contained-tonal" compact style={style.col4} onPress={() => handleButtonPress("AC")}>AC</Button>
                     </View>
                     <View style={style.row}>
-                        <UnitButton activeUnitId={values[selectedField]?.unitId} unitId="ml" onPress={unitId => handleButtonPress(unitId)} />
-                        <UnitButton activeUnitId={values[selectedField]?.unitId} unitId="l" onPress={unitId => handleButtonPress(unitId)} />
-                        <UnitButton activeUnitId={values[selectedField]?.unitId} unitId="g" onPress={unitId => handleButtonPress(unitId)} />
-                        <UnitButton activeUnitId={values[selectedField]?.unitId} unitId="kg" onPress={unitId => handleButtonPress(unitId)} />
+                        <UnitButton activeUnitId={values[selectedField.index]?.unitId} unitId="ml" onPress={unitId => handleButtonPress(unitId)} />
+                        <UnitButton activeUnitId={values[selectedField.index]?.unitId} unitId="l" onPress={unitId => handleButtonPress(unitId)} />
+                        <UnitButton activeUnitId={values[selectedField.index]?.unitId} unitId="g" onPress={unitId => handleButtonPress(unitId)} />
+                        <UnitButton activeUnitId={values[selectedField.index]?.unitId} unitId="kg" onPress={unitId => handleButtonPress(unitId)} />
                     </View>
                     <Divider bold horizontalInset style={{ marginVertical: 4 }} />
                     <View style={style.row}>
