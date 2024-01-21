@@ -389,6 +389,7 @@ export function ItemScreen(props: {
                                     source: showCalculator.source,
                                     shop: showCalculator.shop,
                                 },
+                                type: ((showCalculator.source === "shop") ? "price" : "quantity"),
                                 selected: true,
                             }]}
                         visible={showCalculator.visible}

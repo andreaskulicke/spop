@@ -3,7 +3,7 @@ import { numberToString } from './numberToString';
 import { Portal, useTheme, Modal, Button, TextInput, Divider } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { UnitId, getUnitName } from './store/data/items';
+import { UnitId, getUnitName, units } from './store/data/items';
 import React, { useEffect, useRef, useState } from 'react';
 
 Array.prototype.with = function <T>(index: number, value: T): T[] {
@@ -17,6 +17,8 @@ export function Calculator(props: {
         title: string;
         value?: number;
         unitId?: UnitId;
+        /** Default: "quantity" */
+        type?: "quantity" | "price";
         state?: any;
         selected?: boolean;
     }[];
@@ -53,7 +55,7 @@ export function Calculator(props: {
         let unitIdTmp = values[selectedField.index].unitId;
         let operationTmp = operation[selectedField.index];
 
-        if (selectedField.clearOnInput && (enteredValue !== "=")) {
+        if (selectedField.clearOnInput && (!units.find(x => x.id === enteredValue)) && (enteredValue !== "=")) {
             valueTmp = "";
             setSelectedField(v => ({ ...v, clearOnInput: false }))
             operationTmp = undefined;
@@ -176,7 +178,7 @@ export function Calculator(props: {
 
     useEffect(() => {
         const sf = props.fields?.filter(x => !!x).findIndex(x => x.selected) ?? -1;
-        setSelectedField(v => ({ ...v, index: (sf === -1) ? 0 : sf }));
+        setSelectedField(v => ({ index: (sf === -1) ? 0 : sf, clearOnInput: true }));
 
         setOperation(Array(3));
 
@@ -191,7 +193,6 @@ export function Calculator(props: {
 
     useEffect(() => {
         (textInputRefs[selectedField.index]?.current as any)?.focus();
-        TextInput
     });
 
     return (
@@ -236,7 +237,12 @@ export function Calculator(props: {
                                                     style={{
                                                         textAlign: "right",
                                                     }}
-                                                    right={<TextInput.Affix text={(values[i]?.unitId) ? ` ${getUnitName(values[i]?.unitId)}` : " "} />}
+                                                    right={
+                                                        <TextInput.Affix
+                                                            text={(values[i]?.unitId)
+                                                                ? ` ${(props.fields[i].type === "price") ? "€/" : ""}${getUnitName(values[i]?.unitId)}`
+                                                                : ((props.fields[i].type === "price") ? " €" : " ")}
+                                                        />}
                                                 />
                                             </View>
                                         </TouchableWithoutFeedback>
