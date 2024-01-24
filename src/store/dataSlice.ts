@@ -69,11 +69,26 @@ export const itemsSlice = createSlice({
                     .forEach(storage => storage.defaultCategoryId = undefined);
             }
         },
-        resetCategories: (state) => {
-            state.categories = defaultCategories;
+        resetCategories: (state, action: PayloadAction<void>) => {
+            itemsSlice.caseReducers.setCategories(state, { payload: defaultCategories, type: action.type });
         },
         setCategories: (state, action: PayloadAction<Category[]>) => {
             state.categories = action.payload;
+            const c = new Set(action.payload.map(x => x.id));
+            for (const item of state.items.filter(x => !c.has(x.categoryId ?? "---"))) {
+                item.categoryId = undefined;
+            }
+            for (const shop of state.shops) {
+                shop.categoryIds = shop.categoryIds?.filter(x => c.has(x));
+                if (!c.has(shop.defaultCategoryId ?? "---")) {
+                    shop.defaultCategoryId = undefined;
+                }
+            }
+            for (const storage of state.storages) {
+                if (!c.has(storage.defaultCategoryId ?? "---")) {
+                    storage.defaultCategoryId = undefined;
+                }
+            }
         },
         setCategoryIcon: (state, action: PayloadAction<{ categoryId: string, icon: string }>) => {
             const category = state.categories.find(x => x.id === action.payload.categoryId);
@@ -281,8 +296,8 @@ export const itemsSlice = createSlice({
                 })
             }
         },
-        resetShops: (state) => {
-            state.shops = defaultShops;
+        resetShops: (state, action: PayloadAction<void>) => {
+            itemsSlice.caseReducers.setShops(state, { payload: defaultShops, type: action.type });
         },
         setShops: (state, action: PayloadAction<Shop[]>) => {
             let index = action.payload.length - 1
@@ -292,6 +307,10 @@ export const itemsSlice = createSlice({
                 }
             }
             state.shops = action.payload.slice(0, index + 1);
+            const s = new Set(action.payload.map(x => x.id));
+            for (const item of state.items) {
+                item.shops = item.shops.filter(x => s.has(x.shopId));
+            }
         },
         setShopDefaultCategory: (state, action: PayloadAction<{ shopId: string, categoryId: string }>) => {
             const shop = state.shops.find(x => x.id === action.payload.shopId);
@@ -361,10 +380,14 @@ export const itemsSlice = createSlice({
             }
         },
         resetStorages: (state, action: PayloadAction<void>) => {
-            state.storages = defaultStorages;
+            itemsSlice.caseReducers.setStorages(state, { payload: defaultStorages, type: action.type });
         },
         setStorages: (state, action: PayloadAction<Storage[]>) => {
             state.storages = action.payload;
+            const s = new Set(action.payload.map(x => x.id));
+            for (const item of state.items) {
+                item.storages = item.storages.filter(x => s.has(x.storageId));
+            }
         },
         setStorageDefaultCategory: (state, action: PayloadAction<{ storageId: string, categoryId: string }>) => {
             const storage = state.storages.find(x => x.id === action.payload.storageId);
