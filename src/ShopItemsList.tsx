@@ -8,6 +8,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { numberToString, quantityToString } from './numberToString';
 import { PriceIcon } from './PriceIcon';
 import { RootStackParamList } from '../App';
+import { selectUiItemsList, setUiItemsListItems, setUiItemsListLatest, setUiItemsListLatestInArea, setUiItemsListWithout } from './store/uiSlice';
 import { Shop } from './store/data/shops';
 import { Text, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
@@ -26,9 +27,10 @@ export function ShopItemsList(props: {
     const itemsNotWanted = useAppSelector(selectItemsNotWanted);
     const itemsNotWantedThisShop = useAppSelector(selectItemsNotWantedWithShop(props.shop, true));
     const itemsNotWantedDifferentShop = useAppSelector(selectItemsNotWantedWithDifferentShop(props.shop));
+    const uiItemsList = useAppSelector(selectUiItemsList);
     const dispatch = useAppDispatch();
-    const theme = useTheme();
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const theme = useTheme();
 
     const [showCalculator, setShowCalculator] = useState<{
         visible: boolean;
@@ -149,6 +151,7 @@ export function ShopItemsList(props: {
         {
             title: "Dinge",
             icon: "cart",
+            collapsed: [!uiItemsList.items.expanded, (exp) => dispatch(setUiItemsListItems({ expanded: exp }))],
             data: (props.shop.id === allShop.id)
                 ? itemsWanted
                 : itemsWantedThisShop,
@@ -156,6 +159,7 @@ export function ShopItemsList(props: {
         {
             title: "Ohne Shop",
             icon: "store-off",
+            collapsed: [!uiItemsList.without.expanded, (exp) => dispatch(setUiItemsListWithout({ expanded: exp }))],
             data: itemsWantedWithoutShop,
         },
     ];
@@ -166,6 +170,7 @@ export function ShopItemsList(props: {
             {
                 title: "Zuletzt",
                 icon: "history",
+                collapsed: [!uiItemsList.latest.expanded, (exp) => dispatch(setUiItemsListLatest({ expanded: exp }))],
                 data: itemsNotWanted,
             },
         );
@@ -174,13 +179,13 @@ export function ShopItemsList(props: {
             {
                 title: `Zuletzt in ${props.shop?.name}`,
                 icon: "history",
-                collapsed: true,
+                collapsed: [!uiItemsList.latestInArea.expanded, (exp) => dispatch(setUiItemsListLatestInArea({ expanded: exp }))],
                 data: itemsNotWantedThisShop,
             },
             {
                 title: "Zuletzt in anderen Shops",
                 icon: "history",
-                collapsed: true,
+                collapsed: [!uiItemsList.latest.expanded, (exp) => dispatch(setUiItemsListLatest({ expanded: exp }))],
                 data: itemsNotWantedDifferentShop,
             },
         );

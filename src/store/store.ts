@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import dataSlice from './dataSlice'
 import settingsSlice from './settingsSlice'
 import thunk from 'redux-thunk';
+import uiSlice from './uiSlice';
 
 const persistConfig = {
     key: 'root',
@@ -17,6 +18,7 @@ export const store = configureStore({
     reducer: {
         data: persisterDataReducer,
         settings: persisterSettingsReducer,
+        ui: uiSlice,
     },
     middleware: [thunk],
 })

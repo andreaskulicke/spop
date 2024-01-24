@@ -6,6 +6,7 @@ import { ItemsSectionList, ItemsSectionListSection } from './ItemsSectionList';
 import { List, IconButton, useTheme, TouchableRipple } from 'react-native-paper';
 import { quantityToString } from './numberToString';
 import { RootStackParamList } from '../App';
+import { selectUiItemsList, setUiItemsListItems, setUiItemsListLatest, setUiItemsListLatestInArea, setUiItemsListWithout } from './store/uiSlice';
 import { Storage } from './store/data/storages';
 import { Text, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
@@ -24,9 +25,10 @@ export function StorageItemsList(props: {
     const itemsNotWanted = useAppSelector(selectItemsNotWanted);
     const itemsNotWantedThisStorage = useAppSelector(selectItemsNotWantedWithStorage(props.storage.id));
     const itemsNotWantedDifferentStorage = useAppSelector(selectItemsNotWantedWithDifferentStorage(props.storage.id));
+    const uiItemsList = useAppSelector(selectUiItemsList);
     const dispatch = useAppDispatch();
-    const theme = useTheme();
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const theme = useTheme();
 
     const [showCalculator, setShowCalculator] = useState<{
         visible: boolean;
@@ -123,6 +125,7 @@ export function StorageItemsList(props: {
         {
             title: "Dinge",
             icon: "cart",
+            collapsed: [!uiItemsList.items.expanded, (exp) => dispatch(setUiItemsListItems({ expanded: exp }))],
             data: (props.storage.id === allStorage.id)
                 ? itemsWanted
                 : itemsWantedThisStorage,
@@ -130,6 +133,7 @@ export function StorageItemsList(props: {
         {
             title: "Ohne Vorratsort",
             icon: "home-remove-outline",
+            collapsed: [!uiItemsList.without.expanded, (exp) => dispatch(setUiItemsListWithout({ expanded: exp }))],
             data: itemsWantedWithoutStorage,
         },
     ];
@@ -139,6 +143,7 @@ export function StorageItemsList(props: {
             {
                 title: "Zuletzt",
                 icon: "history",
+                collapsed: [!uiItemsList.latest.expanded, (exp) => dispatch(setUiItemsListLatest({ expanded: exp }))],
                 data: itemsNotWanted,
             },
         );
@@ -147,13 +152,13 @@ export function StorageItemsList(props: {
             {
                 title: `Zuletzt in ${props.storage?.name}`,
                 icon: "history",
-                collapsed: true,
+                collapsed: [!uiItemsList.latestInArea.expanded, (exp) => dispatch(setUiItemsListLatestInArea({ expanded: exp }))],
                 data: itemsNotWantedThisStorage,
             },
             {
                 title: "Zuletzt in anderen Vorratsorten",
                 icon: "history",
-                collapsed: true,
+                collapsed: [!uiItemsList.latest.expanded, (exp) => dispatch(setUiItemsListLatest({ expanded: exp }))],
                 data: itemsNotWantedDifferentStorage,
             },
         );

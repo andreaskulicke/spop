@@ -1,4 +1,3 @@
-import { selectCategories, selectCategory, selectItemsNotWanted, selectItemsNotWantedWithCategory, selectItemsNotWantedWithDifferentCategory, selectItemsWanted, selectItemsWantedWithCategory, setItemCategory, setItemWanted, sortItemsByCategory } from "./store/dataSlice";
 import { Appbar, IconButton, List, useTheme } from "react-native-paper";
 import { CategoriesStackParamList } from "./CategoriesNavigationScreen";
 import { Item, itemListStyle } from "./store/data/items";
@@ -6,10 +5,12 @@ import { ItemsSectionList, ItemsSectionListSection } from "./ItemsSectionList";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { ReactElement, JSXElementConstructor } from "react";
 import { RootStackParamList } from "../App";
-import { View } from "react-native";
+import { SearchBarList } from "./SearchBarList";
+import { selectCategories, selectCategory, selectItemsNotWanted, selectItemsNotWantedWithCategory, selectItemsNotWantedWithDifferentCategory, selectItemsWanted, selectItemsWantedWithCategory, setItemCategory, setItemWanted, sortItemsByCategory } from "./store/dataSlice";
+import { selectUiItemsList, setUiItemsListItems, setUiItemsListLatest, setUiItemsListLatestInArea, setUiItemsListWithout } from "./store/uiSlice";
 import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { SearchBarList } from "./SearchBarList";
+import { View } from "react-native";
 
 export function CategoryItemsScreen(props: {
     navigation: NavigationProp<RootStackParamList & CategoriesStackParamList>;
@@ -23,6 +24,7 @@ export function CategoryItemsScreen(props: {
     const itemsNotWanted = useAppSelector(selectItemsNotWanted);
     const itemsNotWantedThisCategory = useAppSelector(selectItemsNotWantedWithCategory(category?.id));
     const itemsNotWantedDifferentCategory = useAppSelector(selectItemsNotWantedWithDifferentCategory(category?.id));
+    const uiItemsList = useAppSelector(selectUiItemsList);
     const dispatch = useAppDispatch();
     const theme = useTheme();
 
@@ -70,6 +72,7 @@ export function CategoryItemsScreen(props: {
         {
             title: "Dinge",
             icon: "cart",
+            collapsed: [!uiItemsList.items.expanded, (exp) => dispatch(setUiItemsListItems({ expanded: exp }))],
             data: !category
                 ? itemsWanted.sort((a, b) => sortItemsByCategory(c, a, b))
                 : itemsWantedThisCategory,
@@ -77,6 +80,7 @@ export function CategoryItemsScreen(props: {
         {
             title: "Ohne Kategorie",
             icon: "archive-off-outline",
+            collapsed: [!uiItemsList.without.expanded, (exp) => dispatch(setUiItemsListWithout({ expanded: exp }))],
             data: itemsWantedWithoutCategory,
         },
     ];
@@ -86,6 +90,7 @@ export function CategoryItemsScreen(props: {
             {
                 title: "Zuletzt",
                 icon: "history",
+                collapsed: [!uiItemsList.latest.expanded, (exp) => dispatch(setUiItemsListLatest({ expanded: exp }))],
                 data: itemsNotWanted.sort((a, b) => sortItemsByCategory(c, a, b)),
             },
         );
@@ -94,13 +99,13 @@ export function CategoryItemsScreen(props: {
             {
                 title: `Zuletzt in ${category?.name}`,
                 icon: "history",
-                collapsed: true,
+                collapsed: [!uiItemsList.latestInArea.expanded, (exp) => dispatch(setUiItemsListLatestInArea({ expanded: exp }))],
                 data: itemsNotWantedThisCategory,
             },
             {
                 title: "Zuletzt in anderen Kategorien",
                 icon: "history",
-                collapsed: true,
+                collapsed: [!uiItemsList.latest.expanded, (exp) => dispatch(setUiItemsListLatest({ expanded: exp }))],
                 data: itemsNotWantedDifferentCategory,
             },
         );

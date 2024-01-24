@@ -8,7 +8,7 @@ export interface Settings {
     display: {
         colorTheme: ColorSchemeName;
         theme: ThemeName;
-    },
+    };
 }
 
 // Define the initial state using that type
