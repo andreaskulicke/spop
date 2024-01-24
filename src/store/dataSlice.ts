@@ -180,6 +180,12 @@ export const itemsSlice = createSlice({
                 item.name = action.payload.name;
             }
         },
+        setItemNotes: (state, action: PayloadAction<{ itemId: string, notes: string | undefined }>) => {
+            const item = state.items.find(x => x.id === action.payload.itemId);
+            if (item) {
+                item.notes = action.payload.notes;
+            }
+        },
         setItemPackageQuantity: (state, action: PayloadAction<{ itemId: string, packageQuantity: number | undefined }>) => {
             const item = state.items.find(x => x.id === action.payload.itemId);
             if (item) {
@@ -423,6 +429,7 @@ export const {
     setItemQuantity,
     setItemCategory,
     setItemName,
+    setItemNotes,
     setItemPackageQuantity,
     setItemPackageUnit,
     setItems,

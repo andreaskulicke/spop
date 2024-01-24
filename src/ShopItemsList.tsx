@@ -99,7 +99,7 @@ export function ShopItemsList(props: {
             price += " €";
             const unitName = getUnitName(currentItemShop?.unitId);
             if (unitName) {
-                price += `/ ${unitName}`;
+                price += `/${unitName}`;
             }
         }
 

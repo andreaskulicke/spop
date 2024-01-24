@@ -1,4 +1,4 @@
-import { addStorage, setItemWanted, deleteItem, selectItem, setItemQuantity, setItemName, setItemStorage, setItemShop, setItemCategory, addShop, selectValidShops, setItemUnit, setItemPackageQuantity, setItemPackageUnit, setItemShopPrice } from "./store/dataSlice";
+import { addStorage, setItemWanted, deleteItem, selectItem, setItemQuantity, setItemName, setItemStorage, setItemShop, setItemCategory, addShop, selectValidShops, setItemUnit, setItemPackageQuantity, setItemPackageUnit, setItemShopPrice, setItemNotes } from "./store/dataSlice";
 import { Appbar, Card, Checkbox, IconButton, List, TextInput, TouchableRipple, useTheme } from "react-native-paper";
 import { AvatarText } from "./AvatarText";
 import { Calculator } from "./Calculator";
@@ -25,6 +25,7 @@ export function ItemScreen(props: {
     const [name, setName] = useState("");
     const [quantity, setQuantity] = useState<string>();
     const [packageQuantity, setPackageQuantity] = useState<string>();
+    const [notes, setNotes] = useState<string>();
     const [showCalculator, setShowCalculator] = useState<
         {
             visible: boolean;
@@ -46,6 +47,7 @@ export function ItemScreen(props: {
         handleTextInputNameBlur();
         handleTextInputQuantityBlur();
         handleTextInputPackageQuantityBlur();
+        handleTextInputNotesBlur();
         props.navigation.goBack();
     }
 
@@ -140,6 +142,12 @@ export function ItemScreen(props: {
         }
     }
 
+    function handleTextInputNotesBlur(): void {
+        if (item) {
+            dispatch(setItemNotes({ itemId: item.id, notes: notes }));
+        }
+    }
+
     function transformQuantity(text: string): string {
         let newText = text.replace(/[^0-9,\.]/g, "").replace(".", ",");
         if (newText.endsWith(",")) {
@@ -153,6 +161,7 @@ export function ItemScreen(props: {
             handleTextInputNameBlur();
             handleTextInputQuantityBlur();
             handleTextInputPackageQuantityBlur();
+            handleTextInputNotesBlur();
         });
         return () => s.remove();
     });
@@ -161,6 +170,7 @@ export function ItemScreen(props: {
         setName(item?.name ?? "");
         setQuantity(numberToString(item?.quantity));
         setPackageQuantity(numberToString(item?.packageQuantity));
+        setNotes(item.notes);
     }, [item])
 
     return (
@@ -249,6 +259,19 @@ export function ItemScreen(props: {
                         <CategoryMenu
                             categoryId={item.categoryId}
                             onSetCategory={categoryId => dispatch(setItemCategory({ itemId: item.id, categoryId: categoryId }))}
+                        />
+                        <TextInput
+                            label="Notizen"
+                            mode="outlined"
+                            multiline
+                            scrollEnabled
+                            selectTextOnFocus
+                            style={{ flexGrow: 1, margin: 8 }}
+                            value={notes}
+                            onBlur={handleTextInputNotesBlur}
+                            onChangeText={text => {
+                                setNotes(text);
+                            }}
                         />
                     </Card>
                     <Card

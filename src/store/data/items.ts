@@ -118,6 +118,7 @@ export interface Item {
     packageUnitId?: UnitId;
     categoryId?: string;
     wanted?: boolean;
+    notes?: string;
     shops: ItemShop[];
     storages: { storageId: string; }[];
 }
