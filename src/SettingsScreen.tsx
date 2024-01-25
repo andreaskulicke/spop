@@ -1,15 +1,16 @@
 import { Appbar, Button, Card, Icon, List, Menu, Text, TextInput, TouchableRipple } from "react-native-paper";
-import { Linking, ScrollView, View } from "react-native";
+import { Linking, ScrollView, Share, View } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
 import { resetCategories, resetShops, resetStorages, setItems, setShops, setStorages } from "./store/dataSlice";
 import { RootStackParamList } from "../App";
 import { setColorTheme, setTheme } from "./store/settingsSlice";
 import { StatusBarView } from "./StatusBarView";
+import { store } from "./store/store";
 import { themes } from "./store/themes/themes";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { useState } from "react";
-import packageJson from "../package.json";
 import appJson from "../app.json";
+import packageJson from "../package.json";
 
 export function SettingsScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -171,6 +172,21 @@ export function SettingsScreen(props: {
                                 </Button>
                                 <Button {...p} compact mode="outlined" onPress={() => dispatch(setStorages([]))}>
                                     Löschen
+                                </Button>
+                            </View>
+                        }
+                    />
+                    <List.Item
+                        title="Daten"
+                        right={p =>
+                            <View style={{ flexDirection: "row" }}>
+                                <Button {...p} compact mode="outlined" onPress={async () => {
+                                    Share.share(
+                                        {
+                                            message: JSON.stringify(store.getState()),
+                                        })
+                                }}>
+                                    Exportieren
                                 </Button>
                             </View>
                         }
