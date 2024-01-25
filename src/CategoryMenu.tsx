@@ -48,7 +48,7 @@ export function CategoryMenu(props: {
                                 label={props.title ?? "Kategorie"}
                                 mode="outlined"
                                 style={{ marginVertical: 8 }}
-                                value={category?.name}
+                                value={category?.name ?? emptyCategory.name}
                                 left={
                                     <TextInput.Icon
                                         icon={category?.icon ?? "dots-horizontal"}

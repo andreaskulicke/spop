@@ -215,9 +215,7 @@ export function ItemScreen(props: {
                                 style={{ flexGrow: 1, margin: 8 }}
                                 value={quantity}
                                 onBlur={handleTextInputQuantityBlur}
-                                onChangeText={text => {
-                                    setQuantity(transformQuantity(text));
-                                }}
+                                onChangeText={text => setQuantity(transformQuantity(text))}
                             />
                             <UnitSelection
                                 itemId={item.id}
@@ -240,9 +238,7 @@ export function ItemScreen(props: {
                                 style={{ flexGrow: 1, margin: 8 }}
                                 value={packageQuantity}
                                 onBlur={handleTextInputPackageQuantityBlur}
-                                onChangeText={text => {
-                                    setPackageQuantity(transformQuantity(text));
-                                }}
+                                onChangeText={text => setPackageQuantity(transformQuantity(text))}
                             />
                             <UnitSelection
                                 itemId={item.id}
@@ -269,9 +265,7 @@ export function ItemScreen(props: {
                             style={{ flexGrow: 1, margin: 8 }}
                             value={notes}
                             onBlur={handleTextInputNotesBlur}
-                            onChangeText={text => {
-                                setNotes(text);
-                            }}
+                            onChangeText={text => setNotes(text)}
                         />
                     </Card>
                     <Card
