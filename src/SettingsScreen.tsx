@@ -1,4 +1,4 @@
-import { Appbar, Button, Card, Icon, List, Menu, Text, TextInput, TouchableRipple } from "react-native-paper";
+import { Appbar, Button, Card, Icon, IconButton, List, Menu, Text, TextInput, TouchableRipple } from "react-native-paper";
 import { Linking, ScrollView, Share, View } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
 import { resetCategories, resetShops, resetStorages, setItems, setShops, setStorages } from "./store/dataSlice";
@@ -19,6 +19,7 @@ export function SettingsScreen(props: {
     const dispatch = useAppDispatch();
     const [colorThemeMenuVisible, setColorThemeMenuVisible] = useState(false);
     const [themeMenuVisible, setThemeMenuVisible] = useState(false);
+    const [dataExpanded, setDataExpanded] = useState(false);
 
     async function handleFeebackPress(): Promise<void> {
         const url = `mailto:andreaskulicke.apps@gmx.de?subject=Spop ${packageJson.version}`;
@@ -133,64 +134,79 @@ export function SettingsScreen(props: {
                     </Menu>
                 </Card>
                 <Card style={{ margin: 8 }}>
-                    <Card.Title title="Daten" />
-                    <List.Item
-                        title="Dinge"
-                        right={p =>
-                            <Button {...p} compact mode="outlined" onPress={() => dispatch(setItems([]))}>
-                                Löschen
-                            </Button>
-                        }
-                    />
-                    <List.Item
-                        title="Kategorien"
-                        right={p =>
-                            <Button {...p} compact mode="outlined" onPress={() => dispatch(resetCategories())}>
-                                Standard
-                            </Button>
-                        }
-                    />
-                    <List.Item
-                        title="Shops"
-                        right={p =>
-                            <View style={{ flexDirection: "row" }}>
-                                <Button {...p} compact mode="outlined" onPress={() => dispatch(resetShops())}>
-                                    Standard
-                                </Button>
-                                <Button {...p} compact mode="outlined" onPress={() => dispatch(setShops([]))}>
-                                    Löschen
-                                </Button>
-                            </View>
-                        }
-                    />
-                    <List.Item
-                        title="Vorratsorte"
-                        right={p =>
-                            <View style={{ flexDirection: "row" }}>
-                                <Button {...p} compact mode="outlined" onPress={() => dispatch(resetStorages())}>
-                                    Standard
-                                </Button>
-                                <Button {...p} compact mode="outlined" onPress={() => dispatch(setStorages([]))}>
-                                    Löschen
-                                </Button>
-                            </View>
-                        }
-                    />
-                    <List.Item
-                        title="Daten"
-                        right={p =>
-                            <View style={{ flexDirection: "row" }}>
-                                <Button {...p} compact mode="outlined" onPress={async () => {
-                                    Share.share(
-                                        {
-                                            message: JSON.stringify(store.getState()),
-                                        })
-                                }}>
-                                    Exportieren
-                                </Button>
-                            </View>
-                        }
-                    />
+                    <TouchableRipple
+                        onPress={() => setDataExpanded(x => !x)}
+                    >
+                        <Card.Title title="Daten"
+                            right={p => <IconButton
+                                {...p}
+                                icon={dataExpanded ? "chevron-up" : "chevron-down"}
+                                onPress={() => setDataExpanded(x => !x)}
+                            />}
+                        />
+                    </TouchableRipple>
+                    {
+                        dataExpanded
+                        && <View>
+                            <List.Item
+                                title="Dinge"
+                                right={p =>
+                                    <Button {...p} compact mode="outlined" onPress={() => dispatch(setItems([]))}>
+                                        Löschen
+                                    </Button>
+                                }
+                            />
+                            <List.Item
+                                title="Kategorien"
+                                right={p =>
+                                    <Button {...p} compact mode="outlined" onPress={() => dispatch(resetCategories())}>
+                                        Standard
+                                    </Button>
+                                }
+                            />
+                            <List.Item
+                                title="Shops"
+                                right={p =>
+                                    <View style={{ flexDirection: "row" }}>
+                                        <Button {...p} compact mode="outlined" onPress={() => dispatch(resetShops())}>
+                                            Standard
+                                        </Button>
+                                        <Button {...p} compact mode="outlined" onPress={() => dispatch(setShops([]))}>
+                                            Löschen
+                                        </Button>
+                                    </View>
+                                }
+                            />
+                            <List.Item
+                                title="Vorratsorte"
+                                right={p =>
+                                    <View style={{ flexDirection: "row" }}>
+                                        <Button {...p} compact mode="outlined" onPress={() => dispatch(resetStorages())}>
+                                            Standard
+                                        </Button>
+                                        <Button {...p} compact mode="outlined" onPress={() => dispatch(setStorages([]))}>
+                                            Löschen
+                                        </Button>
+                                    </View>
+                                }
+                            />
+                            <List.Item
+                                title="Daten"
+                                right={p =>
+                                    <View style={{ flexDirection: "row" }}>
+                                        <Button {...p} compact mode="outlined" onPress={async () => {
+                                            Share.share(
+                                                {
+                                                    message: JSON.stringify(store.getState()),
+                                                })
+                                        }}>
+                                            Exportieren
+                                        </Button>
+                                    </View>
+                                }
+                            />
+                        </View>
+                    }
                 </Card>
                 <Card style={{ margin: 8 }}>
                     <Card.Title title="Info" />
