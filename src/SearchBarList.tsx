@@ -190,7 +190,7 @@ function Adder(props: {
     }
 
     useEffect(() => {
-        const originalItemQuantity = (originalItem?.quantity ?? 1);
+        const originalItemQuantity = ((originalItem?.quantity ?? 0) === 0) ? 1 : originalItem!.quantity!;
         let plusOneQuantity;
         let plusOneUnitId = originalItem?.unitId;
         let doubleQuantity;
