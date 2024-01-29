@@ -2,8 +2,8 @@ import { Appbar, Button, Card, Icon, IconButton, List, Menu, Text, TextInput, To
 import { Linking, ScrollView, Share, View } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
 import { resetCategories, resetShops, resetStorages, setItems, setShops, setStorages } from "./store/dataSlice";
+import { resetSettings, setColorTheme, setTheme } from "./store/settingsSlice";
 import { RootStackParamList } from "../App";
-import { setColorTheme, setTheme } from "./store/settingsSlice";
 import { StatusBarView } from "./StatusBarView";
 import { store } from "./store/store";
 import { themes } from "./store/themes/themes";
@@ -148,6 +148,14 @@ export function SettingsScreen(props: {
                     {
                         dataExpanded
                         && <View>
+                            <List.Item
+                                title="Einstellungen"
+                                right={p =>
+                                    <Button {...p} compact mode="outlined" onPress={() => dispatch(resetSettings())}>
+                                        Standard
+                                    </Button>
+                                }
+                            />
                             <List.Item
                                 title="Dinge"
                                 right={p =>
