@@ -110,7 +110,7 @@ export function ShopItemsList(props: {
                 style={itemListStyle(theme)}
                 right={
                     p => (
-                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
+                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end", gap: 8 }}>
                             <QuantityPrice
                                 itemId={item.id}
                                 shopId={props.shop.id}
@@ -134,11 +134,11 @@ export function ShopItemsList(props: {
                             }
                             {
                                 !item.wanted && item.shops.find(x => x.checked && (x.shopId === props.shop.id))
-                                && <IconButton {...p} icon="cart-minus" onPress={() => dispatch(setItemShop({ itemId: item.id, shopId: props.shop.id, checked: false }))} />
+                                && <IconButton {...p} style={{ margin: 0 }} icon="cart-minus" onPress={() => dispatch(setItemShop({ itemId: item.id, shopId: props.shop.id, checked: false }))} />
                             }
                             {
                                 !item.wanted && (props.shop.id !== allShop.id) && !item.shops.find(x => x.checked && (x.shopId === props.shop.id))
-                                && <IconButton {...p} icon="cart-plus" onPress={() => dispatch(setItemShop({ itemId: item.id, shopId: props.shop.id, checked: true }))} />
+                                && <IconButton {...p} style={{ margin: 0 }} icon="cart-plus" onPress={() => dispatch(setItemShop({ itemId: item.id, shopId: props.shop.id, checked: true }))} />
                             }
                         </View>
                     )}
@@ -221,8 +221,13 @@ function QuantityPrice(props: {
             style={{
                 justifyContent: "center",
                 minHeight: 40,
-                minWidth: 64,
-                paddingHorizontal: 16,
+                minWidth: 80,
+                paddingHorizontal: 8,
+
+                alignItems: "flex-end",
+                backgroundColor: theme.colors.elevation.level3,
+                borderColor: theme.colors.elevation.level3,
+                borderRadius: theme.roundness,
             }}
             onPress={props.onPress}
         >

@@ -47,16 +47,24 @@ export function HistoryListItem(props: {
             }
             right={p =>
                 <View
-                    style={{ flexDirection: "row", alignItems: "center" }}
+                    style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
                 >
                     {
                         props.onCalculatorPress
                         && price
                         && <TouchableRipple
+                            style={{
+                                alignItems: "flex-end",
+                                backgroundColor: theme.colors.elevation.level3,
+                                borderColor: theme.colors.elevation.level3,
+                                borderRadius: theme.roundness,
+                                minWidth: 80,
+                                paddingRight: 8,
+                            }}
                             onPress={() => props.onCalculatorPress?.(props.item)}
                         >
                             <View style={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
-                                <Text style={{ color: theme.colors.primary, paddingLeft: 8, paddingVertical: 8 }}>
+                                <Text style={{ color: theme.colors.primary, paddingLeft: 8, paddingVertical: 10 }}>
                                     {numberToString(price)} €
                                 </Text>
                                 <PriceIcon
@@ -75,7 +83,6 @@ export function HistoryListItem(props: {
                             onPress={() => props.onCalculatorPress?.(props.item)}
                         />
                     }
-                    <Text style={{ marginHorizontal: 16 }}>{getQuantityUnitFromItem(props.item)}</Text>
                     <AvatarIcon icon="arrow-top-left" onPress={handleIconPress} />
                 </View>
             }

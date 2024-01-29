@@ -45,19 +45,20 @@ export function CategoryItemsScreen(props: {
                 description={(item.categoryId !== category?.id) ? getCategoryName(item.categoryId) : undefined}
                 style={itemListStyle(theme)}
                 right={p =>
-                    <View style={{ flexDirection: "row", alignItems: "center", height: 42 }}>
+                    <View style={{ flexDirection: "row", alignItems: "center", height: 42, gap: 8 }}>
                         <IconButton
                             {...p}
                             icon={item.wanted ? "minus-thick" : "plus-outline"}
+                            style={{ ...(p.style), ...{ marginLeft: 0 } }}
                             onPress={() => dispatch(setItemWanted({ itemId: item.id, wanted: !item.wanted }))}
                         />
                         {
                             !item.wanted && item.categoryId
-                            && <IconButton {...p} icon="archive-minus-outline" onPress={() => dispatch(setItemCategory({ itemId: item.id, categoryId: undefined }))} />
+                            && <IconButton {...p} style={{ margin: 0 }} icon="archive-minus-outline" onPress={() => dispatch(setItemCategory({ itemId: item.id, categoryId: undefined }))} />
                         }
                         {
                             category && (!item.categoryId || (item.categoryId !== category?.id))
-                            && <IconButton {...p} icon="archive-plus-outline" onPress={() => dispatch(setItemCategory({ itemId: item.id, categoryId: category?.id }))} />
+                            && <IconButton {...p} style={{ margin: 0 }} icon="archive-plus-outline" onPress={() => dispatch(setItemCategory({ itemId: item.id, categoryId: category?.id }))} />
                         }
                     </View>
                 }

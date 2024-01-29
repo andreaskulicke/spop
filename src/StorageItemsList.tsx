@@ -82,13 +82,18 @@ export function StorageItemsList(props: {
                 title={item.name}
                 style={itemListStyle(theme)}
                 right={p =>
-                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
+                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end", gap: 8 }}>
                         <TouchableRipple
                             style={{
                                 justifyContent: "center",
                                 minHeight: 40,
-                                minWidth: 64,
+                                minWidth: 80,
                                 paddingHorizontal: 8,
+
+                                alignItems: "flex-end",
+                                backgroundColor: theme.colors.elevation.level3,
+                                borderColor: theme.colors.elevation.level3,
+                                borderRadius: theme.roundness,
                             }}
                             onPress={() => handleShowCalculatorPress(item)}
                         >
@@ -99,8 +104,8 @@ export function StorageItemsList(props: {
                             </View>
                         </TouchableRipple>
                         <IconButton
-                            {...p}
                             icon={item.wanted ? "minus-thick" : "plus-outline"}
+                            style={{ ...(p.style), ...{ marginLeft: 0 } }}
                             onPress={() => {
                                 dispatch(setItemWanted({ itemId: item.id, wanted: !item.wanted }));
                                 dispatch(setItemStorage({ itemId: item.id, storageId: props.storage.id, checked: true }));
@@ -108,11 +113,11 @@ export function StorageItemsList(props: {
                         />
                         {
                             !item.wanted && item.storages.find(x => x.storageId === props.storage.id)
-                            && <IconButton {...p} icon="home-minus-outline" onPress={() => dispatch(setItemStorage({ itemId: item.id, storageId: props.storage.id, checked: false }))} />
+                            && <IconButton {...p} style={{ margin: 0 }} icon="home-minus-outline" onPress={() => dispatch(setItemStorage({ itemId: item.id, storageId: props.storage.id, checked: false }))} />
                         }
                         {
                             (props.storage.id !== allStorage.id) && !item.storages.find(x => x.storageId === props.storage.id)
-                            && <IconButton {...p} icon="home-plus-outline" onPress={() => dispatch(setItemStorage({ itemId: item.id, storageId: props.storage.id, checked: true }))} />
+                            && <IconButton {...p} style={{ margin: 0 }} icon="home-plus-outline" onPress={() => dispatch(setItemStorage({ itemId: item.id, storageId: props.storage.id, checked: true }))} />
                         }
                     </View>
                 }

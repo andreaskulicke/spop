@@ -190,7 +190,7 @@ function Adder(props: {
     }
 
     useEffect(() => {
-        const originalItemQuantity = ((originalItem?.quantity ?? 0) === 0) ? 1 : originalItem!.quantity!;
+        const originalItemQuantity = ((originalItem?.quantity ?? 0) === 0) ? 1 : (originalItem?.quantity ?? 1);
         let plusOneQuantity;
         let plusOneUnitId = originalItem?.unitId;
         let doubleQuantity;
@@ -261,6 +261,8 @@ function QuantityUnit(props: {
     source: Field;
     onPress: (data: Data, source: Field) => void;
 }) {
+    const theme = useTheme();
+
     function handlePress(): void {
         if (props.data) {
             props.onPress?.(props.data, props.source);
@@ -275,10 +277,20 @@ function QuantityUnit(props: {
                 position: "absolute",
                 right: 0,
                 top: -16,
+
+                alignItems: "flex-end",
+                backgroundColor: theme.colors.elevation.level3,
+                borderColor: theme.colors.elevation.level3,
+                borderRadius: theme.roundness,
+                minWidth: 80,
             }}
             onPress={handlePress}
         >
-            <Text>{getQuantityUnit(props.data?.quantity, props.data?.unitId)}</Text>
+            <Text
+                style={{ color: theme.colors.primary }}
+            >
+                {getQuantityUnit(props.data?.quantity, props.data?.unitId)}
+            </Text>
         </TouchableRipple>
     );
 }
