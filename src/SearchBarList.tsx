@@ -122,6 +122,7 @@ export function SearchBarList(props: {
                         ? props.list
                         : <HistoryList
                             item={newItem}
+                            category={props.category}
                             shop={props.shop}
                             storage={props.storage}
                             onPress={handlePress}
