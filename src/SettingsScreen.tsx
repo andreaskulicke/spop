@@ -203,7 +203,7 @@ export function SettingsScreen(props: {
                                 right={p =>
                                     <View style={{ flexDirection: "row" }}>
                                         <Button {...p} compact mode="outlined" onPress={async () => {
-                                            Share.share(
+                                            await Share.share(
                                                 {
                                                     message: JSON.stringify(store.getState()),
                                                 })
