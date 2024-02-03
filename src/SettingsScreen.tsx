@@ -22,12 +22,13 @@ export function SettingsScreen(props: {
     const shops = useAppSelector(selectShops);
     const storages = useAppSelector(selectStorages);
     const dispatch = useAppDispatch();
+    const [buttonsDisabled, setButtonsDisabled] = useState(false);
     const [colorThemeMenuVisible, setColorThemeMenuVisible] = useState(false);
     const [themeMenuVisible, setThemeMenuVisible] = useState(false);
     const [dataExpanded, setDataExpanded] = useState(false);
 
     async function handleFeebackPress(): Promise<void> {
-        const url = `mailto:andreaskulicke.apps@gmx.de?subject=Spop ${packageJson.version}`;
+        const url = `mailto:andreaskulicke.apps@gmx.de?subject=Spop ${packageJson.version} (${appJson.expo.android.versionCode})`;
         if (await Linking.canOpenURL(url)) {
             Linking.openURL(url);
         }
@@ -218,11 +219,13 @@ export function SettingsScreen(props: {
                                 title="Daten"
                                 right={p =>
                                     <View style={{ flexDirection: "row" }}>
-                                        <Button {...p} compact mode="outlined" onPress={async () => {
+                                        <Button {...p} compact disabled={buttonsDisabled} mode="outlined" onPress={async () => {
+                                            setButtonsDisabled(true);
                                             await Share.share(
                                                 {
                                                     message: JSON.stringify(store.getState()),
                                                 })
+                                            setButtonsDisabled(false);
                                         }}>
                                             Exportieren
                                         </Button>
