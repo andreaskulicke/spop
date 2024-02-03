@@ -626,12 +626,18 @@ export function sortItemsByCategory(c: Map<string, Category>, a: Item, b: Item):
 
 // Items: Shop
 
-export function selectItemsWithShop(shop: Shop, itemFilter: (item: Item) => boolean, stopperOff: boolean | undefined, sortByCategory: boolean) {
+export function selectItemsWithShop(
+    shop: Shop,
+    itemFilter: (item: Item) => boolean,
+    shopCategoryFilterOff: boolean | undefined,
+    stopperOff: boolean | undefined,
+    sortByCategory: boolean) {
+
     return createSelector(
         [selectItems, selectCategories, selectShops],
         (items, categories, shops) => {
             const c = new Map(categories.map(x => [x.id, x]));
-            const cats = [undefined as (Category | undefined)]
+            const shopCategories = [undefined as (Category | undefined)]
                 .concat(shop.categoryIds?.filter(x => !!x).map(x => c.get(x)) ?? [...categories].sort((a, b) => a.name.localeCompare(b.name)));
 
             // Add all previous shops from last stopper
@@ -654,9 +660,9 @@ export function selectItemsWithShop(shop: Shop, itemFilter: (item: Item) => bool
 
             const itemsForThisShop = items.filter(itemFilter)
                 .filter(i => (shop.id === allShop.id || i.shops.find(x => x.checked && s.has(x.shopId))))
-                .filter(x => (x.categoryId === undefined) || cats.find(c => c?.id === x.categoryId));
-            const itemsForThisShop2 = groupByCategoryId(cats, itemsForThisShop);
-            const itemsForThisShop3 = Object.keys(itemsForThisShop2).flatMap(x => [cats.find(c => c?.id === x), ...itemsForThisShop2[x]]);
+                .filter(x => shopCategoryFilterOff || (x.categoryId === undefined) || shopCategories.find(c => c?.id === x.categoryId));
+            const itemsForThisShop2 = groupByCategoryId(shopCategories, itemsForThisShop);
+            const itemsForThisShop3 = Object.keys(itemsForThisShop2).flatMap(x => [c.get(x), ...itemsForThisShop2[x]]);
             return itemsForThisShop3;
 
             function groupByCategoryId(categories: (Category | undefined)[], array: Item[]) {
@@ -671,11 +677,23 @@ export function selectItemsWithShop(shop: Shop, itemFilter: (item: Item) => bool
         });
 }
 
-export function selectItemsWantedWithShop(shop: Shop, stopperOff: boolean | undefined) {
+export function selectItemsWantedWithShop(shop: Shop, shopCategoryFilterOff: boolean | undefined, stopperOff: boolean | undefined) {
     return createSelector(
-        [selectItemsWithShop(shop, item => !!item.wanted, stopperOff, true)],
+        [selectItemsWithShop(shop, item => !!item.wanted, shopCategoryFilterOff, stopperOff, true)],
         (items) => {
             return items;
+        });
+}
+
+export function selectItemsWantedWithShopHidden(shop: Shop, stopperOff: boolean | undefined) {
+    return createSelector(
+        [selectItemsWithShop(shop, item => !!item.wanted, true, stopperOff, true)],
+        (items) => {
+            const itemsTmp = items
+                .filter(x => isItem(x))
+                .filter(x => !((shop.categoryIds?.length ?? 0) === 0)
+                    || !(shop.categoryIds?.find(c => (x as Item).categoryId === c) ?? true));
+            return itemsTmp;
         });
 }
 
@@ -688,7 +706,7 @@ export const selectItemsWantedWithoutShop = createSelector(
 
 export function selectItemsNotWantedWithShop(shop: Shop, stopperOff: boolean | undefined) {
     return createSelector(
-        [selectItemsWithShop(shop, item => !item.wanted, stopperOff, false)],
+        [selectItemsWithShop(shop, item => !item.wanted, false, stopperOff, false)],
         (items) => {
             return items.filter(x => isItem(x) ? true : false);
         });

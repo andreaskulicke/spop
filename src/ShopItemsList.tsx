@@ -19,10 +19,11 @@ export function ShopItemsList(props: {
     shop: Shop;
     selectedItemId?: string;
     stopperOff?: boolean;
+    showHidden?: boolean;
 }) {
     const shops = useAppSelector(selectValidShops);
     const itemsWanted = useAppSelector(selectItemsWanted);
-    const itemsWantedThisShop = useAppSelector(selectItemsWantedWithShop(props.shop, props.stopperOff));
+    const itemsWantedThisShop = useAppSelector(selectItemsWantedWithShop(props.shop, props.showHidden, props.stopperOff));
     const itemsWantedWithoutShop = useAppSelector(selectItemsWantedWithoutShop);
     const itemsNotWanted = useAppSelector(selectItemsNotWanted);
     const itemsNotWantedThisShop = useAppSelector(selectItemsNotWantedWithShop(props.shop, true));
