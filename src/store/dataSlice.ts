@@ -698,7 +698,7 @@ export function selectItemsWithDifferentShop(shop: Shop) {
     return createSelector(
         [selectItems],
         (items) => {
-            return items.filter(x => (x.shops.length === 0) || !x.shops.find(x => x.checked && (x.shopId === shop.id)));
+            return items.filter(x => ((x.shops?.length ?? 0) === 0) || !x.shops.find(x => x.checked && (x.shopId === shop.id)));
         });
 }
 
