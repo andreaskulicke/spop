@@ -137,7 +137,7 @@ export function ShopItemsList(props: {
                                 && <IconButton {...p} style={{ margin: 0 }} icon="cart-minus" onPress={() => dispatch(setItemShop({ itemId: item.id, shopId: props.shop.id, checked: false }))} />
                             }
                             {
-                                !item.wanted && (props.shop.id !== allShop.id) && !item.shops.find(x => x.checked && (x.shopId === props.shop.id))
+                                (props.shop.id !== allShop.id) && !item.shops.find(x => x.checked && (x.shopId === props.shop.id))
                                 && <IconButton {...p} style={{ margin: 0 }} icon="cart-plus" onPress={() => dispatch(setItemShop({ itemId: item.id, shopId: props.shop.id, checked: true }))} />
                             }
                         </View>
