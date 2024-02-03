@@ -49,6 +49,7 @@ export function HistoryListItem(props: {
                 <View
                     style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
                 >
+                    <Text>{getQuantityUnitFromItem(props.item)}</Text>
                     {
                         props.onCalculatorPress
                         && price
