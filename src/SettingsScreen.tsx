@@ -1,7 +1,7 @@
 import { Appbar, Button, Card, Icon, IconButton, List, Menu, Text, TextInput, TouchableRipple } from "react-native-paper";
 import { Linking, ScrollView, Share, View } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
-import { resetCategories, resetShops, resetStorages, setItems, setShops, setStorages } from "./store/dataSlice";
+import { resetCategories, resetShops, resetStorages, selectCategories, selectItems, selectShops, selectStorages, setData, setItems, setShops, setStorages } from "./store/dataSlice";
 import { resetSettings, setColorTheme, setTheme } from "./store/settingsSlice";
 import { RootStackParamList } from "../App";
 import { StatusBarView } from "./StatusBarView";
@@ -16,6 +16,11 @@ export function SettingsScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
 }) {
     const settings = useAppSelector(state => state.settings);
+    const dataVersion = useAppSelector(state => state.data.version);
+    const categories = useAppSelector(selectCategories);
+    const items = useAppSelector(selectItems);
+    const shops = useAppSelector(selectShops);
+    const storages = useAppSelector(selectStorages);
     const dispatch = useAppDispatch();
     const [colorThemeMenuVisible, setColorThemeMenuVisible] = useState(false);
     const [themeMenuVisible, setThemeMenuVisible] = useState(false);
@@ -151,7 +156,18 @@ export function SettingsScreen(props: {
                             <List.Item
                                 title="Einstellungen"
                                 right={p =>
-                                    <Button {...p} compact mode="outlined" onPress={() => dispatch(resetSettings())}>
+                                    <Button {...p} compact mode="outlined" onPress={() => {
+                                        dispatch(resetSettings());
+                                        dispatch(setData(
+                                            {
+                                                version: dataVersion,
+                                                categories: categories,
+                                                items: items,
+                                                shops: shops,
+                                                storages: storages,
+                                            }
+                                        ));
+                                    }}>
                                         Standard
                                     </Button>
                                 }

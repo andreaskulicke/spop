@@ -24,8 +24,8 @@ export const settingsSlice = createSlice({
     name: "settings",
     initialState,
     reducers: {
-        resetSettings: (state) => {
-            state.display = initialState.display;
+        resetSettings: () => {
+            return initialState;
         },
 
         setColorTheme: (state, action: PayloadAction<ColorSchemeName>) => {

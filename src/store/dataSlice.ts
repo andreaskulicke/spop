@@ -35,8 +35,11 @@ export const itemsSlice = createSlice({
     name: "items",
     initialState,
     reducers: {
+        resetData: (state, action: PayloadAction<Data>) => {
+            return initialState;
+        },
         setData: (state, action: PayloadAction<Data>) => {
-            state = action.payload;
+            return action.payload;
         },
 
         // Categories
@@ -411,6 +414,7 @@ export const itemsSlice = createSlice({
 })
 
 export const {
+    resetData,
     setData,
 
     // Categories
