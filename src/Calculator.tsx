@@ -239,7 +239,7 @@ export function Calculator(props: {
                                                     }}
                                                     right={
                                                         <TextInput.Affix
-                                                            text={(values[i]?.unitId)
+                                                            text={(values[i]?.unitId && (values[i]?.unitId !== "-"))
                                                                 ? ` ${(props.fields[i].type === "price") ? "€/" : ""}${getUnitName(values[i]?.unitId)}`
                                                                 : ((props.fields[i].type === "price") ? " €" : " ")}
                                                         />}

@@ -3,7 +3,7 @@ import { Appbar, Card, Checkbox, IconButton, List, TextInput, TouchableRipple, u
 import { AvatarText } from "./AvatarText";
 import { Calculator } from "./Calculator";
 import { CategoryMenu } from "./CategoryMenu";
-import { ItemShop, UnitId } from "./store/data/items";
+import { Item, ItemShop, PriceData, Unit, UnitId, formatPrice, getNormalizedPrice, getPackagePrice, getPriceOfPriceBase, getUnit, getUnitName } from "./store/data/items";
 import { Keyboard, KeyboardAvoidingView, ScrollView, Text, View } from "react-native";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { numberToString, stringToNumber } from "./numberToString";
@@ -358,24 +358,17 @@ export function ItemScreen(props: {
                                                             }}
                                                             onPress={() => handleShowCalculatorPricePress(currentItemShop, s)}
                                                         >
-                                                            <View style={{ alignItems: "center" }}>
-                                                                <View style={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
-                                                                    <Text style={{ color: theme.colors.primary }}>
-                                                                        {`${numberToString(currentItemShop.price)} €`}
-                                                                    </Text>
-                                                                    <PriceIcon
-                                                                        itemId={item.id}
-                                                                        shopId={currentItemShop.shopId}
-                                                                    />
-                                                                </View>
-                                                                {
-                                                                    currentItemShop.unitId
-                                                                    && (currentItemShop.unitId !== "-")
-                                                                    && (currentItemShop.unitId !== "pkg")
-                                                                    && <Text style={{ color: theme.colors.primary }}>
-                                                                        {`/ ${currentItemShop.unitId}`}
-                                                                    </Text>
-                                                                }
+                                                            <View style={{ alignItems: "flex-end" }}>
+                                                                <Price
+                                                                    itemShop={currentItemShop}
+                                                                    item={item}
+                                                                    priceData={getPackagePrice(currentItemShop, item)}
+                                                                />
+                                                                <Price
+                                                                    itemShop={currentItemShop}
+                                                                    item={item}
+                                                                    priceData={getNormalizedPrice(currentItemShop, item)}
+                                                                />
                                                             </View>
                                                         </TouchableRipple>
                                                         : <AvatarText
@@ -415,5 +408,25 @@ export function ItemScreen(props: {
                 </ScrollView>
             </KeyboardAvoidingView>
         </StatusBarView>
+    );
+}
+
+function Price(props: {
+    itemShop: ItemShop;
+    item: Item;
+    priceData: PriceData;
+}) {
+    const theme = useTheme();
+
+    return (
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
+            <Text style={{ color: theme.colors.primary }}>
+                {formatPrice(props.priceData)}
+            </Text>
+            <PriceIcon
+                itemId={props.item.id}
+                shopId={props.itemShop.shopId}
+            />
+        </View>
     );
 }

@@ -3,11 +3,11 @@ import { Button, Divider, List, Modal, Portal, Text, TouchableRipple, useTheme }
 import { Calculator } from './Calculator';
 import { Category, emptyCategory } from './store/data/categories';
 import { HistoryList } from './HistoryList';
-import { Item, UnitId, addQuantityUnit, getQuantityUnit } from './store/data/items';
+import { Item, UnitId, addQuantityUnit, getQuantityUnit, parseQuantityUnit } from './store/data/items';
 import { Keyboard, KeyboardAvoidingView, View } from 'react-native';
 import { modalContainerStyle, modalViewStyle } from './styles';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { parseQuantityUnit, quantityToString } from './numberToString';
+import { quantityToString } from './numberToString';
 import { RootStackParamList } from '../App';
 import { SearchBar } from './SearchBar';
 import { Shop } from './store/data/shops';
