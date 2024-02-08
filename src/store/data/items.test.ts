@@ -27,6 +27,8 @@ describe("formatPrice()", () => {
     });
 });
 
+// TODO: Take itemShop.package* if set
+
 describe("getNormalizedPrice()", () => {
     test("no price - returns empty", () => {
         const { price, unit } = getNormalizedPrice({});

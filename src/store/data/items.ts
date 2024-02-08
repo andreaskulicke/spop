@@ -244,7 +244,10 @@ export interface ItemShop {
     checked?: boolean;
     shopId: string;
     price?: number;
+    /** UnitId of price */
     unitId?: UnitId;
+    packageQuantity?: number;
+    packageUnitId?: UnitId;
 }
 
 export function itemListStyle(theme: MD3Theme): ViewStyle {

@@ -221,6 +221,20 @@ export const itemsSlice = createSlice({
                 }
             }
         },
+        setItemShopPackage: (state, action: PayloadAction<{ itemId: string, shopId: string, packageQuantity?: number, packageUnitId?: UnitId }>) => {
+            if (action.payload.shopId !== allShop.id) {
+                const item = state.items.find(x => x.id === action.payload.itemId);
+                if (item) {
+                    let shop = item.shops.find(x => x.shopId === action.payload.shopId);
+                    if (!shop) {
+                        shop = { shopId: action.payload.shopId };
+                        item.shops.push(shop);
+                    }
+                    shop.packageQuantity = action.payload.packageQuantity;
+                    shop.packageUnitId = action.payload.packageUnitId; // TODO: check diff unit across item.unitId, item.packageUnitId
+                }
+            }
+        },
         setItemShopPrice: (state, action: PayloadAction<{ itemId: string, shopId: string, price?: number, unitId?: UnitId }>) => {
             if (action.payload.shopId !== allShop.id) {
                 const item = state.items.find(x => x.id === action.payload.itemId);
@@ -438,6 +452,7 @@ export const {
     setItemPackageUnit,
     setItems,
     setItemShop,
+    setItemShopPackage,
     setItemShopPrice,
     setItemStorage,
     setItemUnit,

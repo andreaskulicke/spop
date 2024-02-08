@@ -12,7 +12,7 @@ import { selectUiItemsList, setUiItemsListItems, setUiItemsListLatest, setUiItem
 import { Shop } from './store/data/shops';
 import { Text, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
-import { withSeparator } from './withSeparator';
+import { withSeparator } from './with';
 import React, { JSXElementConstructor, ReactElement, useState } from 'react';
 
 export function ShopItemsList(props: {

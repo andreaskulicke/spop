@@ -1,9 +1,9 @@
-import { addStorage, setItemWanted, deleteItem, selectItem, setItemQuantity, setItemName, setItemStorage, setItemShop, setItemCategory, addShop, selectValidShops, setItemUnit, setItemPackageQuantity, setItemPackageUnit, setItemShopPrice, setItemNotes } from "./store/dataSlice";
+import { addStorage, setItemWanted, deleteItem, selectItem, setItemQuantity, setItemName, setItemStorage, setItemShop, setItemCategory, addShop, selectValidShops, setItemUnit, setItemPackageQuantity, setItemPackageUnit, setItemShopPrice, setItemNotes, setItemShopPackage } from "./store/dataSlice";
 import { Appbar, Card, Checkbox, IconButton, List, TextInput, TouchableRipple, useTheme } from "react-native-paper";
 import { AvatarText } from "./AvatarText";
 import { Calculator } from "./Calculator";
 import { CategoryMenu } from "./CategoryMenu";
-import { Item, ItemShop, PriceData, Unit, UnitId, formatPrice, getNormalizedPrice, getPackagePrice, getPriceOfPriceBase, getUnit, getUnitName } from "./store/data/items";
+import { Item, ItemShop, PriceData, Unit, UnitId, formatPrice, getNormalizedPrice, getPackagePrice, getPriceOfPriceBase, getQuantityUnit, getUnit, getUnitName } from "./store/data/items";
 import { Keyboard, KeyboardAvoidingView, ScrollView, Text, View } from "react-native";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { numberToString, stringToNumber } from "./numberToString";
@@ -15,6 +15,7 @@ import { UnitSelection } from "./UnitSelection";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import React, { useEffect, useState } from "react";
 import uuid from 'react-native-uuid';
+import { withPrefix } from "./with";
 
 type CalculatorCallSource = "quantity" | "packageQuantity" | "shop";
 
@@ -31,6 +32,8 @@ export function ItemScreen(props: {
             visible: boolean;
             value?: number;
             unitId?: UnitId;
+            packageValue?: number;
+            packageUnitId?: UnitId;
             shop?: Shop;
             source?: CalculatorCallSource;
         }
@@ -73,16 +76,18 @@ export function ItemScreen(props: {
     function handleCalculatorClose(values?: { value?: number; unitId?: UnitId, state?: any; }[] | undefined): void {
         setShowCalculator({ visible: false });
         if (values && (values.length > 0)) {
-            const value = values[0];
-            const source = value.state.source as CalculatorCallSource;
+            const value0 = values[0];
+            const value1 = values[1];
+            const source = value0.state.source as CalculatorCallSource;
             if (source === "quantity") {
-                dispatch(setItemQuantity({ itemId: item.id, quantity: value.value }));
-                dispatch(setItemUnit({ itemId: item.id, unitId: value.unitId ?? "-" }));
+                dispatch(setItemQuantity({ itemId: item.id, quantity: value0.value }));
+                dispatch(setItemUnit({ itemId: item.id, unitId: value0.unitId ?? "-" }));
             } else if (source === "packageQuantity") {
-                dispatch(setItemPackageQuantity({ itemId: item.id, packageQuantity: value.value }));
-                dispatch(setItemPackageUnit({ itemId: item.id, packageUnitId: value.unitId ?? "-" }));
-            } else {
-                dispatch(setItemShopPrice({ itemId: item.id, shopId: value.state.shop.id, price: value.value, unitId: value.unitId }));
+                dispatch(setItemPackageQuantity({ itemId: item.id, packageQuantity: value0.value }));
+                dispatch(setItemPackageUnit({ itemId: item.id, packageUnitId: value0.unitId ?? "-" }));
+            } else if (source === "shop") {
+                dispatch(setItemShopPackage({ itemId: item.id, shopId: value0.state.shop.id, packageQuantity: value0.value, packageUnitId: value0.unitId }));
+                dispatch(setItemShopPrice({ itemId: item.id, shopId: value1.state.shop.id, price: value1.value, unitId: value1.unitId }));
             }
         }
     }
@@ -105,6 +110,8 @@ export function ItemScreen(props: {
             visible: true,
             value: currentItemShop?.price,
             unitId: currentItemShop?.unitId,
+            packageValue: currentItemShop?.packageQuantity,
+            packageUnitId: currentItemShop?.packageUnitId,
             shop: shop,
             source: "shop",
         });
@@ -173,6 +180,37 @@ export function ItemScreen(props: {
         setNotes(item.notes);
     }, [item])
 
+    const calculatorFields: React.ComponentProps<typeof Calculator>["fields"] = [];
+    if (showCalculator.source === "shop") {
+        calculatorFields.push(
+            {
+                title: `Paket Menge${withPrefix(" - ", getQuantityUnit(item.packageQuantity, item.packageUnitId))}`,
+                value: showCalculator.packageValue,
+                unitId: showCalculator.packageUnitId,
+                state:
+                {
+                    source: showCalculator.source,
+                    shop: showCalculator.shop,
+                },
+                type: "quantity",
+            }
+        );
+    }
+    calculatorFields.push(
+        {
+            title: ((showCalculator.source === "shop") ? `Preis - ${showCalculator.shop?.name}` : "Menge"),
+            value: showCalculator.value,
+            unitId: showCalculator.unitId,
+            state:
+            {
+                source: showCalculator.source,
+                shop: showCalculator.shop,
+            },
+            type: ((showCalculator.source === "shop") ? "price" : "quantity"),
+            selected: true,
+        }
+    );
+
     return (
         <StatusBarView bottomPadding>
             <Appbar.Header elevated>
@@ -232,7 +270,7 @@ export function ItemScreen(props: {
                         <View style={{ flexDirection: "row" }}>
                             <TextInput
                                 keyboardType="numeric"
-                                label="Packet Menge"
+                                label="Paket Menge"
                                 mode="outlined"
                                 selectTextOnFocus
                                 style={{ flexGrow: 1, margin: 8 }}
@@ -389,19 +427,7 @@ export function ItemScreen(props: {
                         }
                     </Card>
                     <Calculator
-                        fields={[
-                            {
-                                title: ((showCalculator.source === "shop") ? `Preis - ${showCalculator.shop?.name}` : "Menge"),
-                                value: showCalculator.value,
-                                unitId: showCalculator.unitId,
-                                state:
-                                {
-                                    source: showCalculator.source,
-                                    shop: showCalculator.shop,
-                                },
-                                type: ((showCalculator.source === "shop") ? "price" : "quantity"),
-                                selected: true,
-                            }]}
+                        fields={calculatorFields}
                         visible={showCalculator.visible}
                         onClose={handleCalculatorClose}
                     />

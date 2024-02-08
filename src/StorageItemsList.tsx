@@ -11,7 +11,7 @@ import { Storage } from './store/data/storages';
 import { Text, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { withSeparator } from './withSeparator';
+import { withSeparator } from './with';
 import React, { JSXElementConstructor, ReactElement, useState } from 'react';
 
 export function StorageItemsList(props: {
