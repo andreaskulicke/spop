@@ -1,6 +1,6 @@
 import { Category, defaultCategories, emptyCategory } from './data/categories';
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { defaultItems, getPackagePriceBase, getPriceOfPriceBase, isItem, Item, ItemShop, UnitId, units } from './data/items';
+import { defaultItems, getPackagePriceBase, getNormalizedPriceBase, isItem, Item, ItemShop, UnitId, units } from './data/items';
 import { RootState } from './store';
 import { Shop, defaultShops } from './data/shops';
 import { Storage, defaultStorages } from './data/storages';
@@ -697,11 +697,7 @@ export function selectItemsWithShop(
 }
 
 export function selectItemsWantedWithShop(shop: Shop, shopCategoryFilterOff: boolean | undefined, stopperOff: boolean | undefined) {
-    return createSelector(
-        [selectItemsWithShop(shop, item => !!item.wanted, shopCategoryFilterOff, stopperOff, true)],
-        (items) => {
-            return items;
-        });
+    return selectItemsWithShop(shop, item => !!item.wanted, shopCategoryFilterOff, stopperOff, true);
 }
 
 export function selectItemsWantedWithShopHidden(shop: Shop, stopperOff: boolean | undefined) {
@@ -759,7 +755,7 @@ export function selectItemShopsWithMinPrice(itemId: string): (state: RootState) 
             }
             const prices = item.shops
                 .filter(x => (x.price !== undefined) && (x.price !== null))
-                .map(x => ({ p: getPackagePriceBase(x, item), pb: getPriceOfPriceBase(x, item), s: x }));
+                .map(x => ({ p: getPackagePriceBase(x, item), pb: getNormalizedPriceBase(x, item), s: x }));
             const minPrice = Math.min(...prices.map(x => x.p));
             const minBasePrice = Math.min(...prices.map(x => x.pb));
             return {

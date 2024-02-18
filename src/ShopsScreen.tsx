@@ -1,25 +1,24 @@
 import { addShop, addShopStopper, allShop, selectItems, selectShops, setShops } from "./store/dataSlice";
-import { Appbar, List, Menu, useTheme, Text, Divider, Tooltip, Icon } from "react-native-paper";
+import { Appbar, List, Menu, useTheme, Divider, Tooltip, Icon } from "react-native-paper";
 import { AreaItemTitle } from "./AreaItemTitle";
 import { Count } from "./Count";
+import { LogBox, ScrollView, TouchableWithoutFeedback, View } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
-import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
-import { ReactNode, useState } from "react";
 import { RootStackParamList } from "../App";
 import { SearchBarList } from "./SearchBarList";
 import { Shop, getShopImage } from "./store/data/shops";
 import { ShopsStackParamList } from "./ShopsNavigationScreen";
 import { StatusBarView } from "./StatusBarView";
-import { TouchableWithoutFeedback, View } from "react-native";
 import { UnassignedBadge } from "./UnassignedBadge";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
+import DragList, { DragListRenderItemInfo } from "react-native-draglist";
+import React, { ReactNode, useEffect, useState } from "react";
 import uuid from 'react-native-uuid';
 
 export function ShopsScreen(props: {
     navigation: NavigationProp<RootStackParamList & ShopsStackParamList>;
 }) {
     const [menuVisible, setMenuVisible] = useState(false);
-    const [draggingStopper, setDraggingStopper] = useState("");
     const items = useAppSelector(selectItems);
     const shops = useAppSelector(selectShops);
     const dispatch = useAppDispatch();
@@ -49,43 +48,43 @@ export function ShopsScreen(props: {
         props.navigation.navigate("Shopping", { id });
     }
 
-    function handleRenderItem(params: RenderItemParams<Shop>): ReactNode {
+    function handleRenderItem(params: DragListRenderItemInfo<Shop>): ReactNode {
         const count = items.filter(i => i.wanted && i.shops.find(s => s.checked && (s.shopId === params.item.id))).length;
         return (
             params.item.stopper
-                ? <ScaleDecorator activeScale={2}>
-                    <TouchableWithoutFeedback
-                        onLongPress={() => {
-                            setDraggingStopper(params.item.id);
-                            params.drag();
-                        }}
-
-                    >
-                        <View style={{ backgroundColor: theme.colors.elevation.level1, height: 24 }}>
-                            {
-                                (draggingStopper === params.item.id)
-                                    ? <View style={{ alignItems: "center", paddingTop: 8 }}>
-                                        <Icon size={8} source="trash-can" />
-                                        <Icon size={8} source="chevron-down" />
-                                    </View>
-                                    : <View style={{ alignItems: "center", paddingTop: 2 }}>
-                                        <Icon size={16} source="tray" />
-                                    </View>
-                            }
-                        </View>
-                    </TouchableWithoutFeedback>
-                </ScaleDecorator>
-                : <ScaleDecorator>
-                    <List.Item
-                        title={p => <AreaItemTitle p={p} title={params.item.name} bold={count > 0} />}
-                        left={p => getShopImage(params.item, theme, { ...p })}
-                        right={p => <Count {...p} count={count} />}
-                        onPress={() => handleShopPress(params.item.id)}
-                        onLongPress={() => params.drag()}
-                    />
-                </ScaleDecorator>
+                ? <TouchableWithoutFeedback
+                    onLongPress={params.onDragStart}
+                    onPressOut={() => params.onDragEnd()}
+                >
+                    <View style={{ backgroundColor: theme.colors.elevation.level1, height: 24, transform: [{ scale: params.isActive ? 2 : 1 }] }}>
+                        {
+                            params.isActive
+                                ? <View style={{ alignItems: "center", paddingTop: 8 }}>
+                                    <Icon size={8} source="trash-can" />
+                                    <Icon size={8} source="chevron-down" />
+                                </View>
+                                : <View style={{ alignItems: "center", paddingTop: 2 }}>
+                                    <Icon size={16} source="tray" />
+                                </View>
+                        }
+                    </View>
+                </TouchableWithoutFeedback>
+                : <List.Item
+                    title={p => <AreaItemTitle p={p} title={params.item.name} bold={count > 0} />}
+                    left={p => getShopImage(params.item, theme, { ...p })}
+                    right={p => <Count {...p} count={count} />}
+                    style={params.isActive ? { transform: [{ scale: 1.05 }], backgroundColor: theme.colors.elevation.level1 } : {}}
+                    onPress={() => handleShopPress(params.item.id)}
+                    onLongPress={params.onDragStart}
+                    onPressOut={params.onDragEnd}
+                />
         );
     }
+
+    useEffect(() => {
+        // Disable DragList in ScrollView warning
+        LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+    }, [])
 
     const heightOfAllThingsListItem = 68;
 
@@ -126,17 +125,19 @@ export function ShopsScreen(props: {
                             onPress={() => handleShopPress(allShop.id)}
                         />
                         <Divider />
-                        <NestableScrollContainer>
-                            <NestableDraggableFlatList
+                        <ScrollView>
+                            <DragList
                                 data={shops}
                                 keyExtractor={x => x.id}
                                 renderItem={handleRenderItem}
-                                onDragEnd={({ data }) => {
-                                    setDraggingStopper("");
-                                    dispatch(setShops(data));
+                                onReordered={(fromIndex: number, toIndex: number) => {
+                                    const copy = [...shops]; // Don't modify react data in-place
+                                    const removed = copy.splice(fromIndex, 1);
+                                    copy.splice(toIndex, 0, removed[0]); // Now insert at the new pos
+                                    dispatch(setShops(copy));
                                 }}
                             />
-                        </NestableScrollContainer>
+                        </ScrollView>
                     </View>
                 }
                 shop={allShop}

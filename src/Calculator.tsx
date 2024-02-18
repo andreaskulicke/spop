@@ -1,8 +1,7 @@
 import { modalContainerStyle, modalViewStyle } from './styles';
 import { numberToString } from './numberToString';
 import { Portal, useTheme, Modal, Button, TextInput, Divider } from 'react-native-paper';
-import { StyleSheet, View } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { UnitId, getUnitName, units } from './store/data/items';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -35,9 +34,9 @@ export function Calculator(props: {
         })) ?? []);
     const [operation, setOperation] = useState<("+" | "-" | "*" | "/" | undefined)[]>(Array(3));
 
-    const textInputRef1 = useRef();
-    const textInputRef2 = useRef();
-    const textInputRef3 = useRef();
+    const textInputRef1 = useRef(null);
+    const textInputRef2 = useRef(null);
+    const textInputRef3 = useRef(null);
     const textInputRefs = [textInputRef1, textInputRef2, textInputRef3];
 
     const theme = useTheme();

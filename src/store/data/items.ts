@@ -72,10 +72,11 @@ export const units: Unit[] = [
     },
 ];
 
-export function getPriceOfPriceBase(itemShop: ItemShop, item: Item): number {
+export function getNormalizedPriceBase(itemShop: Partial<ItemShop>, item?: Partial<Item>): number {
     if (itemShop.price) {
-        const packageUnit = getUnit(item.packageUnitId);
-        return (itemShop.price * packageUnit.factorToNormalizedPriceBase / (item.packageQuantity ?? 1))
+        const packageQuantity = itemShop?.packageQuantity ?? item?.packageQuantity ?? 1;
+        const packageUnit = getUnit(itemShop?.packageUnitId ?? item?.packageUnitId);
+        return (itemShop.price * packageUnit.factorToNormalizedPriceBase / (packageQuantity))
     }
     return 0;
 }
@@ -106,15 +107,21 @@ export function formatPrice(data: PriceData): string {
     return s;
 }
 
+/**
+ * Get the normalized price (for /kg, /l) of a package.
+ * @param itemShop The shop with the price. If package info is given this overrides the defaults from the item.
+ * @param item The item.
+ * @returns The normalized price.
+ */
 export function getNormalizedPrice(itemShop: Partial<ItemShop>, item?: Partial<Item>): NormalizedPriceData {
     let p = itemShop.price ?? 0;
     const itemShopUnit = getUnit(itemShop.unitId);
-    const packageUnit = getUnit(item?.packageUnitId);
+    const packageUnit = getUnit(itemShop?.packageUnitId ?? item?.packageUnitId);
     let packageQuantity: number;
     let unit: Unit;
 
     if (itemShopUnit.base === "-") {
-        packageQuantity = (item?.packageQuantity ?? 1);
+        packageQuantity = (itemShop?.packageQuantity ?? item?.packageQuantity ?? 1);
         unit = packageUnit;
     } else {
         packageQuantity = 1;
@@ -127,13 +134,20 @@ export function getNormalizedPrice(itemShop: Partial<ItemShop>, item?: Partial<I
     };
 }
 
+/**
+ * Get the price of a package.
+ * @param itemShop The shop with the price. If package info is given this overrides the defaults from the item.
+ * @param item The item.
+ * @returns The price.
+ */
 export function getPackagePrice(itemShop: Partial<ItemShop>, item?: Partial<Item>): PriceData {
     let p = itemShop.price ?? 0;
     const itemShopUnit = getUnit(itemShop.unitId);
-    const packageUnit = getUnit(item?.packageUnitId);
+    const packageQuantity = itemShop?.packageQuantity ?? item?.packageQuantity;
+    const packageUnit = getUnit(itemShop?.packageUnitId ?? item?.packageUnitId);
 
     if ((itemShopUnit.base !== "-") && (packageUnit.base !== "-")) {
-        p *= (item?.packageQuantity ?? 1);
+        p *= (packageQuantity ?? 1);
         if (itemShopUnit.factorToBase < packageUnit.factorToBase) {
             p *= packageUnit.factorToBase;
         }
@@ -144,11 +158,17 @@ export function getPackagePrice(itemShop: Partial<ItemShop>, item?: Partial<Item
 
     return {
         price: p,
-        quantity: item?.packageQuantity,
+        quantity: packageQuantity,
         unit: (packageUnit.base !== "-") ? packageUnit : itemShopUnit,
     };
 }
 
+/**
+ * Get the price for 1 thing of the base unit for comparison.
+ * @param itemShop For this shop.
+ * @param item For this item.
+ * @returns Base package price.
+ */
 export function getPackagePriceBase(itemShop: Partial<ItemShop>, item?: Partial<Item>): number {
     const priceData = getPackagePrice(itemShop, item);
     const price = priceData.price / (priceData.quantity ?? 1) / (priceData.unit?.factorToBase ?? 1);

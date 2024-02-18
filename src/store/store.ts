@@ -1,9 +1,8 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import { persistReducer, persistStore } from 'redux-persist';
+import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, persistStore } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import dataSlice from './dataSlice'
 import settingsSlice from './settingsSlice'
-import thunk from 'redux-thunk';
 import uiSlice from './uiSlice';
 
 const persistConfig = {
@@ -11,18 +10,19 @@ const persistConfig = {
     storage: AsyncStorage,
 };
 
-const persisterDataReducer = persistReducer(persistConfig, dataSlice);
-const persisterSettingsReducer = persistReducer(persistConfig, settingsSlice);
-
 const rootReducer = combineReducers({
-    data: persisterDataReducer,
-    settings: persisterSettingsReducer,
+    data: persistReducer(persistConfig, dataSlice),
+    settings: persistReducer(persistConfig, settingsSlice),
     ui: uiSlice,
 })
 
 export const store = configureStore({
     reducer: rootReducer,
-    middleware: [thunk],
+    middleware: getDefaultMiddleware => getDefaultMiddleware({
+        serializableCheck: {
+            ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+    }),
 })
 
 export const persistor = persistStore(store);

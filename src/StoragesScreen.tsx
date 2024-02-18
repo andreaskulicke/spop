@@ -1,11 +1,11 @@
 import { addStorage, allStorage, selectItems, selectStorages, setStorages } from "./store/dataSlice";
-import { Appbar, Divider, List, Menu } from "react-native-paper";
+import { Appbar, Divider, List, Menu, useTheme } from "react-native-paper";
 import { AreaItemTitle } from "./AreaItemTitle";
 import { AvatarText } from "./AvatarText";
 import { CategoryIcon } from "./CategoryIcon";
 import { Count } from "./Count";
+import { LogBox, ScrollView, View } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
-import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 import { RootStackParamList } from "../App";
 import { SearchBarList } from "./SearchBarList";
 import { StatusBarView } from "./StatusBarView";
@@ -13,8 +13,8 @@ import { Storage } from "./store/data/storages";
 import { StoragesStackParamList } from "./StoragesNavigationScreen";
 import { UnassignedBadge } from "./UnassignedBadge";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { View } from "react-native";
-import React, { ReactNode, useState } from "react";
+import DragList, { DragListRenderItemInfo } from 'react-native-draglist';
+import React, { ReactNode, useEffect, useState } from "react";
 import uuid from 'react-native-uuid';
 
 export function StoragesScreen(props: {
@@ -24,6 +24,7 @@ export function StoragesScreen(props: {
     const items = useAppSelector(selectItems);
     const storages = useAppSelector(selectStorages);
     const dispatch = useAppDispatch();
+    const theme = useTheme();
 
     function handleDotsPress(): void {
         setMenuVisible(true);
@@ -44,20 +45,25 @@ export function StoragesScreen(props: {
         props.navigation.navigate("Fill", { storageId: id });
     }
 
-    function handleRenderItem(params: RenderItemParams<Storage>): ReactNode {
+    function handleRenderItem(params: DragListRenderItemInfo<Storage>): ReactNode {
         const count = items.filter(i => i.wanted && i.storages.find(s => s.storageId === params.item.id)).length;
         return (
-            <ScaleDecorator>
-                <List.Item
-                    title={p => <AreaItemTitle p={p} title={params.item.name} bold={count > 0} />}
-                    left={p => <AvatarText {...p} label={params.item.name} />}
-                    right={p => <Count {...p} count={count} />}
-                    onPress={() => handleStoragePress(params.item.id)}
-                    onLongPress={() => params.drag()}
-                />
-            </ScaleDecorator>
+            <List.Item
+                title={p => <AreaItemTitle p={p} title={params.item.name} bold={count > 0} />}
+                left={p => <AvatarText {...p} label={params.item.name} />}
+                right={p => <Count {...p} count={count} />}
+                style={params.isActive ? { transform: [{ scale: 1.05 }], backgroundColor: theme.colors.elevation.level1 } : {}}
+                onPress={() => handleStoragePress(params.item.id)}
+                onLongPress={params.onDragStart}
+                onPressOut={params.onDragEnd}
+            />
         );
     }
+
+    useEffect(() => {
+        // Disable DragList in ScrollView warning
+        LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+    }, [])
 
     const heightOfAllThingsListItem = 68;
 
@@ -93,14 +99,19 @@ export function StoragesScreen(props: {
                             onPress={() => handleStoragePress(allStorage.id)}
                         />
                         <Divider />
-                        <NestableScrollContainer>
-                            <NestableDraggableFlatList
+                        <ScrollView>
+                            <DragList
                                 data={storages}
                                 keyExtractor={x => x.id}
                                 renderItem={handleRenderItem}
-                                onDragEnd={({ data }) => dispatch(setStorages(data))}
+                                onReordered={(fromIndex: number, toIndex: number) => {
+                                    const copy = [...storages]; // Don't modify react data in-place
+                                    const removed = copy.splice(fromIndex, 1);
+                                    copy.splice(toIndex, 0, removed[0]); // Now insert at the new pos
+                                    dispatch(setStorages(copy))
+                                }}
                             />
-                        </NestableScrollContainer>
+                        </ScrollView>
                     </View>
                 }
                 storage={allStorage}
