@@ -1,15 +1,15 @@
-import { Appbar, Card, IconButton, List, Text, TextInput, TouchableRipple } from "react-native-paper";
+import { Appbar, Card, IconButton, List, Text, TextInput, TouchableRipple, useTheme } from "react-native-paper";
 import { Category } from "./store/data/categories";
 import { CategoryIcon } from "./CategoryIcon";
 import { CategoryMenu } from "./CategoryMenu";
+import { DraggableList, DraggableListRenderItemInfo } from "./DraggableList";
+import { Keyboard, LogBox, ScrollView, View } from "react-native";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
-import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
-import { ReactNode, useEffect, useState } from "react";
 import { RootStackParamList } from "../App";
-import { selectShop, addCategory, addShopCategory, setShopCategoryShow, deleteShop, setShopName, setShopCategories, setShopDefaultCategory, selectCategories } from "./store/dataSlice";
+import { selectShop, addCategory, addShopCategory, setShopCategoryShow, deleteShop, setShopName, setShopCategories, setShopDefaultCategory, selectCategories, setShops } from "./store/dataSlice";
 import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { Keyboard, View } from "react-native";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 import uuid from 'react-native-uuid';
 
 export function ShopScreen(props: {
@@ -21,6 +21,8 @@ export function ShopScreen(props: {
     const categories = useAppSelector(selectCategories);
     const shop = useAppSelector(selectShop(props.route.params.id));
     const dispatch = useAppDispatch();
+    const scrollRef = useRef<ScrollView>(null);
+    const scrollOffsetYRef = useRef<number>(0);
 
     function handleGoBack() {
         handleTextInputNameBlur();
@@ -46,18 +48,16 @@ export function ShopScreen(props: {
         props.navigation.goBack();
     }
 
-    function handleRenderItem(params: RenderItemParams<Category>): ReactNode {
+    function handleRenderItem(info: DraggableListRenderItemInfo<Category>): ReactNode {
         return (
-            <ScaleDecorator>
-                <List.Item
-                    key={params.item.id}
-                    title={params.item.name}
-                    left={p => <CategoryIcon {...p} icon={params.item.icon} />}
-                    right={p => <IconButton icon="eye-off-outline" onPress={() => dispatch(setShopCategoryShow({ shopId: shop.id, categoryId: params.item.id, show: false }))} />}
-                    onPress={() => props.navigation.navigate("Category", { id: params.item.id })}
-                    onLongPress={() => params.drag()}
-                />
-            </ScaleDecorator>
+            <List.Item
+                key={info.item.id}
+                title={info.item.name}
+                left={p => <CategoryIcon {...p} icon={info.item.icon} />}
+                right={p => <IconButton icon="eye-off-outline" onPress={() => dispatch(setShopCategoryShow({ shopId: shop.id, categoryId: info.item.id, show: false }))} />}
+                onPress={() => props.navigation.navigate("Category", { id: info.item.id })}
+                onLongPress={info.onDragStart}
+            />
         );
     }
 
@@ -71,6 +71,12 @@ export function ShopScreen(props: {
     function handleTextInputNameChange(text: string): void {
         setName(text);
     }
+
+
+    useEffect(() => {
+        // Disable DragList in ScrollView warning
+        LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+    }, [])
 
     useEffect(() => {
         const s = Keyboard.addListener("keyboardDidHide", () => handleTextInputNameBlur());
@@ -92,7 +98,10 @@ export function ShopScreen(props: {
                 <Appbar.Content title={shop?.name ?? "Shop"} />
                 <Appbar.Action icon="trash-can" onPress={handleDeletePress} />
             </Appbar.Header>
-            <NestableScrollContainer>
+            <ScrollView
+                ref={scrollRef}
+                onScroll={e => scrollOffsetYRef.current = e.nativeEvent.contentOffset.y}
+            >
                 <Card
                     style={{ margin: 8 }}
                 >
@@ -143,11 +152,14 @@ export function ShopScreen(props: {
                             icon="eye-off-outline"
                             onButtonPress={() => handleAllCategoriesPress(false)}
                         >
-                            <NestableDraggableFlatList
-                                data={catsShown}
+                            <DraggableList
+                                items={catsShown}
                                 keyExtractor={x => x.id}
                                 renderItem={handleRenderItem}
-                                onDragEnd={({ data }) => dispatch(setShopCategories({ shopId: shop.id, categoryIds: data.map(x => x.id) }))}
+                                onReordered={items => {
+                                    dispatch(setShopCategories({ shopId: shop.id, categoryIds: items.map(x => x.id) }))
+                                }}
+                                onScroll={offset => scrollRef.current?.scrollTo({ y: scrollOffsetYRef.current + offset, animated: true })}
                             />
                         </SubSection>
                     }
@@ -174,7 +186,7 @@ export function ShopScreen(props: {
                         </SubSection>
                     }
                 </Card>
-            </NestableScrollContainer>
+            </ScrollView>
         </StatusBarView >
     );
 }

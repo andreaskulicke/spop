@@ -1,6 +1,5 @@
 import { CategoryScreen } from './src/CategoryScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { HomeNavigationScreen } from './src/HomeNavigationScreen';
 import { ItemScreen } from './src/ItemScreen';
 import { NavigationContainer } from '@react-navigation/native';
@@ -39,50 +38,48 @@ function AppWithStore() {
     const theme = useAppSelector(selectTheme((settings.display.colorTheme ?? colorScheme) === "dark"));
 
     return (
-        <GestureHandlerRootView style={{ flex: 1 }}>
-            <PaperProvider theme={theme}>
-                <NavigationContainer theme={theme}>
-                    <RootStack.Navigator screenOptions={{
-                        statusBarColor: theme.colors.elevation.level2,
-                        statusBarStyle: theme.dark ? "light" : "dark",
-                        navigationBarColor: theme.colors.elevation.level2,
-                        orientation: "portrait",
-                    }}
-                    >
-                        <RootStack.Screen
-                            component={HomeNavigationScreen}
-                            name="Home"
-                            options={{ headerShown: false, statusBarHidden: false }}
-                        />
+        <PaperProvider theme={theme}>
+            <NavigationContainer theme={theme}>
+                <RootStack.Navigator screenOptions={{
+                    statusBarColor: theme.colors.elevation.level2,
+                    statusBarStyle: theme.dark ? "light" : "dark",
+                    navigationBarColor: theme.colors.elevation.level2,
+                    orientation: "portrait",
+                }}
+                >
+                    <RootStack.Screen
+                        component={HomeNavigationScreen}
+                        name="Home"
+                        options={{ headerShown: false, statusBarHidden: false }}
+                    />
 
-                        <RootStack.Screen
-                            component={CategoryScreen}
-                            name="Category"
-                            options={{ headerShown: false, statusBarHidden: false }}
-                        />
-                        <RootStack.Screen
-                            component={ItemScreen}
-                            name="Item"
-                            options={{ headerShown: false, statusBarHidden: false }}
-                        />
-                        <RootStack.Screen
-                            component={SettingsScreen}
-                            name="Settings"
-                            options={{ headerShown: false, statusBarHidden: false }}
-                        />
-                        <RootStack.Screen
-                            component={ShopScreen}
-                            name="Shop"
-                            options={{ headerShown: false, statusBarHidden: false }}
-                        />
-                        <RootStack.Screen
-                            component={StorageScreen}
-                            name="Storage"
-                            options={{ headerShown: false, statusBarHidden: false }}
-                        />
-                    </RootStack.Navigator>
-                </NavigationContainer>
-            </PaperProvider>
-        </GestureHandlerRootView>
+                    <RootStack.Screen
+                        component={CategoryScreen}
+                        name="Category"
+                        options={{ headerShown: false, statusBarHidden: false }}
+                    />
+                    <RootStack.Screen
+                        component={ItemScreen}
+                        name="Item"
+                        options={{ headerShown: false, statusBarHidden: false }}
+                    />
+                    <RootStack.Screen
+                        component={SettingsScreen}
+                        name="Settings"
+                        options={{ headerShown: false, statusBarHidden: false }}
+                    />
+                    <RootStack.Screen
+                        component={ShopScreen}
+                        name="Shop"
+                        options={{ headerShown: false, statusBarHidden: false }}
+                    />
+                    <RootStack.Screen
+                        component={StorageScreen}
+                        name="Storage"
+                        options={{ headerShown: false, statusBarHidden: false }}
+                    />
+                </RootStack.Navigator>
+            </NavigationContainer>
+        </PaperProvider>
     );
 }

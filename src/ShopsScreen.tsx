@@ -2,7 +2,8 @@ import { addShop, addShopStopper, allShop, selectItems, selectShops, setShops } 
 import { Appbar, List, Menu, useTheme, Divider, Tooltip, Icon } from "react-native-paper";
 import { AreaItemTitle } from "./AreaItemTitle";
 import { Count } from "./Count";
-import { LogBox, ScrollView, TouchableWithoutFeedback, View } from "react-native";
+import { DraggableList, DraggableListRenderItemInfo } from "./DraggableList";
+import { LogBox, TouchableWithoutFeedback, View } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { SearchBarList } from "./SearchBarList";
@@ -11,7 +12,6 @@ import { ShopsStackParamList } from "./ShopsNavigationScreen";
 import { StatusBarView } from "./StatusBarView";
 import { UnassignedBadge } from "./UnassignedBadge";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import DragList, { DragListRenderItemInfo } from "react-native-draglist";
 import React, { ReactNode, useEffect, useState } from "react";
 import uuid from 'react-native-uuid';
 
@@ -48,17 +48,16 @@ export function ShopsScreen(props: {
         props.navigation.navigate("Shopping", { id });
     }
 
-    function handleRenderItem(params: DragListRenderItemInfo<Shop>): ReactNode {
-        const count = items.filter(i => i.wanted && i.shops.find(s => s.checked && (s.shopId === params.item.id))).length;
+    function handleRenderItem(info: DraggableListRenderItemInfo<Shop>): ReactNode {
+        const count = items.filter(i => i.wanted && i.shops.find(s => s.checked && (s.shopId === info.item.id))).length;
         return (
-            params.item.stopper
+            info.item.stopper
                 ? <TouchableWithoutFeedback
-                    onLongPress={params.onDragStart}
-                    onPressOut={() => params.onDragEnd()}
+                    onLongPress={info.onDragStart}
                 >
-                    <View style={{ backgroundColor: theme.colors.elevation.level1, height: 24, transform: [{ scale: params.isActive ? 2 : 1 }] }}>
+                    <View style={{ backgroundColor: theme.colors.elevation.level1, height: 24, transform: [{ scale: info.active ? 2 : 1 }] }}>
                         {
-                            params.isActive
+                            info.active
                                 ? <View style={{ alignItems: "center", paddingTop: 8 }}>
                                     <Icon size={8} source="trash-can" />
                                     <Icon size={8} source="chevron-down" />
@@ -70,13 +69,11 @@ export function ShopsScreen(props: {
                     </View>
                 </TouchableWithoutFeedback>
                 : <List.Item
-                    title={p => <AreaItemTitle p={p} title={params.item.name} bold={count > 0} />}
-                    left={p => getShopImage(params.item, theme, { ...p })}
+                    title={p => <AreaItemTitle p={p} title={info.item.name} bold={count > 0} />}
+                    left={p => getShopImage(info.item, theme, { ...p })}
                     right={p => <Count {...p} count={count} />}
-                    style={params.isActive ? { transform: [{ scale: 1.05 }], backgroundColor: theme.colors.elevation.level1 } : {}}
-                    onPress={() => handleShopPress(params.item.id)}
-                    onLongPress={params.onDragStart}
-                    onPressOut={params.onDragEnd}
+                    onPress={() => handleShopPress(info.item.id)}
+                    onLongPress={info.onDragStart}
                 />
         );
     }
@@ -125,19 +122,14 @@ export function ShopsScreen(props: {
                             onPress={() => handleShopPress(allShop.id)}
                         />
                         <Divider />
-                        <ScrollView>
-                            <DragList
-                                data={shops}
-                                keyExtractor={x => x.id}
-                                renderItem={handleRenderItem}
-                                onReordered={(fromIndex: number, toIndex: number) => {
-                                    const copy = [...shops]; // Don't modify react data in-place
-                                    const removed = copy.splice(fromIndex, 1);
-                                    copy.splice(toIndex, 0, removed[0]); // Now insert at the new pos
-                                    dispatch(setShops(copy));
-                                }}
-                            />
-                        </ScrollView>
+                        <DraggableList
+                            items={shops}
+                            keyExtractor={x => x.id}
+                            renderItem={handleRenderItem}
+                            onReordered={items => {
+                                dispatch(setShops(items));
+                            }}
+                        />
                     </View>
                 }
                 shop={allShop}
