@@ -7,30 +7,30 @@ export interface Storage {
 export const defaultStorages: Storage[] = [
     {
         id: "pantry",
-        name: "Speisekammer"
+        name: "Speisekammer",
     },
     {
         id: "fridge",
         name: "Kühlschrank",
-        defaultCategoryId: "fridge"
+        defaultCategoryId: "fridge",
     },
     {
         id: "bath",
         name: "Bad",
-        defaultCategoryId: "household"
+        defaultCategoryId: "household",
     },
     {
         id: "storageroom",
-        name: "Vorratsraum"
+        name: "Vorratsraum",
     },
     {
         id: "freezer",
         name: "Tiefkühlschrank",
-        defaultCategoryId: "freezer"
+        defaultCategoryId: "freezer",
     },
     {
         id: "laundry",
         name: "Waschküche",
-        defaultCategoryId: "household"
-    }
+        defaultCategoryId: "household",
+    },
 ];

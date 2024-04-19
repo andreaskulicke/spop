@@ -1,4 +1,8 @@
-import { addCategory, selectItems, selectSortedCategories } from "./store/dataSlice";
+import {
+    addCategory,
+    selectItems,
+    selectSortedCategories,
+} from "./store/dataSlice";
 import { Appbar, Tooltip, Menu, Divider, List } from "react-native-paper";
 import { AreaItemTitle } from "./AreaItemTitle";
 import { CategoriesStackParamList } from "./CategoriesNavigationScreen";
@@ -14,7 +18,7 @@ import { SearchBarList } from "./SearchBarList";
 import { StatusBarView } from "./StatusBarView";
 import { UnassignedBadge } from "./UnassignedBadge";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import uuid from 'react-native-uuid';
+import uuid from "react-native-uuid";
 
 export function CategoriesScreen(props: {
     navigation: NavigationProp<RootStackParamList & CategoriesStackParamList>;
@@ -43,14 +47,24 @@ export function CategoriesScreen(props: {
         props.navigation.navigate("CategoryItems", { id });
     }
 
-    function handleRenderItem(info: ListRenderItemInfo<Category>): ReactElement<any, string | JSXElementConstructor<any>> | null {
-        const count = items.filter(i => i.wanted && i.categoryId === info.item.id).length;
+    function handleRenderItem(
+        info: ListRenderItemInfo<Category>,
+    ): ReactElement<any, string | JSXElementConstructor<any>> | null {
+        const count = items.filter(
+            (i) => i.wanted && i.categoryId === info.item.id,
+        ).length;
         return (
             <List.Item
                 key={info.item.id}
-                title={p => <AreaItemTitle p={p} title={info.item.name} bold={count > 0} />}
-                left={p => <CategoryIcon {...p} icon={info.item.icon} />}
-                right={p => <Count {...p} count={count} />}
+                title={(p) => (
+                    <AreaItemTitle
+                        p={p}
+                        title={info.item.name}
+                        bold={count > 0}
+                    />
+                )}
+                left={(p) => <CategoryIcon {...p} icon={info.item.icon} />}
+                right={(p) => <Count {...p} count={count} />}
                 onPress={() => handleCategoryPress(info.item.id)}
             />
         );
@@ -63,15 +77,27 @@ export function CategoriesScreen(props: {
             <Appbar.Header elevated>
                 <Appbar.Content title="Kategorien" />
                 <Tooltip title="Neue Kategorie hinzufügen">
-                    <Appbar.Action icon="plus-outline" onPress={handleAddCategoryPress} />
+                    <Appbar.Action
+                        icon="plus-outline"
+                        onPress={handleAddCategoryPress}
+                    />
                 </Tooltip>
                 <Menu
-                    anchor={<Appbar.Action icon="dots-vertical" onPress={handleDotsPress} />}
+                    anchor={
+                        <Appbar.Action
+                            icon="dots-vertical"
+                            onPress={handleDotsPress}
+                        />
+                    }
                     anchorPosition="bottom"
                     visible={menuVisible}
                     onDismiss={() => setMenuVisible(false)}
                 >
-                    <Menu.Item leadingIcon="cog-outline" title="Einstellungen" onPress={handleSettingsPress} />
+                    <Menu.Item
+                        leadingIcon="cog-outline"
+                        title="Einstellungen"
+                        onPress={handleSettingsPress}
+                    />
                 </Menu>
             </Appbar.Header>
             <SearchBarList
@@ -81,25 +107,28 @@ export function CategoriesScreen(props: {
                         <List.Item
                             title="Alle Dinge"
                             style={{ height: heightOfAllThingsListItem }}
-                            left={p => <CategoryIcon {...p} icon="check-all" />}
-                            right={p =>
+                            left={(p) => (
+                                <CategoryIcon {...p} icon="check-all" />
+                            )}
+                            right={(p) => (
                                 <UnassignedBadge
                                     p={p}
                                     tooltip="Gewünschte Dinge und ohne Kategorie"
-                                    unassignedFilter={item => !item.categoryId}
+                                    unassignedFilter={(item) =>
+                                        !item.categoryId
+                                    }
                                 />
-                            }
+                            )}
                             onPress={() => handleCategoryPress(undefined)}
                         />
                         <Divider />
                         <FlatList
                             data={categories}
                             renderItem={handleRenderItem}
-                        >
-                        </FlatList>
+                        ></FlatList>
                     </View>
                 }
             />
         </StatusBarView>
-    )
+    );
 }

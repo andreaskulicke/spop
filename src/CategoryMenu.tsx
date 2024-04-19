@@ -1,13 +1,19 @@
 import { addCategory, selectSortedCategories } from "./store/dataSlice";
 import { CategoryIcon } from "./CategoryIcon";
 import { emptyCategory } from "./store/data/categories";
-import { IconButton, Menu, TextInput, TouchableRipple, useTheme } from "react-native-paper";
+import {
+    IconButton,
+    Menu,
+    TextInput,
+    TouchableRipple,
+    useTheme,
+} from "react-native-paper";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { View } from "react-native";
 import React, { useState } from "react";
-import uuid from 'react-native-uuid';
+import uuid from "react-native-uuid";
 
 export function CategoryMenu(props: {
     categoryId: string | undefined;
@@ -33,10 +39,16 @@ export function CategoryMenu(props: {
         }
     }
 
-    const category = categories.find(x => x.id === props.categoryId);
+    const category = categories.find((x) => x.id === props.categoryId);
 
     return (
-        <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 8 }}>
+        <View
+            style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginLeft: 8,
+            }}
+        >
             <View style={{ flexGrow: 1, flexShrink: 1 }}>
                 <Menu
                     anchor={
@@ -51,15 +63,23 @@ export function CategoryMenu(props: {
                                 value={category?.name ?? emptyCategory.name}
                                 left={
                                     <TextInput.Icon
-                                        icon={category?.icon ?? "dots-horizontal"}
+                                        icon={
+                                            category?.icon ?? "dots-horizontal"
+                                        }
                                         color={theme.colors.primary}
-                                        style={{
-                                        }}
+                                        style={{}}
                                     />
                                 }
                                 right={
-                                    <TextInput.Icon icon={categoryMenuVisible ? "chevron-up" : "chevron-down"}
-                                        onPress={() => setCategoryMenuVisible(true)}
+                                    <TextInput.Icon
+                                        icon={
+                                            categoryMenuVisible
+                                                ? "chevron-up"
+                                                : "chevron-down"
+                                        }
+                                        onPress={() =>
+                                            setCategoryMenuVisible(true)
+                                        }
                                     />
                                 }
                             />
@@ -69,26 +89,33 @@ export function CategoryMenu(props: {
                     visible={categoryMenuVisible}
                     onDismiss={() => setCategoryMenuVisible(false)}
                 >
-                    {
-                        [emptyCategory, ...categories,].map(x => (
-                            <Menu.Item
-                                key={x.id}
-                                contentStyle={{ marginLeft: 32 }}
-                                title={x.name}
-                                leadingIcon={p => <CategoryIcon {...p} icon={x.icon} selected={x.icon === category?.icon} />}
-                                onPress={() => {
-                                    setCategoryMenuVisible(false);
-                                    props.onSetCategory(x.id);
-                                }}
-                            />
-                        ))
-                    }
+                    {[emptyCategory, ...categories].map((x) => (
+                        <Menu.Item
+                            key={x.id}
+                            contentStyle={{ marginLeft: 32 }}
+                            title={x.name}
+                            leadingIcon={(p) => (
+                                <CategoryIcon
+                                    {...p}
+                                    icon={x.icon}
+                                    selected={x.icon === category?.icon}
+                                />
+                            )}
+                            onPress={() => {
+                                setCategoryMenuVisible(false);
+                                props.onSetCategory(x.id);
+                            }}
+                        />
+                    ))}
                 </Menu>
             </View>
-            {
-                props.categoryId
-                && <IconButton icon="pencil-outline" style={{ marginRight: 0 }} onPress={handleEditCategoryPress} />
-            }
+            {props.categoryId && (
+                <IconButton
+                    icon="pencil-outline"
+                    style={{ marginRight: 0 }}
+                    onPress={handleEditCategoryPress}
+                />
+            )}
             <IconButton icon="plus-outline" onPress={handleAddCategoryPress} />
         </View>
     );

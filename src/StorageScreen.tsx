@@ -3,7 +3,13 @@ import { RootStackParamList } from "../App";
 import { Keyboard, ScrollView } from "react-native";
 import { Appbar, Card, TextInput } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { selectStorage, deleteStorage, setStorageName, setStorageDefaultCategory, selectCategories } from "./store/dataSlice";
+import {
+    selectStorage,
+    deleteStorage,
+    setStorageName,
+    setStorageDefaultCategory,
+    selectCategories,
+} from "./store/dataSlice";
 import { CategoryMenu } from "./CategoryMenu";
 import { StatusBarView } from "./StatusBarView";
 import { useEffect, useState } from "react";
@@ -31,7 +37,9 @@ export function StorageScreen(props: {
 
     function handleTextInputNameBlur(): void {
         if (storage) {
-            dispatch(setStorageName({ storageId: storage.id, name: name.trim() }));
+            dispatch(
+                setStorageName({ storageId: storage.id, name: name.trim() }),
+            );
             setName(name.trim());
         }
     }
@@ -41,13 +49,15 @@ export function StorageScreen(props: {
     }
 
     useEffect(() => {
-        const s = Keyboard.addListener("keyboardDidHide", () => handleTextInputNameBlur());
+        const s = Keyboard.addListener("keyboardDidHide", () =>
+            handleTextInputNameBlur(),
+        );
         return () => s.remove();
     });
 
     useEffect(() => {
         setName(storage?.name ?? "");
-    }, [storage])
+    }, [storage]);
 
     return (
         <StatusBarView bottomPadding>
@@ -57,9 +67,7 @@ export function StorageScreen(props: {
                 <Appbar.Action icon="trash-can" onPress={handleDeletePress} />
             </Appbar.Header>
             <ScrollView>
-                <Card
-                    style={{ margin: 8 }}
-                >
+                <Card style={{ margin: 8 }}>
                     <Card.Title title={"Allgemein"} />
                     <TextInput
                         label="Name"
@@ -73,7 +81,14 @@ export function StorageScreen(props: {
                     <CategoryMenu
                         categoryId={storage.defaultCategoryId}
                         title="Standart Kategorie"
-                        onSetCategory={categoryId => dispatch(setStorageDefaultCategory({ storageId: storage.id, categoryId }))}
+                        onSetCategory={(categoryId) =>
+                            dispatch(
+                                setStorageDefaultCategory({
+                                    storageId: storage.id,
+                                    categoryId,
+                                }),
+                            )
+                        }
                     />
                 </Card>
             </ScrollView>

@@ -7,19 +7,20 @@ export function CategoryCount(props: {
     categoryId: string | undefined;
     style?: Style | undefined;
 }) {
-    const itemsCategory = useAppSelector(selectItemsWithCategory(props.categoryId));
-
-    return (
-        <Count count={itemsCategory.length} style={props.style} />
+    const itemsCategory = useAppSelector(
+        selectItemsWithCategory(props.categoryId),
     );
+
+    return <Count count={itemsCategory.length} style={props.style} />;
 }
 
-export function Count(props: {
-    count: number;
-    style?: Style | undefined;
-}) {
+export function Count(props: { count: number; style?: Style | undefined }) {
     return (
-        <Text {...props.style} variant="labelMedium" style={{ paddingLeft: 32, paddingVertical: 12 }}>
+        <Text
+            {...props.style}
+            variant="labelMedium"
+            style={{ paddingLeft: 32, paddingVertical: 12 }}
+        >
             {props.count}
         </Text>
     );

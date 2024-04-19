@@ -64,8 +64,8 @@ export const categoryIcons = [
 ] as const;
 
 export interface Category {
-    id: (string & {}) | typeof categoryIds[number];
-    icon: (string & {}) | typeof categoryIcons[number];
+    id: (string & {}) | (typeof categoryIds)[number];
+    icon: (string & {}) | (typeof categoryIcons)[number];
     name: string;
 }
 
@@ -195,5 +195,5 @@ export const defaultCategories: Category[] = [
         id: "misc",
         icon: "dots-horizontal",
         name: "Sonstiges",
-    }
+    },
 ];

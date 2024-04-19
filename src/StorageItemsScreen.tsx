@@ -1,13 +1,13 @@
-import { allStorage, selectStorage } from './store/dataSlice';
-import { Appbar } from 'react-native-paper';
-import { StorageItemsList } from './StorageItemsList';
-import { NavigationProp, RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '../App';
-import { SearchBarList } from './SearchBarList';
-import { StatusBarView } from './StatusBarView';
-import { StoragesStackParamList } from './StoragesNavigationScreen';
-import { useAppSelector } from './store/hooks';
-import React, { useState } from 'react';
+import { allStorage, selectStorage } from "./store/dataSlice";
+import { Appbar } from "react-native-paper";
+import { StorageItemsList } from "./StorageItemsList";
+import { NavigationProp, RouteProp } from "@react-navigation/native";
+import { RootStackParamList } from "../App";
+import { SearchBarList } from "./SearchBarList";
+import { StatusBarView } from "./StatusBarView";
+import { StoragesStackParamList } from "./StoragesNavigationScreen";
+import { useAppSelector } from "./store/hooks";
+import React, { useState } from "react";
 
 export function StorageItemsScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -25,10 +25,12 @@ export function StorageItemsScreen(props: {
             <Appbar.Header elevated>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={storage?.name ?? allStorage.name} />
-                {
-                    (storage.id !== allStorage.id)
-                    && <Appbar.Action icon="pencil-outline" onPress={handleEditPress} />
-                }
+                {storage.id !== allStorage.id && (
+                    <Appbar.Action
+                        icon="pencil-outline"
+                        onPress={handleEditPress}
+                    />
+                )}
             </Appbar.Header>
             <SearchBarList
                 list={
@@ -38,7 +40,7 @@ export function StorageItemsScreen(props: {
                     />
                 }
                 storage={storage}
-                onItemPress={itemId => setSelectedItemId(itemId)}
+                onItemPress={(itemId) => setSelectedItemId(itemId)}
             />
         </StatusBarView>
     );

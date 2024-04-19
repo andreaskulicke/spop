@@ -19,14 +19,17 @@ import UnknownSvg from "../icons/Unknown";
 export interface Shop {
     id: string;
     name: string;
-    defaultCategoryId?: (string & {}) | typeof categoryIds[number];
+    defaultCategoryId?: (string & {}) | (typeof categoryIds)[number];
     /** Category IDs that are present here are shown in the order of this array */
-    categoryIds?: ((string & {}) | typeof categoryIds[number])[];
+    categoryIds?: ((string & {}) | (typeof categoryIds)[number])[];
     stopper?: boolean;
 }
 
-export function getShopImage(shop: Shop, theme: MD3Theme, props: { style: Style }) {
-
+export function getShopImage(
+    shop: Shop,
+    theme: MD3Theme,
+    props: { style: Style },
+) {
     const s: SvgProps = {
         height: 28,
         width: 28,
@@ -46,8 +49,8 @@ export function getShopImage(shop: Shop, theme: MD3Theme, props: { style: Style 
             style: {
                 ...imageStyle,
                 backgroundColor: backgroundColor,
-            }
-        }
+            },
+        };
     }
 
     function getAvatarBorderProps(borderColor: string) {
@@ -57,45 +60,100 @@ export function getShopImage(shop: Shop, theme: MD3Theme, props: { style: Style 
                 ...avatarBackgroundProps.style,
                 borderColor: borderColor,
                 borderWidth: 2,
-            }
-        }
+            },
+        };
     }
 
     if (/aldi/i.test(shop.name)) {
-        return <Avatar.Image {...getAvatarProps("#00005f")} source={() => <AldiSvg {...s} />} />;
+        return (
+            <Avatar.Image
+                {...getAvatarProps("#00005f")}
+                source={() => <AldiSvg {...s} />}
+            />
+        );
     }
     if (/baecker|bäcker|backer|polster/i.test(shop.name)) {
-        return <Avatar.Image {...getAvatarProps("#2163ad")} source={() => <BaeckerSvg {...s} />} />;
+        return (
+            <Avatar.Image
+                {...getAvatarProps("#2163ad")}
+                source={() => <BaeckerSvg {...s} />}
+            />
+        );
     }
     if (/dm/i.test(shop.name)) {
-        return <Avatar.Image {...getAvatarProps("#fec700")} source={() => <DmSvg {...s} />} />;
+        return (
+            <Avatar.Image
+                {...getAvatarProps("#fec700")}
+                source={() => <DmSvg {...s} />}
+            />
+        );
     }
     if (/edeka/i.test(shop.name)) {
-        return <Avatar.Image {...getAvatarProps("#FFD400")} source={() => <EdekaSvg {...s} />} />;
+        return (
+            <Avatar.Image
+                {...getAvatarProps("#FFD400")}
+                source={() => <EdekaSvg {...s} />}
+            />
+        );
     }
     if (/hornbach/i.test(shop.name)) {
-        return <Avatar.Image {...getAvatarProps("#f7911a")} source={() => <HornbachSvg {...s} />} />;
+        return (
+            <Avatar.Image
+                {...getAvatarProps("#f7911a")}
+                source={() => <HornbachSvg {...s} />}
+            />
+        );
     }
     if (/lidl/i.test(shop.name)) {
-        return <Avatar.Image {...getAvatarProps("#0050aa")} source={() => <LidlSvg {...s} />} />;
+        return (
+            <Avatar.Image
+                {...getAvatarProps("#0050aa")}
+                source={() => <LidlSvg {...s} />}
+            />
+        );
     }
     if (/mueller|müller|muller/i.test(shop.name)) {
-        return <Avatar.Image {...getAvatarBorderProps("#f16426")} source={() => <MuellerSvg {...s} />} />;
+        return (
+            <Avatar.Image
+                {...getAvatarBorderProps("#f16426")}
+                source={() => <MuellerSvg {...s} />}
+            />
+        );
     }
     if (/norma/i.test(shop.name)) {
-        return <Avatar.Image {...getAvatarProps("#D60F19")} source={() => <NormaSvg {...s} />} />;
+        return (
+            <Avatar.Image
+                {...getAvatarProps("#D60F19")}
+                source={() => <NormaSvg {...s} />}
+            />
+        );
     }
     if (/obi/i.test(shop.name)) {
-        return <Avatar.Image {...getAvatarBorderProps("#ff7313")} source={() => <ObiSvg {...s} />} />;
+        return (
+            <Avatar.Image
+                {...getAvatarBorderProps("#ff7313")}
+                source={() => <ObiSvg {...s} />}
+            />
+        );
     }
     if (/rewe/i.test(shop.name)) {
-        return <Avatar.Image {...getAvatarProps("#cc071e")} source={() => <ReweSvg {...s} />} />;
+        return (
+            <Avatar.Image
+                {...getAvatarProps("#cc071e")}
+                source={() => <ReweSvg {...s} />}
+            />
+        );
     }
     if (/rossman/i.test(shop.name)) {
         return (
             <Avatar.Image
                 {...avatarBackgroundProps}
-                source={() => <RossmannSvg height={avatarBackgroundProps.size + 8} width={avatarBackgroundProps.size + 10} />}
+                source={() => (
+                    <RossmannSvg
+                        height={avatarBackgroundProps.size + 8}
+                        width={avatarBackgroundProps.size + 10}
+                    />
+                )}
             />
         );
     }
@@ -123,7 +181,16 @@ export const defaultShops: Shop[] = [
     {
         id: "aldi",
         name: "Aldi",
-        categoryIds: ["fruits_vegetables", "eggs", "sweets", "fridge", "cereals", "drinks", "household", "misc"]
+        categoryIds: [
+            "fruits_vegetables",
+            "eggs",
+            "sweets",
+            "fridge",
+            "cereals",
+            "drinks",
+            "household",
+            "misc",
+        ],
     },
     {
         id: "rewe",
@@ -132,12 +199,31 @@ export const defaultShops: Shop[] = [
     {
         id: "edeka",
         name: "Edeka",
-        categoryIds: ["misc", "fruits_vegetables", "nuts", "bakery", "backing", "cereals", "coffee_tea", "noodles", "sauces", "tins", "fridge", "spices", "freezer", "meat", "eggs", "sweets", "drinks", "household"]
+        categoryIds: [
+            "misc",
+            "fruits_vegetables",
+            "nuts",
+            "bakery",
+            "backing",
+            "cereals",
+            "coffee_tea",
+            "noodles",
+            "sauces",
+            "tins",
+            "fridge",
+            "spices",
+            "freezer",
+            "meat",
+            "eggs",
+            "sweets",
+            "drinks",
+            "household",
+        ],
     },
     {
         id: "rossmann",
         name: "Rossmann",
         defaultCategoryId: "household",
-        categoryIds: ["household", "nuts", "sweets"]
-    }
+        categoryIds: ["household", "nuts", "sweets"],
+    },
 ];

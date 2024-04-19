@@ -1,6 +1,6 @@
 https://react-svgr.com/playground/?native=true
 
-# logo/*
+# logo/\*
 
 - 01.12.2023: https://commons.wikimedia.org/wiki/File:Ampelmann_Gr%C3%BCn.svg
 
@@ -26,7 +26,7 @@ Added viewBox.
 
 24.11.2023: https://de.wikipedia.org/wiki/Edeka#/media/Datei:Edeka_Logo_Aktuell.svg
 
-# Hornbach*.svg
+# Hornbach\*.svg
 
 24.11.2023: https://de.wikipedia.org/wiki/Hornbach_(Baumarkt)#/media/Datei:Hornbach_Logo_black.svg
 
@@ -36,7 +36,7 @@ Cut out main logo for better display.
 
 24.11.2023: https://de.wikipedia.org/wiki/Lidl#/media/Datei:Lidl-Logo.svg
 
-# Mueller*.svg
+# Mueller\*.svg
 
 24.11.2023: https://de.wikipedia.org/wiki/M%C3%BCller_(Handelskette)#/media/Datei:Logo_Drogerie_Mueller.svg
 
@@ -54,7 +54,7 @@ Cut out main logo for better display.
 
 24.11.2023: https://de.wikipedia.org/wiki/Rewe#/media/Datei:Logo_REWE.svg
 
-# Rossmann*.svg
+# Rossmann\*.svg
 
 24.11.2023: https://de.wikipedia.org/wiki/Rossmann_(Handelskette)#/media/Datei:Rossmann_Logo.svg
 

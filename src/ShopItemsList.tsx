@@ -1,19 +1,53 @@
-import { allShop, selectItemsNotWantedWithShop, selectItemsWantedWithShop, selectValidShops, setItemPackageQuantity, setItemPackageUnit, setItemQuantity, setItemShop, setItemShopPrice, setItemUnit, setItemWanted, selectItemsWanted, selectItemsWantedWithoutShop, selectItemsNotWanted, selectItemsNotWantedWithDifferentShop } from './store/dataSlice';
-import { Calculator } from './Calculator';
-import { getCalculatorFields } from './getCalculatorFields';
-import { Item, UnitId, getPackageQuantityUnit, getUnitName, itemListStyle } from './store/data/items';
-import { ItemsSectionList, ItemsSectionListSection } from './ItemsSectionList';
-import { List, Checkbox, IconButton, useTheme, TouchableRipple } from 'react-native-paper';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { numberToString, quantityToString } from './numberToString';
-import { PriceIcon } from './PriceIcon';
-import { RootStackParamList } from '../App';
-import { selectUiItemsList, setUiItemsListItems, setUiItemsListLatest, setUiItemsListLatestInArea, setUiItemsListWithout } from './store/uiSlice';
-import { Shop } from './store/data/shops';
-import { Text, View } from 'react-native';
-import { useAppDispatch, useAppSelector } from './store/hooks';
-import { withSeparator } from './with';
-import React, { JSXElementConstructor, ReactElement, useState } from 'react';
+import {
+    allShop,
+    selectItemsNotWantedWithShop,
+    selectItemsWantedWithShop,
+    selectValidShops,
+    setItemPackageQuantity,
+    setItemPackageUnit,
+    setItemQuantity,
+    setItemShop,
+    setItemShopPrice,
+    setItemUnit,
+    setItemWanted,
+    selectItemsWanted,
+    selectItemsWantedWithoutShop,
+    selectItemsNotWanted,
+    selectItemsNotWantedWithDifferentShop,
+} from "./store/dataSlice";
+import { Calculator } from "./Calculator";
+import { getCalculatorFields } from "./getCalculatorFields";
+import {
+    Item,
+    UnitId,
+    getPackageQuantityUnit,
+    getUnitName,
+    itemListStyle,
+} from "./store/data/items";
+import { ItemsSectionList, ItemsSectionListSection } from "./ItemsSectionList";
+import {
+    List,
+    Checkbox,
+    IconButton,
+    useTheme,
+    TouchableRipple,
+} from "react-native-paper";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { numberToString, quantityToString } from "./numberToString";
+import { PriceIcon } from "./PriceIcon";
+import { RootStackParamList } from "../App";
+import {
+    selectUiItemsList,
+    setUiItemsListItems,
+    setUiItemsListLatest,
+    setUiItemsListLatestInArea,
+    setUiItemsListWithout,
+} from "./store/uiSlice";
+import { Shop } from "./store/data/shops";
+import { Text, View } from "react-native";
+import { useAppDispatch, useAppSelector } from "./store/hooks";
+import { withSeparator } from "./with";
+import React, { JSXElementConstructor, ReactElement, useState } from "react";
 
 export function ShopItemsList(props: {
     shop: Shop;
@@ -23,11 +57,21 @@ export function ShopItemsList(props: {
 }) {
     const shops = useAppSelector(selectValidShops);
     const itemsWanted = useAppSelector(selectItemsWanted);
-    const itemsWantedThisShop = useAppSelector(selectItemsWantedWithShop(props.shop, props.showHidden, props.stopperOff));
+    const itemsWantedThisShop = useAppSelector(
+        selectItemsWantedWithShop(
+            props.shop,
+            props.showHidden,
+            props.stopperOff,
+        ),
+    );
     const itemsWantedWithoutShop = useAppSelector(selectItemsWantedWithoutShop);
     const itemsNotWanted = useAppSelector(selectItemsNotWanted);
-    const itemsNotWantedThisShop = useAppSelector(selectItemsNotWantedWithShop(props.shop, true));
-    const itemsNotWantedDifferentShop = useAppSelector(selectItemsNotWantedWithDifferentShop(props.shop));
+    const itemsNotWantedThisShop = useAppSelector(
+        selectItemsNotWantedWithShop(props.shop, true),
+    );
+    const itemsNotWantedDifferentShop = useAppSelector(
+        selectItemsNotWantedWithDifferentShop(props.shop),
+    );
     const uiItemsList = useAppSelector(selectUiItemsList);
     const dispatch = useAppDispatch();
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -38,25 +82,51 @@ export function ShopItemsList(props: {
         item?: Item;
     }>({ visible: false });
 
-    function handleCalculatorClose(values?: { value?: number; unitId?: UnitId, state?: any; }[] | undefined): void {
+    function handleCalculatorClose(
+        values?: { value?: number; unitId?: UnitId; state?: any }[] | undefined,
+    ): void {
         setShowCalculator({ visible: false });
         if (values) {
             if (values.length > 0) {
                 const value = values[0];
                 const item = value.state as Item;
-                dispatch(setItemQuantity({ itemId: item.id, quantity: value.value }));
-                dispatch(setItemUnit({ itemId: item.id, unitId: value.unitId ?? "-" }));
+                dispatch(
+                    setItemQuantity({ itemId: item.id, quantity: value.value }),
+                );
+                dispatch(
+                    setItemUnit({
+                        itemId: item.id,
+                        unitId: value.unitId ?? "-",
+                    }),
+                );
             }
             if (values.length > 1) {
                 const value = values[1];
                 const item = value.state as Item;
-                dispatch(setItemPackageQuantity({ itemId: item.id, packageQuantity: value.value }));
-                dispatch(setItemPackageUnit({ itemId: item.id, packageUnitId: value.unitId ?? "-" }));
+                dispatch(
+                    setItemPackageQuantity({
+                        itemId: item.id,
+                        packageQuantity: value.value,
+                    }),
+                );
+                dispatch(
+                    setItemPackageUnit({
+                        itemId: item.id,
+                        packageUnitId: value.unitId ?? "-",
+                    }),
+                );
             }
             if (values.length > 2) {
                 const value = values[2];
                 const item = value.state as Item;
-                dispatch(setItemShopPrice({ itemId: item.id, shopId: props.shop.id, price: value.value, unitId: value.unitId }));
+                dispatch(
+                    setItemShopPrice({
+                        itemId: item.id,
+                        shopId: props.shop.id,
+                        price: value.value,
+                        unitId: value.unitId,
+                    }),
+                );
             }
         }
     }
@@ -67,7 +137,13 @@ export function ShopItemsList(props: {
 
     function handleItemWantedPress(item: Item): void {
         dispatch(setItemWanted({ itemId: item.id, wanted: !item.wanted }));
-        dispatch(setItemShop({ itemId: item.id, shopId: props.shop.id, checked: true }));
+        dispatch(
+            setItemShop({
+                itemId: item.id,
+                shopId: props.shop.id,
+                checked: true,
+            }),
+        );
     }
 
     function handleShowCalculatorPress(item: Item): void {
@@ -77,18 +153,22 @@ export function ShopItemsList(props: {
         });
     }
 
-    function handleRenderItem(item: Item): ReactElement<any, string | JSXElementConstructor<any>> | null {
-
+    function handleRenderItem(
+        item: Item,
+    ): ReactElement<any, string | JSXElementConstructor<any>> | null {
         const description = withSeparator(
             getPackageQuantityUnit(item),
             " - ",
             item.shops
-                .filter(x => x.checked)
-                .map(x => shops.find(s => s.id === x.shopId)?.name)
-                .filter(x => !!x)
-                .join(", "));
+                .filter((x) => x.checked)
+                .map((x) => shops.find((s) => s.id === x.shopId)?.name)
+                .filter((x) => !!x)
+                .join(", "),
+        );
 
-        const currentItemShop = item.shops.find(x => x.shopId === props.shop.id);
+        const currentItemShop = item.shops.find(
+            (x) => x.shopId === props.shop.id,
+        );
 
         let quantity = quantityToString(item.quantity);
         if (quantity && item.unitId) {
@@ -109,40 +189,76 @@ export function ShopItemsList(props: {
                 description={description ? description : undefined}
                 title={item.name}
                 style={itemListStyle(theme)}
-                right={
-                    p => (
-                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end", gap: 8 }}>
-                            <QuantityPrice
-                                itemId={item.id}
-                                shopId={props.shop.id}
-                                quantity={quantity}
-                                price={price}
-                                onPress={() => handleShowCalculatorPress(item)}
+                right={(p) => (
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "flex-end",
+                            gap: 8,
+                        }}
+                    >
+                        <QuantityPrice
+                            itemId={item.id}
+                            shopId={props.shop.id}
+                            quantity={quantity}
+                            price={price}
+                            onPress={() => handleShowCalculatorPress(item)}
+                        />
+                        {item.wanted ? (
+                            <Checkbox
+                                {...p}
+                                status="unchecked"
+                                onPress={() => handleItemWantedPress(item)}
                             />
-                            {
-                                item.wanted
-                                    ? <Checkbox
-                                        {...p}
-                                        status="unchecked"
-                                        onPress={() => handleItemWantedPress(item)}
-                                    />
-                                    : <IconButton
-                                        {...p}
-                                        icon="plus-outline"
-                                        style={{ ...(p.style), ...{ marginLeft: 0 } }}
-                                        onPress={() => handleItemWantedPress(item)}
-                                    />
-                            }
-                            {
-                                !item.wanted && item.shops.find(x => x.checked && (x.shopId === props.shop.id))
-                                && <IconButton {...p} style={{ margin: 0 }} icon="cart-minus" onPress={() => dispatch(setItemShop({ itemId: item.id, shopId: props.shop.id, checked: false }))} />
-                            }
-                            {
-                                (props.shop.id !== allShop.id) && !item.shops.find(x => x.checked && (x.shopId === props.shop.id))
-                                && <IconButton {...p} style={{ margin: 0 }} icon="cart-plus" onPress={() => dispatch(setItemShop({ itemId: item.id, shopId: props.shop.id, checked: true }))} />
-                            }
-                        </View>
-                    )}
+                        ) : (
+                            <IconButton
+                                {...p}
+                                icon="plus-outline"
+                                style={{ ...p.style, ...{ marginLeft: 0 } }}
+                                onPress={() => handleItemWantedPress(item)}
+                            />
+                        )}
+                        {!item.wanted &&
+                            item.shops.find(
+                                (x) => x.checked && x.shopId === props.shop.id,
+                            ) && (
+                                <IconButton
+                                    {...p}
+                                    style={{ margin: 0 }}
+                                    icon="cart-minus"
+                                    onPress={() =>
+                                        dispatch(
+                                            setItemShop({
+                                                itemId: item.id,
+                                                shopId: props.shop.id,
+                                                checked: false,
+                                            }),
+                                        )
+                                    }
+                                />
+                            )}
+                        {props.shop.id !== allShop.id &&
+                            !item.shops.find(
+                                (x) => x.checked && x.shopId === props.shop.id,
+                            ) && (
+                                <IconButton
+                                    {...p}
+                                    style={{ margin: 0 }}
+                                    icon="cart-plus"
+                                    onPress={() =>
+                                        dispatch(
+                                            setItemShop({
+                                                itemId: item.id,
+                                                shopId: props.shop.id,
+                                                checked: true,
+                                            }),
+                                        )
+                                    }
+                                />
+                            )}
+                    </View>
+                )}
                 onPress={() => handleItemPress(item)}
             />
         );
@@ -152,41 +268,55 @@ export function ShopItemsList(props: {
         {
             title: "Dinge",
             icon: "cart",
-            collapsed: [!uiItemsList.items.expanded, (exp) => dispatch(setUiItemsListItems({ expanded: exp }))],
-            data: (props.shop.id === allShop.id)
-                ? itemsWanted
-                : itemsWantedThisShop,
+            collapsed: [
+                !uiItemsList.items.expanded,
+                (exp) => dispatch(setUiItemsListItems({ expanded: exp })),
+            ],
+            data:
+                props.shop.id === allShop.id
+                    ? itemsWanted
+                    : itemsWantedThisShop,
         },
         {
             title: "Ohne Shop",
             icon: "store-off",
-            collapsed: [!uiItemsList.without.expanded, (exp) => dispatch(setUiItemsListWithout({ expanded: exp }))],
+            collapsed: [
+                !uiItemsList.without.expanded,
+                (exp) => dispatch(setUiItemsListWithout({ expanded: exp })),
+            ],
             data: itemsWantedWithoutShop,
         },
     ];
 
-
     if (props.shop.id === allShop.id) {
-        data.push(
-            {
-                title: "Zuletzt",
-                icon: "history",
-                collapsed: [!uiItemsList.latest.expanded, (exp) => dispatch(setUiItemsListLatest({ expanded: exp }))],
-                data: itemsNotWanted,
-            },
-        );
+        data.push({
+            title: "Zuletzt",
+            icon: "history",
+            collapsed: [
+                !uiItemsList.latest.expanded,
+                (exp) => dispatch(setUiItemsListLatest({ expanded: exp })),
+            ],
+            data: itemsNotWanted,
+        });
     } else {
         data.push(
             {
                 title: `Zuletzt in ${props.shop?.name}`,
                 icon: "history",
-                collapsed: [!uiItemsList.latestInArea.expanded, (exp) => dispatch(setUiItemsListLatestInArea({ expanded: exp }))],
+                collapsed: [
+                    !uiItemsList.latestInArea.expanded,
+                    (exp) =>
+                        dispatch(setUiItemsListLatestInArea({ expanded: exp })),
+                ],
                 data: itemsNotWantedThisShop,
             },
             {
                 title: "Zuletzt in anderen Shops",
                 icon: "history",
-                collapsed: [!uiItemsList.latest.expanded, (exp) => dispatch(setUiItemsListLatest({ expanded: exp }))],
+                collapsed: [
+                    !uiItemsList.latest.expanded,
+                    (exp) => dispatch(setUiItemsListLatest({ expanded: exp })),
+                ],
                 data: itemsNotWantedDifferentShop,
             },
         );
@@ -233,16 +363,19 @@ function QuantityPrice(props: {
             onPress={props.onPress}
         >
             <View style={{ alignItems: "flex-end" }}>
-                {
-                    props.quantity
-                    && <Text style={{ color: theme.colors.primary }}>
+                {props.quantity && (
+                    <Text style={{ color: theme.colors.primary }}>
                         {props.quantity}
                     </Text>
-                }
-                {
-                    (props.shopId !== allShop.id)
-                    && props.price
-                    && <View style={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
+                )}
+                {props.shopId !== allShop.id && props.price && (
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: 2,
+                        }}
+                    >
                         <Text style={{ color: theme.colors.primary }}>
                             {props.price}
                         </Text>
@@ -251,7 +384,7 @@ function QuantityPrice(props: {
                             shopId={props.shopId}
                         />
                     </View>
-                }
+                )}
             </View>
         </TouchableRipple>
     );

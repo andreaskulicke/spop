@@ -1,11 +1,22 @@
-import { addStorage, allStorage, selectItems, selectStorages, setStorages } from "./store/dataSlice";
+import {
+    addStorage,
+    allStorage,
+    selectItems,
+    selectStorages,
+    setStorages,
+} from "./store/dataSlice";
 import { Appbar, Divider, List, Menu } from "react-native-paper";
 import { AreaItemTitle } from "./AreaItemTitle";
 import { AvatarText } from "./AvatarText";
 import { CategoryIcon } from "./CategoryIcon";
 import { Count } from "./Count";
 import { NavigationProp } from "@react-navigation/native";
-import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
+import {
+    NestableDraggableFlatList,
+    NestableScrollContainer,
+    RenderItemParams,
+    ScaleDecorator,
+} from "react-native-draggable-flatlist";
 import { RootStackParamList } from "../App";
 import { SearchBarList } from "./SearchBarList";
 import { StatusBarView } from "./StatusBarView";
@@ -15,7 +26,7 @@ import { UnassignedBadge } from "./UnassignedBadge";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { View } from "react-native";
 import React, { ReactNode, useState } from "react";
-import uuid from 'react-native-uuid';
+import uuid from "react-native-uuid";
 
 export function StoragesScreen(props: {
     navigation: NavigationProp<RootStackParamList & StoragesStackParamList>;
@@ -45,13 +56,23 @@ export function StoragesScreen(props: {
     }
 
     function handleRenderItem(params: RenderItemParams<Storage>): ReactNode {
-        const count = items.filter(i => i.wanted && i.storages.find(s => s.storageId === params.item.id)).length;
+        const count = items.filter(
+            (i) =>
+                i.wanted &&
+                i.storages.find((s) => s.storageId === params.item.id),
+        ).length;
         return (
             <ScaleDecorator>
                 <List.Item
-                    title={p => <AreaItemTitle p={p} title={params.item.name} bold={count > 0} />}
-                    left={p => <AvatarText {...p} label={params.item.name} />}
-                    right={p => <Count {...p} count={count} />}
+                    title={(p) => (
+                        <AreaItemTitle
+                            p={p}
+                            title={params.item.name}
+                            bold={count > 0}
+                        />
+                    )}
+                    left={(p) => <AvatarText {...p} label={params.item.name} />}
+                    right={(p) => <Count {...p} count={count} />}
                     onPress={() => handleStoragePress(params.item.id)}
                     onLongPress={() => params.drag()}
                 />
@@ -65,14 +86,26 @@ export function StoragesScreen(props: {
         <StatusBarView>
             <Appbar.Header elevated>
                 <Appbar.Content title="Vorratsorte" />
-                <Appbar.Action icon="plus-outline" onPress={handleAddStoragePress} />
+                <Appbar.Action
+                    icon="plus-outline"
+                    onPress={handleAddStoragePress}
+                />
                 <Menu
-                    anchor={<Appbar.Action icon="dots-vertical" onPress={handleDotsPress} />}
+                    anchor={
+                        <Appbar.Action
+                            icon="dots-vertical"
+                            onPress={handleDotsPress}
+                        />
+                    }
                     anchorPosition="bottom"
                     visible={menuVisible}
                     onDismiss={() => setMenuVisible(false)}
                 >
-                    <Menu.Item leadingIcon="cog-outline" title="Einstellungen" onPress={handleSettingsPress} />
+                    <Menu.Item
+                        leadingIcon="cog-outline"
+                        title="Einstellungen"
+                        onPress={handleSettingsPress}
+                    />
                 </Menu>
             </Appbar.Header>
             <SearchBarList
@@ -82,23 +115,29 @@ export function StoragesScreen(props: {
                         <List.Item
                             title={allStorage.name}
                             style={{ height: heightOfAllThingsListItem }}
-                            left={p => <CategoryIcon {...p} icon="check-all" />}
-                            right={p =>
+                            left={(p) => (
+                                <CategoryIcon {...p} icon="check-all" />
+                            )}
+                            right={(p) => (
                                 <UnassignedBadge
                                     p={p}
                                     tooltip="Gewünschte Dinge und ohne Vorratsort"
-                                    unassignedFilter={item => (item.storages?.length ?? 0) === 0}
+                                    unassignedFilter={(item) =>
+                                        (item.storages?.length ?? 0) === 0
+                                    }
                                 />
-                            }
+                            )}
                             onPress={() => handleStoragePress(allStorage.id)}
                         />
                         <Divider />
                         <NestableScrollContainer>
                             <NestableDraggableFlatList
                                 data={storages}
-                                keyExtractor={x => x.id}
+                                keyExtractor={(x) => x.id}
                                 renderItem={handleRenderItem}
-                                onDragEnd={({ data }) => dispatch(setStorages(data))}
+                                onDragEnd={({ data }) =>
+                                    dispatch(setStorages(data))
+                                }
                             />
                         </NestableScrollContainer>
                     </View>

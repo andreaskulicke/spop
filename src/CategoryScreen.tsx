@@ -3,7 +3,12 @@ import { RootStackParamList } from "../App";
 import { Keyboard, ScrollView, View } from "react-native";
 import { Appbar, Card, Portal, TextInput, Dialog } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { deleteCategory, selectCategory, setCategoryIcon, setCategoryName } from "./store/dataSlice";
+import {
+    deleteCategory,
+    selectCategory,
+    setCategoryIcon,
+    setCategoryName,
+} from "./store/dataSlice";
 import { useEffect, useState } from "react";
 import { CategoryIcon } from "./CategoryIcon";
 import { StatusBarView } from "./StatusBarView";
@@ -43,7 +48,9 @@ export function CategoryScreen(props: {
 
     function handleTextInputNameBlur(): void {
         if (category) {
-            dispatch(setCategoryName({ categoryId: category.id, name: name.trim() }));
+            dispatch(
+                setCategoryName({ categoryId: category.id, name: name.trim() }),
+            );
             setName(name.trim());
         }
     }
@@ -53,13 +60,15 @@ export function CategoryScreen(props: {
     }
 
     useEffect(() => {
-        const s = Keyboard.addListener("keyboardDidHide", () => handleTextInputNameBlur());
+        const s = Keyboard.addListener("keyboardDidHide", () =>
+            handleTextInputNameBlur(),
+        );
         return () => s.remove();
     });
 
     useEffect(() => {
         setName(category?.name ?? "");
-    }, [category])
+    }, [category]);
 
     return (
         <StatusBarView bottomPadding>
@@ -69,12 +78,15 @@ export function CategoryScreen(props: {
                 <Appbar.Action icon="trash-can" onPress={handleDeletePress} />
             </Appbar.Header>
             <ScrollView>
-                <Card
-                    style={{ margin: 8 }}
-                >
+                <Card style={{ margin: 8 }}>
                     <Card.Title title="Allgemein" />
-                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <CategoryIcon icon={category?.icon} onPress={handleIconPress} />
+                    <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                        <CategoryIcon
+                            icon={category?.icon}
+                            onPress={handleIconPress}
+                        />
                         <IconModal
                             icons={categoryIcons}
                             selectedIcon={category?.icon}
@@ -85,7 +97,11 @@ export function CategoryScreen(props: {
                             label="Name"
                             mode="outlined"
                             selectTextOnFocus
-                            style={{ flex: 1, marginVertical: 8, marginRight: 8 }}
+                            style={{
+                                flex: 1,
+                                marginVertical: 8,
+                                marginRight: 8,
+                            }}
                             value={name}
                             onBlur={handleTextInputNameBlur}
                             onChangeText={handleTextInputNameChange}
@@ -105,10 +121,7 @@ function IconModal(props: {
 }) {
     return (
         <Portal>
-            <Dialog
-                visible={!!props.visible}
-                onDismiss={() => props.onClose()}
-            >
+            <Dialog visible={!!props.visible} onDismiss={() => props.onClose()}>
                 <Dialog.Content>
                     <ScrollView>
                         <View
@@ -119,11 +132,14 @@ function IconModal(props: {
                                 gap: 16,
                             }}
                         >
-                            {
-                                props.icons.map(x => (
-                                    <CategoryIcon key={x} icon={x} selected={x === props.selectedIcon} onPress={() => props.onClose(x)} />
-                                ))
-                            }
+                            {props.icons.map((x) => (
+                                <CategoryIcon
+                                    key={x}
+                                    icon={x}
+                                    selected={x === props.selectedIcon}
+                                    onPress={() => props.onClose(x)}
+                                />
+                            ))}
                         </View>
                     </ScrollView>
                 </Dialog.Content>

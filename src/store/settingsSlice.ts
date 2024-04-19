@@ -1,7 +1,7 @@
-import { ColorSchemeName } from 'react-native';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { RootState } from './store';
-import { ThemeName, themes, ThemeType } from './themes/themes';
+import { ColorSchemeName } from "react-native";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "./store";
+import { ThemeName, themes, ThemeType } from "./themes/themes";
 
 export interface Settings {
     version: string;
@@ -18,7 +18,7 @@ const initialState: Settings = {
         colorTheme: undefined,
         theme: "default",
     },
-}
+};
 
 export const settingsSlice = createSlice({
     name: "settings",
@@ -34,24 +34,26 @@ export const settingsSlice = createSlice({
         setTheme: (state, action: PayloadAction<ThemeName>) => {
             state.display.theme = action.payload;
         },
-    }
-})
+    },
+});
 
 export const {
     resetSettings,
 
     setColorTheme,
     setTheme,
-} = settingsSlice.actions
+} = settingsSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 // export const selectCount = (state: RootState) => state.counter.value
 
-export default settingsSlice.reducer
+export default settingsSlice.reducer;
 
 export function selectTheme(isDark: boolean): (state: RootState) => ThemeType {
     return (state: RootState) => {
-        const t = themes.find(x => x.id === state.settings.display.theme) ?? themes[0];
+        const t =
+            themes.find((x) => x.id === state.settings.display.theme) ??
+            themes[0];
         return isDark ? t.dark : t.light;
     };
 }

@@ -10,16 +10,19 @@ eas build -p android --profile preview
 
 Make sure to increase `versionCode` in `app.json`.
 To make sure the important `versionCode` in `build.gradle` is updated run:
+
 ```
 npx expo prebuild
 ```
 
 To build and submit:
+
 ```
 eas build -p android --auto-submit
 ```
 
 Or submit only:
+
 ```
 eas submit -p android
 ```

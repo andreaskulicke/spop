@@ -17,9 +17,7 @@ export function UnitSelection(props: {
     return (
         <Menu
             anchor={
-                <TouchableRipple
-                    onPress={() => setMenuVisible(true)}
-                >
+                <TouchableRipple onPress={() => setMenuVisible(true)}>
                     <TextInput
                         editable={false}
                         label="Einheit"
@@ -27,7 +25,10 @@ export function UnitSelection(props: {
                         style={{ marginRight: 8, marginVertical: 8, width: 80 }}
                         value={getUnitName(props.value, true)}
                         right={
-                            <TextInput.Icon icon={menuVisible ? "chevron-up" : "chevron-down"}
+                            <TextInput.Icon
+                                icon={
+                                    menuVisible ? "chevron-up" : "chevron-down"
+                                }
                                 onPress={() => setMenuVisible(true)}
                             />
                         }
@@ -38,15 +39,13 @@ export function UnitSelection(props: {
             visible={menuVisible}
             onDismiss={() => setMenuVisible(false)}
         >
-            {
-                units.map(u => (
-                    <Menu.Item
-                        key={u.id}
-                        title={u.name}
-                        onPress={() => handlePress(u.id)}
-                    />
-                ))
-            }
+            {units.map((u) => (
+                <Menu.Item
+                    key={u.id}
+                    title={u.name}
+                    onPress={() => handlePress(u.id)}
+                />
+            ))}
         </Menu>
     );
 }

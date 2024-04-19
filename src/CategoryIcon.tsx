@@ -14,10 +14,12 @@ export function CategoryIcon(props: {
             icon={props.icon ?? "dots-horizontal"}
             mode="contained"
             style={{
-                ...props.style as object,
-                ...(props.selected ? {
-                    borderWidth: 1,
-                } : {}),
+                ...(props.style as object),
+                ...(props.selected
+                    ? {
+                          borderWidth: 1,
+                      }
+                    : {}),
                 backgroundColor: theme.colors.elevation.level3,
             }}
             onPress={props.onPress}

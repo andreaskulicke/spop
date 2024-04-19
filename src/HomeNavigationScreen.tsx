@@ -1,9 +1,9 @@
-import { CategoriesNavigationScreen } from './CategoriesNavigationScreen';
-import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
-import { Icon } from 'react-native-paper';
-import { ShopsNavigationScreen } from './ShopsNavigationScreen';
-import { StoragesNavigationScreen } from './StoragesNavigationScreen';
-import React from 'react';
+import { CategoriesNavigationScreen } from "./CategoriesNavigationScreen";
+import { createMaterialBottomTabNavigator } from "react-native-paper/react-navigation";
+import { Icon } from "react-native-paper";
+import { ShopsNavigationScreen } from "./ShopsNavigationScreen";
+import { StoragesNavigationScreen } from "./StoragesNavigationScreen";
+import React from "react";
 
 export type TabParamList = {
     StoragesEntry: undefined;
@@ -20,7 +20,9 @@ export function HomeNavigationScreen() {
                 component={StoragesNavigationScreen}
                 name="StoragesEntry"
                 options={{
-                    tabBarIcon: p => <Icon {...p} size={24} source="home-plus-outline" />,
+                    tabBarIcon: (p) => (
+                        <Icon {...p} size={24} source="home-plus-outline" />
+                    ),
                     tabBarLabel: "Vorratsorte",
                 }}
             />
@@ -28,7 +30,9 @@ export function HomeNavigationScreen() {
                 component={CategoriesNavigationScreen}
                 name="CategoriesEntry"
                 options={{
-                    tabBarIcon: p => <Icon {...p} size={24} source="archive-outline" />,
+                    tabBarIcon: (p) => (
+                        <Icon {...p} size={24} source="archive-outline" />
+                    ),
                     tabBarLabel: "Kategorien",
                 }}
             />
@@ -36,7 +40,9 @@ export function HomeNavigationScreen() {
                 component={ShopsNavigationScreen}
                 name="ShopsEntry"
                 options={{
-                    tabBarIcon: p => <Icon {...p} size={24} source="cart-outline" />,
+                    tabBarIcon: (p) => (
+                        <Icon {...p} size={24} source="cart-outline" />
+                    ),
                     tabBarLabel: "Shops",
                 }}
             />

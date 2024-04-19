@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Searchbar, useTheme } from 'react-native-paper';
+import { Searchbar, useTheme } from "react-native-paper";
 import { units } from "./store/data/items";
 
 export function SearchBar(props: {
@@ -12,10 +12,16 @@ export function SearchBar(props: {
 
     function handleSearchChangeText(text: string) {
         const t = text.trimStart();
-        const unitsMatch = `(${units.map(x => x.name).join("|")})`;
-        const m = t.match(`^(?<pre>\\d+[^ ]*)? *(?<name>.*?) +(?<post>\\d+${unitsMatch}?$)?$`);
+        const unitsMatch = `(${units.map((x) => x.name).join("|")})`;
+        const m = t.match(
+            `^(?<pre>\\d+[^ ]*)? *(?<name>.*?) +(?<post>\\d+${unitsMatch}?$)?$`,
+        );
         if (m && m.groups) {
-            const name = m.groups["name"] + ((m.groups["pre"] && m.groups.post) ? ` ${m.groups["post"]}` : "")
+            const name =
+                m.groups["name"] +
+                (m.groups["pre"] && m.groups.post
+                    ? ` ${m.groups["post"]}`
+                    : "");
             props.onChange?.(t, name, m.groups["pre"] ?? m.groups["post"]);
         } else {
             props.onChange?.(t, t, "");
@@ -32,7 +38,11 @@ export function SearchBar(props: {
             mode="bar"
             placeholder="Will haben"
             value={searchQuery}
-            style={{ backgroundColor: theme.colors.elevation.level2, margin: 4, height: 64 }}
+            style={{
+                backgroundColor: theme.colors.elevation.level2,
+                margin: 4,
+                height: 64,
+            }}
             onChangeText={handleSearchChangeText}
             onSubmitEditing={props.onSubmitEditing}
         />

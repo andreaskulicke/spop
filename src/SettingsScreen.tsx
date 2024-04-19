@@ -1,7 +1,30 @@
-import { Appbar, Button, Card, Icon, IconButton, List, Menu, Text, TextInput, TouchableRipple } from "react-native-paper";
+import {
+    Appbar,
+    Button,
+    Card,
+    Icon,
+    IconButton,
+    List,
+    Menu,
+    Text,
+    TextInput,
+    TouchableRipple,
+} from "react-native-paper";
 import { Linking, ScrollView, Share, View } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
-import { resetCategories, resetShops, resetStorages, selectCategories, selectItems, selectShops, selectStorages, setData, setItems, setShops, setStorages } from "./store/dataSlice";
+import {
+    resetCategories,
+    resetShops,
+    resetStorages,
+    selectCategories,
+    selectItems,
+    selectShops,
+    selectStorages,
+    setData,
+    setItems,
+    setShops,
+    setStorages,
+} from "./store/dataSlice";
 import { resetSettings, setColorTheme, setTheme } from "./store/settingsSlice";
 import { RootStackParamList } from "../App";
 import { StatusBarView } from "./StatusBarView";
@@ -15,8 +38,8 @@ import packageJson from "../package.json";
 export function SettingsScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
 }) {
-    const settings = useAppSelector(state => state.settings);
-    const dataVersion = useAppSelector(state => state.data.version);
+    const settings = useAppSelector((state) => state.settings);
+    const dataVersion = useAppSelector((state) => state.data.version);
     const categories = useAppSelector(selectCategories);
     const items = useAppSelector(selectItems);
     const shops = useAppSelector(selectShops);
@@ -51,9 +74,7 @@ export function SettingsScreen(props: {
                 <Appbar.Content title={"Einstellungen"} />
             </Appbar.Header>
             <ScrollView>
-                <Card
-                    style={{ margin: 8 }}
-                >
+                <Card style={{ margin: 8 }}>
                     <Card.Title title="Anzeige" />
                     <Menu
                         anchor={
@@ -67,8 +88,15 @@ export function SettingsScreen(props: {
                                     value={colorSchemeLabel}
                                     style={{ margin: 8 }}
                                     right={
-                                        <TextInput.Icon icon={colorThemeMenuVisible ? "chevron-up" : "chevron-down"}
-                                            onPress={() => setColorThemeMenuVisible(true)}
+                                        <TextInput.Icon
+                                            icon={
+                                                colorThemeMenuVisible
+                                                    ? "chevron-up"
+                                                    : "chevron-down"
+                                            }
+                                            onPress={() =>
+                                                setColorThemeMenuVisible(true)
+                                            }
                                         />
                                     }
                                 />
@@ -110,11 +138,23 @@ export function SettingsScreen(props: {
                                     editable={false}
                                     label="Schema"
                                     mode="outlined"
-                                    value={themes.find(x => x.id === settings.display.theme)?.label}
+                                    value={
+                                        themes.find(
+                                            (x) =>
+                                                x.id === settings.display.theme,
+                                        )?.label
+                                    }
                                     style={{ margin: 8 }}
                                     right={
-                                        <TextInput.Icon icon={themeMenuVisible ? "chevron-up" : "chevron-down"}
-                                            onPress={() => setThemeMenuVisible(true)}
+                                        <TextInput.Icon
+                                            icon={
+                                                themeMenuVisible
+                                                    ? "chevron-up"
+                                                    : "chevron-down"
+                                            }
+                                            onPress={() =>
+                                                setThemeMenuVisible(true)
+                                            }
                                         />
                                     }
                                 />
@@ -125,130 +165,190 @@ export function SettingsScreen(props: {
                         visible={themeMenuVisible}
                         onDismiss={() => setThemeMenuVisible(false)}
                     >
-                        {
-                            themes.map(t =>
-                                <Menu.Item
-                                    key={t.id}
-                                    title={t.label}
-                                    onPress={() => {
-                                        setThemeMenuVisible(false);
-                                        dispatch(setTheme(t.id));
-                                    }}
-                                />
-                            )
-                        }
+                        {themes.map((t) => (
+                            <Menu.Item
+                                key={t.id}
+                                title={t.label}
+                                onPress={() => {
+                                    setThemeMenuVisible(false);
+                                    dispatch(setTheme(t.id));
+                                }}
+                            />
+                        ))}
                     </Menu>
                 </Card>
                 <Card style={{ margin: 8 }}>
-                    <TouchableRipple
-                        onPress={() => setDataExpanded(x => !x)}
-                    >
-                        <Card.Title title="Daten"
-                            right={p => <IconButton
-                                {...p}
-                                icon={dataExpanded ? "chevron-up" : "chevron-down"}
-                                onPress={() => setDataExpanded(x => !x)}
-                            />}
+                    <TouchableRipple onPress={() => setDataExpanded((x) => !x)}>
+                        <Card.Title
+                            title="Daten"
+                            right={(p) => (
+                                <IconButton
+                                    {...p}
+                                    icon={
+                                        dataExpanded
+                                            ? "chevron-up"
+                                            : "chevron-down"
+                                    }
+                                    onPress={() => setDataExpanded((x) => !x)}
+                                />
+                            )}
                         />
                     </TouchableRipple>
-                    {
-                        dataExpanded
-                        && <View>
+                    {dataExpanded && (
+                        <View>
                             <List.Item
                                 title="Einstellungen"
-                                right={p =>
-                                    <Button {...p} compact mode="outlined" onPress={() => {
-                                        dispatch(resetSettings());
-                                        dispatch(setData(
-                                            {
-                                                version: dataVersion,
-                                                categories: categories,
-                                                items: items,
-                                                shops: shops,
-                                                storages: storages,
-                                            }
-                                        ));
-                                    }}>
+                                right={(p) => (
+                                    <Button
+                                        {...p}
+                                        compact
+                                        mode="outlined"
+                                        onPress={() => {
+                                            dispatch(resetSettings());
+                                            dispatch(
+                                                setData({
+                                                    version: dataVersion,
+                                                    categories: categories,
+                                                    items: items,
+                                                    shops: shops,
+                                                    storages: storages,
+                                                }),
+                                            );
+                                        }}
+                                    >
                                         Standard
                                     </Button>
-                                }
+                                )}
                             />
                             <List.Item
                                 title="Dinge"
-                                right={p =>
-                                    <Button {...p} compact mode="outlined" onPress={() => dispatch(setItems([]))}>
+                                right={(p) => (
+                                    <Button
+                                        {...p}
+                                        compact
+                                        mode="outlined"
+                                        onPress={() => dispatch(setItems([]))}
+                                    >
                                         Löschen
                                     </Button>
-                                }
+                                )}
                             />
                             <List.Item
                                 title="Kategorien"
-                                right={p =>
-                                    <Button {...p} compact mode="outlined" onPress={() => dispatch(resetCategories())}>
+                                right={(p) => (
+                                    <Button
+                                        {...p}
+                                        compact
+                                        mode="outlined"
+                                        onPress={() =>
+                                            dispatch(resetCategories())
+                                        }
+                                    >
                                         Standard
                                     </Button>
-                                }
+                                )}
                             />
                             <List.Item
                                 title="Shops"
-                                right={p =>
+                                right={(p) => (
                                     <View style={{ flexDirection: "row" }}>
-                                        <Button {...p} compact mode="outlined" onPress={() => dispatch(resetShops())}>
+                                        <Button
+                                            {...p}
+                                            compact
+                                            mode="outlined"
+                                            onPress={() =>
+                                                dispatch(resetShops())
+                                            }
+                                        >
                                             Standard
                                         </Button>
-                                        <Button {...p} compact mode="outlined" onPress={() => dispatch(setShops([]))}>
+                                        <Button
+                                            {...p}
+                                            compact
+                                            mode="outlined"
+                                            onPress={() =>
+                                                dispatch(setShops([]))
+                                            }
+                                        >
                                             Löschen
                                         </Button>
                                     </View>
-                                }
+                                )}
                             />
                             <List.Item
                                 title="Vorratsorte"
-                                right={p =>
+                                right={(p) => (
                                     <View style={{ flexDirection: "row" }}>
-                                        <Button {...p} compact mode="outlined" onPress={() => dispatch(resetStorages())}>
+                                        <Button
+                                            {...p}
+                                            compact
+                                            mode="outlined"
+                                            onPress={() =>
+                                                dispatch(resetStorages())
+                                            }
+                                        >
                                             Standard
                                         </Button>
-                                        <Button {...p} compact mode="outlined" onPress={() => dispatch(setStorages([]))}>
+                                        <Button
+                                            {...p}
+                                            compact
+                                            mode="outlined"
+                                            onPress={() =>
+                                                dispatch(setStorages([]))
+                                            }
+                                        >
                                             Löschen
                                         </Button>
                                     </View>
-                                }
+                                )}
                             />
                             <List.Item
                                 title="Daten"
-                                right={p =>
+                                right={(p) => (
                                     <View style={{ flexDirection: "row" }}>
-                                        <Button {...p} compact disabled={buttonsDisabled} mode="outlined" onPress={async () => {
-                                            setButtonsDisabled(true);
-                                            await Share.share(
-                                                {
-                                                    message: JSON.stringify(store.getState()),
-                                                })
-                                            setButtonsDisabled(false);
-                                        }}>
+                                        <Button
+                                            {...p}
+                                            compact
+                                            disabled={buttonsDisabled}
+                                            mode="outlined"
+                                            onPress={async () => {
+                                                setButtonsDisabled(true);
+                                                await Share.share({
+                                                    message: JSON.stringify(
+                                                        store.getState(),
+                                                    ),
+                                                });
+                                                setButtonsDisabled(false);
+                                            }}
+                                        >
                                             Exportieren
                                         </Button>
                                     </View>
-                                }
+                                )}
                             />
                         </View>
-                    }
+                    )}
                 </Card>
                 <Card style={{ margin: 8 }}>
                     <Card.Title title="Info" />
                     <List.Item
                         title="Feeback"
-                        right={p => <Icon {...p} size={24} source="email-send-outline" />}
+                        right={(p) => (
+                            <Icon
+                                {...p}
+                                size={24}
+                                source="email-send-outline"
+                            />
+                        )}
                         onPress={handleFeebackPress}
                     />
                     <List.Item
                         title="Version"
-                        right={p =>
+                        right={(p) => (
                             <Text {...p}>
                                 {`${packageJson.version} (${appJson.expo.android.versionCode})`}
                             </Text>
-                        }
+                        )}
                     />
                 </Card>
             </ScrollView>

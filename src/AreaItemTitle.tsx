@@ -11,7 +11,11 @@ export function AreaItemTitle(props: {
     bold?: boolean;
 }) {
     return (
-        <Text {...props.p} variant="bodyLarge" style={{ fontWeight: props.bold ? "bold" : "normal" }}>
+        <Text
+            {...props.p}
+            variant="bodyLarge"
+            style={{ fontWeight: props.bold ? "bold" : "normal" }}
+        >
             {props.title}
         </Text>
     );

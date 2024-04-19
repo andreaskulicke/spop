@@ -13,7 +13,7 @@
   "submit": {
     "production": {
       "android": {
-        "track": "internal" // (enum: production, beta, alpha, internal) 
+        "track": "internal" // (enum: production, beta, alpha, internal)
       }
     }
   }

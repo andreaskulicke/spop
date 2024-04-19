@@ -16,8 +16,10 @@ export function UnassignedBadge(props: {
 }) {
     const items = useAppSelector(selectItems);
 
-    const count = items.filter(i => i.wanted).length;
-    const unassignedCount = items.filter(item => item.wanted && props.unassignedFilter(item)).length;
+    const count = items.filter((i) => i.wanted).length;
+    const unassignedCount = items.filter(
+        (item) => item.wanted && props.unassignedFilter(item),
+    ).length;
 
     return (
         <View style={{ flexDirection: "row", alignItems: "center" }}>

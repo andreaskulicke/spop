@@ -5,7 +5,11 @@ export function withPrefix(prefix: string, rhs: string | undefined): string {
     return "";
 }
 
-export function withSeparator(lhs: string | undefined, separator: string, rhs: string | undefined): string {
+export function withSeparator(
+    lhs: string | undefined,
+    separator: string,
+    rhs: string | undefined,
+): string {
     if (lhs && rhs) {
         return `${lhs}${separator}${rhs}`;
     }

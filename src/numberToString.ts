@@ -16,5 +16,5 @@ export function stringToNumber(value: string | undefined): number | undefined {
 }
 
 export function quantityToString(value: number | undefined): string {
-    return (value !== 0) ? numberToString(value) : "";
+    return value !== 0 ? numberToString(value) : "";
 }

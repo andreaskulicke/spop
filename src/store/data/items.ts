@@ -72,11 +72,20 @@ export const units: Unit[] = [
     },
 ];
 
-export function getNormalizedPriceBase(itemShop: Partial<ItemShop>, item?: Partial<Item>): number {
+export function getNormalizedPriceBase(
+    itemShop: Partial<ItemShop>,
+    item?: Partial<Item>,
+): number {
     if (itemShop.price) {
-        const packageQuantity = itemShop?.packageQuantity ?? item?.packageQuantity ?? 1;
-        const packageUnit = getUnit(itemShop?.packageUnitId ?? item?.packageUnitId);
-        return (itemShop.price * packageUnit.factorToNormalizedPriceBase / (packageQuantity))
+        const packageQuantity =
+            itemShop?.packageQuantity ?? item?.packageQuantity ?? 1;
+        const packageUnit = getUnit(
+            itemShop?.packageUnitId ?? item?.packageUnitId,
+        );
+        return (
+            (itemShop.price * packageUnit.factorToNormalizedPriceBase) /
+            packageQuantity
+        );
     }
     return 0;
 }
@@ -100,8 +109,11 @@ export function formatPrice(data: PriceData): string {
         return "";
     }
     let s = `${numberToString(price)}€`;
-    if (quantity || (unit.base !== "-")) {
-        const u = (unit.id && (unit.id !== "-") && (unit.id !== "pkg")) ? getUnitName(unit.id) : "";
+    if (quantity || unit.base !== "-") {
+        const u =
+            unit.id && unit.id !== "-" && unit.id !== "pkg"
+                ? getUnitName(unit.id)
+                : "";
         s += ` / ${quantity ?? ""}${u}`;
     }
     return s;
@@ -113,7 +125,10 @@ export function formatPrice(data: PriceData): string {
  * @param item The item.
  * @returns The normalized price.
  */
-export function getNormalizedPrice(itemShop: Partial<ItemShop>, item?: Partial<Item>): NormalizedPriceData {
+export function getNormalizedPrice(
+    itemShop: Partial<ItemShop>,
+    item?: Partial<Item>,
+): NormalizedPriceData {
     let p = itemShop.price ?? 0;
     const itemShopUnit = getUnit(itemShop.unitId);
     const packageUnit = getUnit(itemShop?.packageUnitId ?? item?.packageUnitId);
@@ -121,7 +136,8 @@ export function getNormalizedPrice(itemShop: Partial<ItemShop>, item?: Partial<I
     let unit: Unit;
 
     if (itemShopUnit.base === "-") {
-        packageQuantity = (itemShop?.packageQuantity ?? item?.packageQuantity ?? 1);
+        packageQuantity =
+            itemShop?.packageQuantity ?? item?.packageQuantity ?? 1;
         unit = packageUnit;
     } else {
         packageQuantity = 1;
@@ -129,7 +145,7 @@ export function getNormalizedPrice(itemShop: Partial<ItemShop>, item?: Partial<I
     }
 
     return {
-        price: p / packageQuantity * unit.factorToNormalizedPriceBase,
+        price: (p / packageQuantity) * unit.factorToNormalizedPriceBase,
         unit: getUnit(unit.normalizedPriceBase),
     };
 }
@@ -140,14 +156,17 @@ export function getNormalizedPrice(itemShop: Partial<ItemShop>, item?: Partial<I
  * @param item The item.
  * @returns The price.
  */
-export function getPackagePrice(itemShop: Partial<ItemShop>, item?: Partial<Item>): PriceData {
+export function getPackagePrice(
+    itemShop: Partial<ItemShop>,
+    item?: Partial<Item>,
+): PriceData {
     let p = itemShop.price ?? 0;
     const itemShopUnit = getUnit(itemShop.unitId);
     const packageQuantity = itemShop?.packageQuantity ?? item?.packageQuantity;
     const packageUnit = getUnit(itemShop?.packageUnitId ?? item?.packageUnitId);
 
-    if ((itemShopUnit.base !== "-") && (packageUnit.base !== "-")) {
-        p *= (packageQuantity ?? 1);
+    if (itemShopUnit.base !== "-" && packageUnit.base !== "-") {
+        p *= packageQuantity ?? 1;
         if (itemShopUnit.factorToBase < packageUnit.factorToBase) {
             p *= packageUnit.factorToBase;
         }
@@ -159,7 +178,7 @@ export function getPackagePrice(itemShop: Partial<ItemShop>, item?: Partial<Item
     return {
         price: p,
         quantity: packageQuantity,
-        unit: (packageUnit.base !== "-") ? packageUnit : itemShopUnit,
+        unit: packageUnit.base !== "-" ? packageUnit : itemShopUnit,
     };
 }
 
@@ -169,23 +188,41 @@ export function getPackagePrice(itemShop: Partial<ItemShop>, item?: Partial<Item
  * @param item For this item.
  * @returns Base package price.
  */
-export function getPackagePriceBase(itemShop: Partial<ItemShop>, item?: Partial<Item>): number {
+export function getPackagePriceBase(
+    itemShop: Partial<ItemShop>,
+    item?: Partial<Item>,
+): number {
     const priceData = getPackagePrice(itemShop, item);
-    const price = priceData.price / (priceData.quantity ?? 1) / (priceData.unit?.factorToBase ?? 1);
+    const price =
+        priceData.price /
+        (priceData.quantity ?? 1) /
+        (priceData.unit?.factorToBase ?? 1);
     return price;
 }
 
 // Units
 
-export function addQuantityUnit(quantity1: number, unitId1: UnitId | undefined, quantity2: number, unitId2: UnitId | undefined): { quantity: number, unitId: UnitId } {
+export function addQuantityUnit(
+    quantity1: number,
+    unitId1: UnitId | undefined,
+    quantity2: number,
+    unitId2: UnitId | undefined,
+): { quantity: number; unitId: UnitId } {
     const unit1 = getUnit(unitId1);
     const unit2 = getUnit(unitId2);
     // Check for recalc
     if (unit1.factorToBase !== unit2.factorToBase) {
-        return { quantity: (quantity1 * unit1.factorToBase) + (quantity2 * unit2.factorToBase), unitId: unit2.base };
+        return {
+            quantity:
+                quantity1 * unit1.factorToBase + quantity2 * unit2.factorToBase,
+            unitId: unit2.base,
+        };
     }
     // Just add
-    return { quantity: quantity1 + quantity2, unitId: (unit2.group ? unit2.id : unit1.id) };
+    return {
+        quantity: quantity1 + quantity2,
+        unitId: unit2.group ? unit2.id : unit1.id,
+    };
 }
 
 export function getQuantityUnitFromItem(item: Item | undefined): string {
@@ -196,7 +233,10 @@ export function getQuantityUnitFromItem(item: Item | undefined): string {
     return s;
 }
 
-export function getQuantityUnit(quantity: number | undefined, unitId: UnitId | undefined): string {
+export function getQuantityUnit(
+    quantity: number | undefined,
+    unitId: UnitId | undefined,
+): string {
     let s = "";
     if (quantity) {
         s = `${quantity} `;
@@ -215,31 +255,44 @@ export function getPackageQuantityUnit(item: Item): string {
 }
 
 export function getUnit(unitId: UnitId | undefined): Unit {
-    return units.find(unit => unit.id === unitId) ?? units[0];
+    return units.find((unit) => unit.id === unitId) ?? units[0];
 }
 
-export function getUnitName(unitId: UnitId | undefined, fullName?: boolean): string {
-    if (!fullName && (!unitId || (unitId === "-"))) {
+export function getUnitName(
+    unitId: UnitId | undefined,
+    fullName?: boolean,
+): string {
+    if (!fullName && (!unitId || unitId === "-")) {
         return "";
     }
     return getUnit(unitId).name;
 }
 
-export function parseQuantityUnit(quantity: string | undefined): [quantity: number, unit: UnitId] {
+export function parseQuantityUnit(
+    quantity: string | undefined,
+): [quantity: number, unit: UnitId] {
     let q = quantity?.trim().toLowerCase() ?? "";
     let u = "";
-    const pattern = new RegExp(`(\\d+)(${units.map(u => u.name.toLowerCase()).join("|")})`);
+    const pattern = new RegExp(
+        `(\\d+)(${units.map((u) => u.name.toLowerCase()).join("|")})`,
+    );
     const match = q.match(pattern);
     if (match) {
         q = match[1];
         u = match[2];
-        return [parseFloat(q), units.find(x => x.name.toLowerCase() === u)?.id ?? units[0].id];
+        return [
+            parseFloat(q),
+            units.find((x) => x.name.toLowerCase() === u)?.id ?? units[0].id,
+        ];
     }
     return [parseFloat(quantity ?? "0"), "-"];
 }
 
-export function replaceUnitIdIfEmpty(unitId: UnitId | undefined, replaceWithUnitId: UnitId | undefined): UnitId | undefined {
-    if (unitId && (unitId !== "-")) {
+export function replaceUnitIdIfEmpty(
+    unitId: UnitId | undefined,
+    replaceWithUnitId: UnitId | undefined,
+): UnitId | undefined {
+    if (unitId && unitId !== "-") {
         return unitId;
     }
     return replaceWithUnitId;
@@ -257,7 +310,7 @@ export interface Item {
     wanted?: boolean;
     notes?: string;
     shops: ItemShop[];
-    storages: { storageId: string; }[];
+    storages: { storageId: string }[];
 }
 
 export interface ItemShop {
@@ -278,11 +331,12 @@ export function itemListStyle(theme: MD3Theme): ViewStyle {
     };
 }
 
-export function isItem(o: (undefined | Category | Item)): o is Item {
+export function isItem(o: undefined | Category | Item): o is Item {
     const item = o as Item;
-    return (item?.wanted !== undefined)
-        || ((item?.shops !== undefined) && (item?.storages !== undefined));
+    return (
+        item?.wanted !== undefined ||
+        (item?.shops !== undefined && item?.storages !== undefined)
+    );
 }
 
-export const defaultItems: Item[] = [
-];
+export const defaultItems: Item[] = [];
