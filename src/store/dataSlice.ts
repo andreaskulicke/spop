@@ -1,6 +1,6 @@
 import { Category, defaultCategories, emptyCategory } from './data/categories';
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { defaultItems, getPackagePriceBase, getPriceOfPriceBase, isItem, Item, ItemShop, UnitId, units } from './data/items';
+import { defaultItems, getPackagePriceBase, getNormalizedPriceBase, isItem, Item, ItemShop, UnitId, units } from './data/items';
 import { RootState } from './store';
 import { Shop, defaultShops } from './data/shops';
 import { Storage, defaultStorages } from './data/storages';
@@ -221,6 +221,20 @@ export const itemsSlice = createSlice({
                 }
             }
         },
+        setItemShopPackage: (state, action: PayloadAction<{ itemId: string, shopId: string, packageQuantity?: number, packageUnitId?: UnitId }>) => {
+            if (action.payload.shopId !== allShop.id) {
+                const item = state.items.find(x => x.id === action.payload.itemId);
+                if (item) {
+                    let shop = item.shops.find(x => x.shopId === action.payload.shopId);
+                    if (!shop) {
+                        shop = { shopId: action.payload.shopId };
+                        item.shops.push(shop);
+                    }
+                    shop.packageQuantity = action.payload.packageQuantity;
+                    shop.packageUnitId = action.payload.packageUnitId; // TODO: check diff unit across item.unitId, item.packageUnitId
+                }
+            }
+        },
         setItemShopPrice: (state, action: PayloadAction<{ itemId: string, shopId: string, price?: number, unitId?: UnitId }>) => {
             if (action.payload.shopId !== allShop.id) {
                 const item = state.items.find(x => x.id === action.payload.itemId);
@@ -438,6 +452,7 @@ export const {
     setItemPackageUnit,
     setItems,
     setItemShop,
+    setItemShopPackage,
     setItemShopPrice,
     setItemStorage,
     setItemUnit,
@@ -744,7 +759,7 @@ export function selectItemShopsWithMinPrice(itemId: string): (state: RootState) 
             }
             const prices = item.shops
                 .filter(x => (x.price !== undefined) && (x.price !== null))
-                .map(x => ({ p: getPackagePriceBase(x, item), pb: getPriceOfPriceBase(x, item), s: x }));
+                .map(x => ({ p: getPackagePriceBase(x, item), pb: getNormalizedPriceBase(x, item), s: x }));
             const minPrice = Math.min(...prices.map(x => x.p));
             const minBasePrice = Math.min(...prices.map(x => x.pb));
             return {
