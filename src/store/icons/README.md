@@ -1,3 +1,5 @@
+https://react-svgr.com/playground/?native=true
+
 # logo/*
 
 - 01.12.2023: https://commons.wikimedia.org/wiki/File:Ampelmann_Gr%C3%BCn.svg

@@ -9,7 +9,7 @@ import { StatusBarView } from './StatusBarView';
 import { useAppSelector } from './store/hooks';
 import { View } from 'react-native';
 import React, { useState } from 'react';
-import TrayOff from './store/icons/tray-off.svg';
+import TrayOff from './store/icons/tray-off';
 
 export function ShopItemsScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
