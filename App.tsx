@@ -9,10 +9,11 @@ import { Provider } from 'react-redux';
 import { SettingsScreen } from './src/SettingsScreen';
 import { ShopScreen } from './src/ShopScreen';
 import { StorageScreen } from './src/StorageScreen';
-import { store } from './src/store/store';
+import { persistor, store } from './src/store/store';
 import { useAppSelector } from './src/store/hooks';
 import { useColorScheme } from 'react-native';
 import { selectTheme } from './src/store/settingsSlice';
+import { PersistGate } from 'redux-persist/integration/react';
 
 // import "./ReactotronConfig";
 // if (__DEV__) {
@@ -33,7 +34,12 @@ const RootStack = createNativeStackNavigator<RootStackParamList>();
 export default function App() {
     return (
         <Provider store={store}>
-            <AppWithStore />
+            <PersistGate
+                loading={null}
+                persistor={persistor}
+            >
+                <AppWithStore />
+            </PersistGate>
         </Provider>
     );
 }

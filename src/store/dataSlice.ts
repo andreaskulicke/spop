@@ -697,11 +697,7 @@ export function selectItemsWithShop(
 }
 
 export function selectItemsWantedWithShop(shop: Shop, shopCategoryFilterOff: boolean | undefined, stopperOff: boolean | undefined) {
-    return createSelector(
-        [selectItemsWithShop(shop, item => !!item.wanted, shopCategoryFilterOff, stopperOff, true)],
-        (items) => {
-            return items;
-        });
+    return selectItemsWithShop(shop, item => !!item.wanted, shopCategoryFilterOff, stopperOff, true);
 }
 
 export function selectItemsWantedWithShopHidden(shop: Shop, stopperOff: boolean | undefined) {
