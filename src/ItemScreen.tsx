@@ -631,6 +631,9 @@ export function ItemScreen(props: {
                                                                     currentItemShop
                                                                 }
                                                                 item={item}
+                                                                normalized={
+                                                                    true
+                                                                }
                                                                 priceData={getNormalizedPrice(
                                                                     currentItemShop,
                                                                     item,
@@ -687,6 +690,7 @@ export function ItemScreen(props: {
 function Price(props: {
     itemShop: ItemShop;
     item: Item;
+    normalized?: boolean;
     priceData: PriceData;
 }) {
     const theme = useTheme();
@@ -696,7 +700,11 @@ function Price(props: {
             <Text style={{ color: theme.colors.primary }}>
                 {formatPrice(props.priceData)}
             </Text>
-            <PriceIcon itemId={props.item.id} shopId={props.itemShop.shopId} />
+            <PriceIcon
+                itemId={props.item.id}
+                shopId={props.itemShop.shopId}
+                normalized={props.normalized}
+            />
         </View>
     );
 }

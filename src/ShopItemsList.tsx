@@ -34,7 +34,7 @@ import {
 } from "react-native-paper";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { numberToString, quantityToString } from "./numberToString";
-import { PriceIcon } from "./PriceIcon";
+import { PriceIcon, SummaryPriceIcon } from "./PriceIcon";
 import { RootStackParamList } from "../App";
 import {
     selectUiItemsList,
@@ -380,7 +380,7 @@ function QuantityPrice(props: {
                         <Text style={{ color: theme.colors.primary }}>
                             {props.price}
                         </Text>
-                        <PriceIcon
+                        <SummaryPriceIcon
                             itemId={props.itemId}
                             shopId={props.shopId}
                         />

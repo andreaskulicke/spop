@@ -131,7 +131,11 @@ export function getNormalizedPrice(
 ): NormalizedPriceData {
     let p = itemShop.price ?? 0;
     const itemShopUnit = getUnit(itemShop.unitId);
-    const packageUnit = getUnit(itemShop?.packageUnitId ?? item?.packageUnitId);
+    const packageUnit = getUnit(
+        getUnit(itemShop?.packageUnitId).base === "-"
+            ? item?.packageUnitId
+            : itemShop?.packageUnitId,
+    );
     let packageQuantity: number;
     let unit: Unit;
 
@@ -163,7 +167,11 @@ export function getPackagePrice(
     let p = itemShop.price ?? 0;
     const itemShopUnit = getUnit(itemShop.unitId);
     const packageQuantity = itemShop?.packageQuantity ?? item?.packageQuantity;
-    const packageUnit = getUnit(itemShop?.packageUnitId ?? item?.packageUnitId);
+    const packageUnit = getUnit(
+        getUnit(itemShop?.packageUnitId).base === "-"
+            ? item?.packageUnitId
+            : itemShop?.packageUnitId,
+    );
 
     if (itemShopUnit.base !== "-" && packageUnit.base !== "-") {
         p *= packageQuantity ?? 1;
@@ -195,7 +203,6 @@ export function getPackagePriceBase(
     const priceData = getPackagePrice(itemShop, item);
     const price =
         priceData.price /
-        (priceData.quantity ?? 1) /
         (priceData.unit?.factorToBase ?? 1);
     return price;
 }

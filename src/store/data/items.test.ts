@@ -1,4 +1,5 @@
 import {
+    Unit,
     UnitId,
     formatPrice,
     getNormalizedPrice,
@@ -128,6 +129,21 @@ describe("getNormalizedPrice()", () => {
         expect(price).toBe(5);
         expect(unit.id).toBe("kg");
     });
+
+    test.each([undefined, "-"])(
+        "price without package unit (%s), with shop package quantity and kg",
+        (u: string | undefined) => {
+            const { price, unit } = getNormalizedPrice(
+                {
+                    price: 5,
+                    packageUnitId: u as UnitId,
+                },
+                { packageQuantity: 50, packageUnitId: "kg" },
+            );
+            expect(price).toBe(0.1);
+            expect(unit.id).toBe("kg");
+        },
+    );
 });
 
 describe("getNormalizedPriceBase()", () => {
@@ -414,6 +430,22 @@ describe("getPackagePrice()", () => {
         expect(quantity).toBe(50);
         expect(unit.id).toBe("kg");
     });
+
+    test.each([undefined, "-"])(
+        "price without package unit (%s), with shop package quantity and kg",
+        (u: string | undefined) => {
+            const { price, quantity, unit } = getPackagePrice(
+                {
+                    price: 5,
+                    packageUnitId: u as UnitId,
+                },
+                { packageQuantity: 50, packageUnitId: "kg" },
+            );
+            expect(price).toBe(5);
+            expect(quantity).toBe(50);
+            expect(unit.id).toBe("kg");
+        },
+    );
 });
 
 describe("getPackagePriceBase()", () => {
@@ -426,41 +458,41 @@ describe("getPackagePriceBase()", () => {
             { price: 5 },
             { packageQuantity: 50 },
         );
-        expect(price).toBe(5 / 50);
+        expect(price).toBe(5);
     });
     test("price with shop package quantity", () => {
         const price = getPackagePriceBase(
             { price: 5, packageQuantity: 50 },
             { packageQuantity: 500 },
         );
-        expect(price).toBe(5 / 50);
+        expect(price).toBe(5);
     });
     test("price with package quantity and g", () => {
         const price = getPackagePriceBase(
             { price: 5 },
             { packageQuantity: 50, packageUnitId: "g" },
         );
-        expect(price).toBe(5 / 50);
+        expect(price).toBe(5);
     });
     test("price with shop package quantity and g", () => {
         const price = getPackagePriceBase(
             { price: 5, packageQuantity: 50, packageUnitId: "g" },
             { packageQuantity: 500, packageUnitId: "kg" },
         );
-        expect(price).toBe(5 / 50);
+        expect(price).toBe(5);
     });
     test("price with package quantity and kg", () => {
         const price = getPackagePriceBase(
             { price: 5 },
             { packageQuantity: 50, packageUnitId: "kg" },
         );
-        expect(price).toBe(5 / 50 / 1000);
+        expect(price).toBe(5 / 1000);
     });
     test("price with shop package quantity and kg", () => {
         const price = getPackagePriceBase(
             { price: 5, packageQuantity: 50, packageUnitId: "kg" },
             { packageQuantity: 500, packageUnitId: "g" },
         );
-        expect(price).toBe(5 / 50 / 1000);
+        expect(price).toBe(5 / 1000);
     });
 });

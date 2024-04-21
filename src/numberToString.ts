@@ -1,8 +1,14 @@
-export function numberToString(value: number | undefined): string {
-    if (Number.isNaN(value)) {
+export function numberToString(
+    value: number | undefined,
+    precision: number = 2,
+): string {
+    if (Number.isNaN(value) || value === undefined || value === null) {
         return "";
     }
-    return value?.toString().replace(".", ",") ?? "";
+    let valueTmp = Number.isInteger(value)
+        ? value.toString()
+        : value.toFixed(precision);
+    return valueTmp.replace(".", ",");
 }
 
 export function stringToNumber(value: string | undefined): number | undefined {

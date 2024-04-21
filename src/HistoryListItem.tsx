@@ -10,7 +10,7 @@ import {
     useTheme,
 } from "react-native-paper";
 import { numberToString } from "./numberToString";
-import { PriceIcon } from "./PriceIcon";
+import { PriceIcon, SummaryPriceIcon } from "./PriceIcon";
 import { View } from "react-native";
 import React from "react";
 
@@ -107,7 +107,7 @@ export function HistoryListItem(props: {
                                 >
                                     {numberToString(price)} €
                                 </Text>
-                                <PriceIcon
+                                <SummaryPriceIcon
                                     itemId={props.item.id}
                                     shopId={props.shopId}
                                 />
