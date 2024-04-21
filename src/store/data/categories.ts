@@ -1,5 +1,6 @@
 export const categoryIds = [
     "alcohol",
+    "asia",
     "baking",
     "bakery",
     "canned_fruits",
@@ -140,6 +141,11 @@ export const defaultCategories: Category[] = [
         id: "noodles",
         icon: "noodles",
         name: "Nudeln",
+    },
+    {
+        id: "asia",
+        icon: "noodles",
+        name: "Asia",
     },
     {
         id: "rice",
