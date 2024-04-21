@@ -40,7 +40,7 @@ function isExpanded(
     collapsed: ItemsSectionListSection["collapsed"] | undefined,
 ): boolean {
     if (isCollapsedArray(collapsed)) {
-        return collapsed[0];
+        return !collapsed[0];
     }
     return !collapsed;
 }
