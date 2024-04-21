@@ -1012,7 +1012,7 @@ export function selectItemsWantedWithShopHidden(
 export const selectItemsWantedWithoutShop = createSelector(
     [selectItems],
     (items) => {
-        return items.filter((x) => x.wanted && x.shops.length === 0);
+        return items.filter((x) => x.wanted && x.shops.filter(x => x.checked).length === 0);
     },
 );
 
