@@ -21,7 +21,7 @@ export const defaultStorages: Storage[] = [
     },
     {
         id: "storageroom",
-        name: "Vorratsraum",
+        name: "Keller Vorratsraum",
     },
     {
         id: "freezer",
@@ -32,5 +32,9 @@ export const defaultStorages: Storage[] = [
         id: "laundry",
         name: "Waschküche",
         defaultCategoryId: "household",
+    },
+    {
+        id: "nowhere",
+        name: "Nirgendwo",
     },
 ];
