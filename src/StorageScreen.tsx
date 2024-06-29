@@ -22,7 +22,9 @@ export function StorageScreen(props: {
     // Just register on category change in case the default category gets deleted via edit from here.
     // Re-render would be missing otherwise.
     const categories = useAppSelector(selectCategories);
-    const storage = useAppSelector(selectStorage(props.route.params.id));
+    const storage = useAppSelector((state) =>
+        selectStorage(state, props.route.params.id),
+    );
     const dispatch = useAppDispatch();
 
     function handleGoBack() {

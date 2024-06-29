@@ -14,7 +14,9 @@ export function StorageItemsScreen(props: {
     route: RouteProp<StoragesStackParamList, "Fill">;
 }) {
     const [selectedItemId, setSelectedItemId] = useState("");
-    const storage = useAppSelector(selectStorage(props.route.params.storageId));
+    const storage = useAppSelector((state) =>
+        selectStorage(state, props.route.params.storageId),
+    );
 
     function handleEditPress(): void {
         props.navigation.navigate("Storage", { id: storage.id });

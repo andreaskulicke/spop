@@ -23,9 +23,11 @@ export function ShopItemsScreen(props: {
     const [showHidden, setShowHidden] = useState(false);
     const [stopperOff, setStopperOff] = useState(false);
 
-    const shop = useAppSelector(selectShop(props.route.params.id));
-    const itemsWantedThisShopHidden = useAppSelector(
-        selectItemsWantedWithShopHidden(shop, stopperOff),
+    const shop = useAppSelector((state) =>
+        selectShop(state, props.route.params.id),
+    );
+    const itemsWantedThisShopHidden = useAppSelector((state) =>
+        selectItemsWantedWithShopHidden(state, shop, stopperOff),
     );
 
     const theme = useTheme();

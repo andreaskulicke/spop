@@ -204,7 +204,9 @@ function Adder(props: {
     visible?: boolean;
     onClose: (item?: Item) => void;
 }) {
-    const originalItem = useAppSelector(selectItemByName(props.item?.name));
+    const originalItem = useAppSelector((state) =>
+        selectItemByName(state, props.item?.name),
+    );
     const theme = useTheme();
 
     const [existing, setExisting] = useState<Data>();

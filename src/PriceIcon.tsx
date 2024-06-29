@@ -1,53 +1,67 @@
 import { selectItem, selectItemShopsWithMinPrice } from "./store/dataSlice";
 import { useTheme, Icon } from "react-native-paper";
 import { useAppSelector } from "./store/hooks";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 export function SummaryPriceIcon(props: {
     itemId: string;
     shopId: string | undefined;
+    onTooltipText?: (text: string) => void;
 }) {
-    const item = useAppSelector(selectItem(props.itemId));
-    const itemShopsWithMinPrice = useAppSelector(
-        selectItemShopsWithMinPrice(props.itemId),
+    const item = useAppSelector((state) => selectItem(state, props.itemId));
+    const itemShopsWithMinPrice = useAppSelector((state) =>
+        selectItemShopsWithMinPrice(state, props.itemId),
     );
     const theme = useTheme();
 
-    const numberOfShopsWithPrices =
-        item?.shops.filter((x) => x.price).length ?? 0;
-    const hasMinPackagePrice = itemShopsWithMinPrice.prices.find(
-        (x) => x.shopId === props.shopId,
-    );
-    const hasMinNormalizedPrice = itemShopsWithMinPrice.normalizedPrices.find(
-        (x) => x.shopId === props.shopId,
-    );
+    const [numberOfShopsWithPrices, setNumberOfShopsWithPrices] = useState(0);
+    const [color, setColor] = useState(theme.colors.background);
+    const [icon, setIcon] = useState("");
 
-    let color = "";
-    let icon = "";
-    if (hasMinPackagePrice) {
-        if (hasMinNormalizedPrice) {
-            color = "green";
-            if (
-                itemShopsWithMinPrice.prices.length > 1 ||
-                itemShopsWithMinPrice.normalizedPrices.length > 1
-            ) {
-                icon = "arrow-right";
+    useEffect(() => {
+        setNumberOfShopsWithPrices(
+            item?.shops.filter((x) => x.price).length ?? 0,
+        );
+        const hasMinPackagePrice = itemShopsWithMinPrice.prices.find(
+            (x) => x.shopId === props.shopId,
+        );
+        const hasMinNormalizedPrice =
+            itemShopsWithMinPrice.normalizedPrices.find(
+                (x) => x.shopId === props.shopId,
+            );
+
+        let tooltipText = "";
+        if (hasMinPackagePrice) {
+            if (hasMinNormalizedPrice) {
+                setColor("green");
+                if (
+                    itemShopsWithMinPrice.prices.length > 1 ||
+                    itemShopsWithMinPrice.normalizedPrices.length > 1
+                ) {
+                    setIcon("arrow-right");
+                    tooltipText = "Gleiche Preise";
+                } else {
+                    setIcon("arrow-up");
+                    tooltipText = "Bester Preis";
+                }
             } else {
-                icon = "arrow-up";
+                setColor(theme.colors.error);
+                setIcon("arrow-bottom-right");
+                tooltipText = "Woanders Preis pro Einheit besser!";
             }
         } else {
-            color = theme.colors.error;
-            icon = "arrow-bottom-right";
+            if (hasMinNormalizedPrice) {
+                setColor("green");
+                setIcon("arrow-top-right");
+                tooltipText = "Bester Preis pro Einheit";
+            } else {
+                setColor(theme.colors.error);
+                setIcon("arrow-down");
+                tooltipText = "Woanders billiger!";
+            }
         }
-    } else {
-        if (hasMinNormalizedPrice) {
-            color = "green";
-            icon = "arrow-top-right";
-        } else {
-            color = theme.colors.error;
-            icon = "arrow-down";
-        }
-    }
+        props.onTooltipText?.(tooltipText);
+    }, [itemShopsWithMinPrice]);
 
     return numberOfShopsWithPrices > 1 ? (
         <Icon color={color} source={icon} size={16} />
@@ -61,9 +75,9 @@ export function PriceIcon(props: {
     itemId: string;
     shopId: string | undefined;
 }) {
-    const item = useAppSelector(selectItem(props.itemId));
-    const itemShopsWithMinPrice = useAppSelector(
-        selectItemShopsWithMinPrice(props.itemId),
+    const item = useAppSelector((state) => selectItem(state, props.itemId));
+    const itemShopsWithMinPrice = useAppSelector((state) =>
+        selectItemShopsWithMinPrice(state, props.itemId),
     );
     const theme = useTheme();
 

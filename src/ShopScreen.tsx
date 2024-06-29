@@ -42,7 +42,9 @@ export function ShopScreen(props: {
     const [name, setName] = useState("");
     const [categoriesExpanded, setCategoriesExpanded] = useState(false);
     const categories = useAppSelector(selectCategories);
-    const shop = useAppSelector(selectShop(props.route.params.id));
+    const shop = useAppSelector((state) =>
+        selectShop(state, props.route.params.id),
+    );
     const dispatch = useAppDispatch();
 
     function handleGoBack() {

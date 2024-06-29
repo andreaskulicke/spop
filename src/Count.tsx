@@ -7,8 +7,8 @@ export function CategoryCount(props: {
     categoryId: string | undefined;
     style?: Style | undefined;
 }) {
-    const itemsCategory = useAppSelector(
-        selectItemsWithCategory(props.categoryId),
+    const itemsCategory = useAppSelector((state) =>
+        selectItemsWithCategory(state, props.categoryId),
     );
 
     return <Count count={itemsCategory.length} style={props.style} />;

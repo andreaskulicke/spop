@@ -1,6 +1,11 @@
 import { Menu, TextInput, TouchableRipple } from "react-native-paper";
 import { UnitId, getUnitName, units } from "./store/data/items";
 import React, { useState } from "react";
+import { LogBox } from "react-native";
+
+LogBox.ignoreLogs([
+    "Warning: TextInput.Icon: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
+]);
 
 export function UnitSelection(props: {
     itemId: string;
@@ -26,6 +31,7 @@ export function UnitSelection(props: {
                         value={getUnitName(props.value, true)}
                         right={
                             <TextInput.Icon
+                                forceTextInputFocus={true}
                                 icon={
                                     menuVisible ? "chevron-up" : "chevron-down"
                                 }

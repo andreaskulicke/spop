@@ -52,18 +52,18 @@ export function StorageItemsList(props: {
 }) {
     const storages = useAppSelector(selectStorages);
     const itemsWanted = useAppSelector(selectItemsWanted);
-    const itemsWantedThisStorage = useAppSelector(
-        selectItemsWantedWithStorage(props.storage.id),
+    const itemsWantedThisStorage = useAppSelector((state) =>
+        selectItemsWantedWithStorage(state, props.storage.id),
     );
     const itemsWantedWithoutStorage = useAppSelector(
         selectItemsWantedWithoutStorage,
     );
     const itemsNotWanted = useAppSelector(selectItemsNotWanted);
-    const itemsNotWantedThisStorage = useAppSelector(
-        selectItemsNotWantedWithStorage(props.storage.id),
+    const itemsNotWantedThisStorage = useAppSelector((state) =>
+        selectItemsNotWantedWithStorage(state, props.storage.id),
     );
-    const itemsNotWantedDifferentStorage = useAppSelector(
-        selectItemsNotWantedWithDifferentStorage(props.storage.id),
+    const itemsNotWantedDifferentStorage = useAppSelector((state) =>
+        selectItemsNotWantedWithDifferentStorage(state, props.storage.id),
     );
     const uiItemsList = useAppSelector(selectUiItemsList);
     const dispatch = useAppDispatch();

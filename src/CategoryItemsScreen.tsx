@@ -33,21 +33,23 @@ export function CategoryItemsScreen(props: {
     navigation: NavigationProp<RootStackParamList & CategoriesStackParamList>;
     route: RouteProp<CategoriesStackParamList, "CategoryItems">;
 }) {
-    const category = useAppSelector(selectCategory(props.route.params.id));
+    const category = useAppSelector((state) =>
+        selectCategory(state, props.route.params.id),
+    );
     const categories = useAppSelector(selectCategories);
     const itemsWanted = useAppSelector(selectItemsWanted);
-    const itemsWantedThisCategory = useAppSelector(
-        selectItemsWantedWithCategory(category?.id),
+    const itemsWantedThisCategory = useAppSelector((state) =>
+        selectItemsWantedWithCategory(state, category?.id),
     );
-    const itemsWantedWithoutCategory = useAppSelector(
-        selectItemsWantedWithCategory(undefined),
+    const itemsWantedWithoutCategory = useAppSelector((state) =>
+        selectItemsWantedWithCategory(state, undefined),
     );
     const itemsNotWanted = useAppSelector(selectItemsNotWanted);
-    const itemsNotWantedThisCategory = useAppSelector(
-        selectItemsNotWantedWithCategory(category?.id),
+    const itemsNotWantedThisCategory = useAppSelector((state) =>
+        selectItemsNotWantedWithCategory(state, category?.id),
     );
-    const itemsNotWantedDifferentCategory = useAppSelector(
-        selectItemsNotWantedWithDifferentCategory(category?.id),
+    const itemsNotWantedDifferentCategory = useAppSelector((state) =>
+        selectItemsNotWantedWithDifferentCategory(state, category?.id),
     );
     const uiItemsList = useAppSelector(selectUiItemsList);
     const dispatch = useAppDispatch();

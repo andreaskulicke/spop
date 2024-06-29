@@ -31,10 +31,11 @@ import {
     IconButton,
     useTheme,
     TouchableRipple,
+    Tooltip,
 } from "react-native-paper";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { numberToString, quantityToString } from "./numberToString";
-import { PriceIcon, SummaryPriceIcon } from "./PriceIcon";
+import { SummaryPriceIcon } from "./PriceIcon";
 import { RootStackParamList } from "../App";
 import {
     selectUiItemsList,
@@ -57,8 +58,9 @@ export function ShopItemsList(props: {
 }) {
     const shops = useAppSelector(selectValidShops);
     const itemsWanted = useAppSelector(selectItemsWanted);
-    const itemsWantedThisShop = useAppSelector(
+    const itemsWantedThisShop = useAppSelector((state) =>
         selectItemsWantedWithShop(
+            state,
             props.shop,
             props.showHidden,
             props.stopperOff,
@@ -66,11 +68,11 @@ export function ShopItemsList(props: {
     );
     const itemsWantedWithoutShop = useAppSelector(selectItemsWantedWithoutShop);
     const itemsNotWanted = useAppSelector(selectItemsNotWanted);
-    const itemsNotWantedThisShop = useAppSelector(
-        selectItemsNotWantedWithShop(props.shop, true),
+    const itemsNotWantedThisShop = useAppSelector((state) =>
+        selectItemsNotWantedWithShop(state, props.shop, true),
     );
-    const itemsNotWantedDifferentShop = useAppSelector(
-        selectItemsNotWantedWithDifferentShop(props.shop),
+    const itemsNotWantedDifferentShop = useAppSelector((state) =>
+        selectItemsNotWantedWithDifferentShop(state, props.shop),
     );
     const uiItemsList = useAppSelector(selectUiItemsList);
     const dispatch = useAppDispatch();
@@ -346,47 +348,51 @@ function QuantityPrice(props: {
     price: string | undefined;
     onPress: () => void;
 }) {
+    const [tooltipText, setTooltipText] = useState("");
     const theme = useTheme();
 
     return (
-        <TouchableRipple
-            style={{
-                justifyContent: "center",
-                minHeight: 40,
-                minWidth: 80,
-                paddingHorizontal: 8,
+        <Tooltip title={tooltipText}>
+            <TouchableRipple
+                style={{
+                    justifyContent: "center",
+                    minHeight: 40,
+                    minWidth: 80,
+                    paddingHorizontal: 8,
 
-                alignItems: "flex-end",
-                backgroundColor: theme.colors.elevation.level3,
-                borderColor: theme.colors.elevation.level3,
-                borderRadius: theme.roundness,
-            }}
-            onPress={props.onPress}
-        >
-            <View style={{ alignItems: "flex-end" }}>
-                {props.quantity && (
-                    <Text style={{ color: theme.colors.primary }}>
-                        {props.quantity}
-                    </Text>
-                )}
-                {props.shopId !== allShop.id && props.price && (
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 2,
-                        }}
-                    >
+                    alignItems: "flex-end",
+                    backgroundColor: theme.colors.elevation.level3,
+                    borderColor: theme.colors.elevation.level3,
+                    borderRadius: theme.roundness,
+                }}
+                onPress={props.onPress}
+            >
+                <View style={{ alignItems: "flex-end" }}>
+                    {props.quantity && (
                         <Text style={{ color: theme.colors.primary }}>
-                            {props.price}
+                            {props.quantity}
                         </Text>
-                        <SummaryPriceIcon
-                            itemId={props.itemId}
-                            shopId={props.shopId}
-                        />
-                    </View>
-                )}
-            </View>
-        </TouchableRipple>
+                    )}
+                    {props.shopId !== allShop.id && props.price && (
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: 2,
+                            }}
+                        >
+                            <Text style={{ color: theme.colors.primary }}>
+                                {props.price}
+                            </Text>
+                            <SummaryPriceIcon
+                                itemId={props.itemId}
+                                shopId={props.shopId}
+                                onTooltipText={(text) => setTooltipText(text)}
+                            />
+                        </View>
+                    )}
+                </View>
+            </TouchableRipple>
+        </Tooltip>
     );
 }

@@ -20,7 +20,9 @@ export function CategoryScreen(props: {
 }) {
     const [name, setName] = useState("");
     const [iconModalVisible, setIconModalVisible] = useState(false);
-    const category = useAppSelector(selectCategory(props.route.params.id));
+    const category = useAppSelector((state) =>
+        selectCategory(state, props.route.params.id),
+    );
     const dispatch = useAppDispatch();
 
     function handleGoBack() {

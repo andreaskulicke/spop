@@ -84,7 +84,9 @@ export function ItemScreen(props: {
     const [shopsExpanded, setShopsExpanded] = useState(
         !!props.route.params.shopId,
     );
-    const item = useAppSelector(selectItem(props.route.params.id))!;
+    const item = useAppSelector((state) =>
+        selectItem(state, props.route.params.id),
+    )!;
     const shops = useAppSelector(selectValidShops);
     const storages = useAppSelector((state) => state.data.storages);
     const dispatch = useAppDispatch();
