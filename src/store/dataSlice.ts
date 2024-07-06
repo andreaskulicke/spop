@@ -1007,7 +1007,7 @@ export const selectItemsWantedWithShopHidden = createSelector(
     (state: RootState, shop: Shop) => shop,
     (items: (Category | Item | undefined)[], shop: Shop) => {
         const itemsTmp = items
-            .filter((x) => isItem(x))
+            .filter((x) => isItem(x) && x.categoryId)
             .filter(
                 (x) =>
                     !((shop.categoryIds?.length ?? 0) === 0) ||
