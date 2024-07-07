@@ -42,7 +42,6 @@ export const settingsSlice = createSlice({
                 keepAwake: boolean;
             }>,
         ) => {
-            console.log(state.display.keepAwake);
             if (action.payload.keepAwake) {
                 state.display.keepAwake = [
                     ...new Set(

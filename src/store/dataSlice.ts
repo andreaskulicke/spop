@@ -1035,7 +1035,7 @@ export const selectItemsNotWantedWithShop = createSelector(
         selectItemsWithShop(
             state,
             shop,
-            (item: Item) => !!item.wanted,
+            (item: Item) => !item.wanted,
             false,
             stopperOff,
             false,
