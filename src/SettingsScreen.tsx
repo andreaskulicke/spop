@@ -2,6 +2,7 @@ import {
     Appbar,
     Button,
     Card,
+    Checkbox,
     Icon,
     IconButton,
     List,
@@ -25,7 +26,15 @@ import {
     setShops,
     setStorages,
 } from "./store/dataSlice";
-import { resetSettings, setColorTheme, setTheme } from "./store/settingsSlice";
+import {
+    resetSettings,
+    selectKeepAwakeCategories,
+    selectKeepAwakeShops,
+    selectKeepAwakeStorages,
+    setColorTheme,
+    setKeepAwake,
+    setTheme,
+} from "./store/settingsSlice";
 import { RootStackParamList } from "../App";
 import { StatusBarView } from "./StatusBarView";
 import { store } from "./store/store";
@@ -40,6 +49,10 @@ export function SettingsScreen(props: {
 }) {
     const settings = useAppSelector((state) => state.settings);
     const dataVersion = useAppSelector((state) => state.data.version);
+    const isKeepAwakeCategories = useAppSelector(selectKeepAwakeCategories);
+    const isKeepAwakeShops = useAppSelector(selectKeepAwakeShops);
+    const isKeepAwakeStorages = useAppSelector(selectKeepAwakeStorages);
+
     const categories = useAppSelector(selectCategories);
     const items = useAppSelector(selectItems);
     const shops = useAppSelector(selectShops);
@@ -176,6 +189,74 @@ export function SettingsScreen(props: {
                             />
                         ))}
                     </Menu>
+                    <Card style={{ margin: 8 }}>
+                        <Card.Title title="Bildschirm anlassen in:" />
+                        <View>
+                            <List.Item
+                                title="Vorratsorte"
+                                right={(p) => (
+                                    <Checkbox
+                                        status={
+                                            isKeepAwakeStorages
+                                                ? "checked"
+                                                : "unchecked"
+                                        }
+                                        onPress={() =>
+                                            dispatch(
+                                                setKeepAwake({
+                                                    area: "storages",
+                                                    keepAwake:
+                                                        !isKeepAwakeStorages,
+                                                }),
+                                            )
+                                        }
+                                    />
+                                )}
+                            />
+                            <List.Item
+                                title="Kategorien"
+                                right={(p) => (
+                                    <Checkbox
+                                        status={
+                                            isKeepAwakeCategories
+                                                ? "checked"
+                                                : "unchecked"
+                                        }
+                                        onPress={() =>
+                                            dispatch(
+                                                setKeepAwake({
+                                                    area: "categories",
+                                                    keepAwake:
+                                                        !isKeepAwakeCategories,
+                                                }),
+                                            )
+                                        }
+                                    />
+                                )}
+                            />
+                            <List.Item
+                                title="Shops"
+                                right={(p) => (
+                                    <Checkbox
+                                        status={
+                                            isKeepAwakeShops
+                                                ? "checked"
+                                                : "unchecked"
+                                        }
+                                        onPress={() =>
+                                            dispatch(
+                                                setKeepAwake({
+                                                    area: "shops",
+                                                    keepAwake:
+                                                        !isKeepAwakeShops,
+                                                }),
+                                            )
+                                        }
+                                    />
+                                )}
+                            />
+                        </View>
+                    </Card>
                 </Card>
                 <Card style={{ margin: 8 }}>
                     <TouchableRipple onPress={() => setDataExpanded((x) => !x)}>

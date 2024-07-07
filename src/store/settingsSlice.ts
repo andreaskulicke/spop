@@ -1,13 +1,16 @@
 import { ColorSchemeName } from "react-native";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import { ThemeName, themes, ThemeType } from "./themes/themes";
+
+export type KeepAwakeArea = "storages" | "categories" | "shops";
 
 export interface Settings {
     version: string;
     display: {
         colorTheme: ColorSchemeName;
         theme: ThemeName;
+        keepAwake: KeepAwakeArea[];
     };
 }
 
@@ -17,6 +20,7 @@ const initialState: Settings = {
     display: {
         colorTheme: undefined,
         theme: "default",
+        keepAwake: ["storages", "shops"],
     },
 };
 
@@ -31,6 +35,29 @@ export const settingsSlice = createSlice({
         setColorTheme: (state, action: PayloadAction<ColorSchemeName>) => {
             state.display.colorTheme = action.payload;
         },
+        setKeepAwake: (
+            state,
+            action: PayloadAction<{
+                area: KeepAwakeArea;
+                keepAwake: boolean;
+            }>,
+        ) => {
+            console.log(state.display.keepAwake);
+            if (action.payload.keepAwake) {
+                state.display.keepAwake = [
+                    ...new Set(
+                        (state.display.keepAwake ?? []).concat(
+                            action.payload.area,
+                        ),
+                    ),
+                ];
+            } else {
+                state.display.keepAwake =
+                    state.display.keepAwake?.filter(
+                        (x) => x !== action.payload.area,
+                    ) ?? [];
+            }
+        },
         setTheme: (state, action: PayloadAction<ThemeName>) => {
             state.display.theme = action.payload;
         },
@@ -41,6 +68,7 @@ export const {
     resetSettings,
 
     setColorTheme,
+    setKeepAwake,
     setTheme,
 } = settingsSlice.actions;
 
@@ -49,11 +77,50 @@ export const {
 
 export default settingsSlice.reducer;
 
-export function selectTheme(isDark: boolean): (state: RootState) => ThemeType {
-    return (state: RootState) => {
-        const t =
-            themes.find((x) => x.id === state.settings.display.theme) ??
-            themes[0];
+export const selectTheme = createSelector(
+    (state: RootState) => state.settings.display.theme,
+    (state: RootState, isDark: boolean) => isDark,
+    (themeName: ThemeName, isDark: boolean) => {
+        const t = themes.find((x) => x.id === themeName) ?? themes[0];
         return isDark ? t.dark : t.light;
-    };
+    },
+);
+
+export function selectKeepAwakeCategories(state: RootState): boolean {
+    if (state.settings.display.keepAwake) {
+        return !!state.settings.display.keepAwake.find(
+            (x) => x === "categories",
+        );
+    }
+    return false;
 }
+
+export function selectKeepAwakeShops(state: RootState): boolean {
+    if (state.settings.display.keepAwake) {
+        return !!state.settings.display.keepAwake.find((x) => x === "shops");
+    }
+    return true;
+}
+
+export function selectKeepAwakeStorages(state: RootState): boolean {
+    if (state.settings.display.keepAwake) {
+        return !!state.settings.display.keepAwake.find((x) => x === "storages");
+    }
+    return true;
+}
+
+export const selectKeepAwake = createSelector(
+    (state: RootState) => state.settings.display.keepAwake,
+    (state: RootState, area: KeepAwakeArea) => area,
+    (keepAwake: KeepAwakeArea[], area: KeepAwakeArea) => {
+        if (keepAwake) {
+            return !!keepAwake.find((x) => x === area);
+        }
+        switch (area) {
+            case "categories":
+                return false;
+            default:
+                return true;
+        }
+    },
+);

@@ -11,7 +11,6 @@ import {
     List,
     Menu,
     useTheme,
-    Text,
     Divider,
     Tooltip,
     Icon,

@@ -44,8 +44,11 @@ export default function App() {
 function AppWithStore() {
     const colorScheme = useColorScheme();
     const settings = useAppSelector((state) => state.settings);
-    const theme = useAppSelector(
-        selectTheme((settings.display.colorTheme ?? colorScheme) === "dark"),
+    const theme = useAppSelector((state) =>
+        selectTheme(
+            state,
+            (settings.display.colorTheme ?? colorScheme) === "dark",
+        ),
     );
 
     return (
