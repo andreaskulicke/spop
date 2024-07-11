@@ -348,7 +348,7 @@ function QuantityPrice(props: {
     price: string | undefined;
     onPress: () => void;
 }) {
-    const [tooltipText, setTooltipText] = useState("");
+    const [tooltipText, setTooltipText] = useState("Eingabe Preis und Menge");
     const theme = useTheme();
 
     return (
