@@ -63,7 +63,7 @@ export function ItemsSectionList(props: {
         setExpanded(expandedTmp);
         const c = props.data[i].collapsed;
         if (isCollapsedArray(c)) {
-            c[1](!exp);
+            c[1](exp);
         }
     }
 
