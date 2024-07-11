@@ -124,7 +124,7 @@ export function SearchBarList(props: {
         name = name.trim() + " ";
         setFilter({
             text: quantity ? `${quantity}${unitId} ${name}` : name,
-            name,
+            name: name.trim(),
             quantity: quantityToString(quantity) + unitId,
         });
     }
