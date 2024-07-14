@@ -240,8 +240,7 @@ export function ShopItemsList(props: {
                                     }
                                 />
                             )}
-                        {!item.wanted &&
-                            props.shop.id !== allShop.id &&
+                        {props.shop.id !== allShop.id &&
                             !item.shops.find(
                                 (x) => x.checked && x.shopId === props.shop.id,
                             ) && (
