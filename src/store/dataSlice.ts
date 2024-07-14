@@ -1008,15 +1008,11 @@ export const selectItemsWantedWithShopHidden = createSelector(
     (items: (Category | Item | undefined)[], shop: Shop) => {
         const itemsTmp = items
             .filter((x) => isItem(x) && x.categoryId)
-            .filter(
-                (x) =>
-                    !((shop.categoryIds?.length ?? 0) === 0) ||
-                    !(
-                        shop.categoryIds?.find(
-                            (c) => (x as Item).categoryId === c,
-                        ) ?? true
-                    ),
-            );
+            .filter((x) => {
+                return !shop.categoryIds?.find(
+                    (c) => (x as Item).categoryId === c ?? false,
+                );
+            });
         return itemsTmp;
     },
 );

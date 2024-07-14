@@ -60,20 +60,22 @@ export function ShopItemsScreen(props: {
                                     />
                                 </Tooltip>
                             ) : (
-                                <Tooltip title="Versteckte Dinge einblenden (Kategorien)">
-                                    <Appbar.Action
-                                        icon="eye-outline"
-                                        onPress={handleShowHiddenPress}
-                                    />
-                                </Tooltip>
+                                <View>
+                                    <Tooltip title="Versteckte Dinge einblenden (Kategorien)">
+                                        <Appbar.Action
+                                            icon="eye-outline"
+                                            onPress={handleShowHiddenPress}
+                                        />
+                                    </Tooltip>
+                                    <Badge
+                                        style={{
+                                            position: "absolute",
+                                        }}
+                                    >
+                                        {itemsWantedThisShopHidden.length}
+                                    </Badge>
+                                </View>
                             )}
-                            <Badge
-                                style={{
-                                    position: "absolute",
-                                }}
-                            >
-                                {itemsWantedThisShopHidden.length}
-                            </Badge>
                         </View>
                     )}
                 {shop.id !== allShop.id &&
