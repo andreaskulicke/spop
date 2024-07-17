@@ -14,7 +14,7 @@ export function SearchBar(props: {
         const t = text.trimStart();
         const unitsMatch = `(${units.map((x) => x.name).join("|")})`;
         const m = t.match(
-            `^(?<pre>\\d+[^ ]*)? *(?<name>.*?) +(?<post>\\d+${unitsMatch}?$)?$`,
+            `^(?<pre>\\d+[^ ]*)? *(?<name>.*?) *(?<post>\\d+${unitsMatch}?$)?$`,
         );
         if (m && m.groups) {
             const name =

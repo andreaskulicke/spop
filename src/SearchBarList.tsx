@@ -23,7 +23,9 @@ import {
     UnitId,
     addQuantityUnit,
     getQuantityUnit,
+    getUnitName,
     parseQuantityUnit,
+    replaceUnitIdIfEmpty,
 } from "./store/data/items";
 import { Keyboard, KeyboardAvoidingView, View } from "react-native";
 import { modalContainerStyle, modalViewStyle } from "./styles";
@@ -123,7 +125,7 @@ export function SearchBarList(props: {
     ): void {
         name = name.trim() + " ";
         setFilter({
-            text: quantity ? `${quantity}${unitId} ${name}` : name,
+            text: quantity ? `${quantity}${getUnitName(unitId)} ${name}` : name,
             name: name.trim(),
             quantity: quantityToString(quantity) + unitId,
         });
