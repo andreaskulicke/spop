@@ -156,6 +156,8 @@ export const itemsSlice = createSlice({
             if (item) {
                 if (action.payload.item.quantity) {
                     item.quantity = action.payload.item.quantity;
+                } else {
+                    item.quantity = undefined;
                 }
                 if (action.payload.item.unitId) {
                     item.unitId = action.payload.item.unitId;
