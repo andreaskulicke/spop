@@ -241,6 +241,7 @@ export function ShopItemsList(props: {
                                 />
                             )}
                         {props.shop.id !== allShop.id &&
+                            item.shops.length === 0 &&
                             !item.shops.find(
                                 (x) => x.checked && x.shopId === props.shop.id,
                             ) && (
