@@ -269,7 +269,9 @@ function Adder(props: {
         const originalItemQuantity =
             (originalItem?.quantity ?? 0) === 0
                 ? 1
-                : originalItem?.quantity ?? 1;
+                : !!originalItem?.quantity
+                  ? originalItem.quantity
+                  : 1;
         let plusOneQuantity;
         let plusOneUnitId = originalItem?.unitId;
         let doubleQuantity;
@@ -334,17 +336,19 @@ function Adder(props: {
                         )}
                         onPress={() => handleItemPress(replacePlusOne)}
                     />
-                    <List.Item
-                        title={props.item?.name ?? ""}
-                        right={(p) => (
-                            <QuantityUnit
-                                data={replaceDouble}
-                                source="replaceDouble"
-                                onPress={handleCalculatorShow}
-                            />
-                        )}
-                        onPress={() => handleItemPress(replaceDouble)}
-                    />
+                    {replaceDouble?.quantity !== replacePlusOne?.quantity && (
+                        <List.Item
+                            title={props.item?.name ?? ""}
+                            right={(p) => (
+                                <QuantityUnit
+                                    data={replaceDouble}
+                                    source="replaceDouble"
+                                    onPress={handleCalculatorShow}
+                                />
+                            )}
+                            onPress={() => handleItemPress(replaceDouble)}
+                        />
+                    )}
                     <Divider />
                     <View style={{ flexDirection: "row", marginTop: 8 }}>
                         <View style={{ flex: 1 }}></View>

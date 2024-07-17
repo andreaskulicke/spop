@@ -743,8 +743,8 @@ export const selectItem = createSelector(
 
 export const selectItemByName = createSelector(
     selectItems,
-    (state: RootState, name: string) => name,
-    (items: Item[], name: string) => {
+    (state: RootState, name: string | undefined) => name,
+    (items: Item[], name: string | undefined) => {
         if (!name) {
             return undefined;
         }
