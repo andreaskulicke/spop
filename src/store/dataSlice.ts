@@ -1011,8 +1011,11 @@ export const selectItemsWantedWithShopHidden = createSelector(
         const itemsTmp = items
             .filter((x) => isItem(x) && x.categoryId)
             .filter((x) => {
-                return !shop.categoryIds?.find(
-                    (c) => (x as Item).categoryId === c ?? false,
+                if (!shop.categoryIds) {
+                    return false;
+                }
+                return !shop.categoryIds.find(
+                    (c) => (x as Item).categoryId === c,
                 );
             });
         return itemsTmp;
