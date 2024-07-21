@@ -1,0 +1,39 @@
+{
+  "$schema": "./categoryPatterns-schema.json",
+  "categories": {
+    "alcohol": [],
+    "asia": [".*\\bwok.*"],
+    "baking": ["back.*", ".*mehl.*", ".*\\bvanill.*", ".*zucker.*"],
+    "bakery": ["tortilla.*"],
+    "canned_fruits": [],
+    "cereals": [],
+    "coffee_tea": [],
+    "drinks": [],
+    "eggs": [".*eier.*"],
+    "freezer": [".*pizza.*"],
+    "fridge": [],
+    "fruits_vegetables": [".*banane.*", ".*[aä]pfel.*", ".*tomate.*"],
+    "household": [
+      ".*\\bariel.*",
+      "calgon.*",
+      ".*seife.*",
+      ".*toilette.*",
+      ".*wasch.*",
+      ".*\\bwc\\b.*"
+    ],
+    "meat": [".*\\brind.*", ".*\\bschwein.*"],
+    "misc": [],
+    "noodles": [".*nudeln.*"],
+    "nuts": [".*n[uü]ss.*"],
+    "pickled_preserves": [],
+    "rice": [".*reis.*"],
+    "sauces": [".*sauce.*", ".*ketchup.*"],
+    "spices": [".*\\bbasilikum\\b.*", ".*\\bthymian\\b.*"],
+    "stationary": [],
+    "sweets": [
+      ".*\\bchips\\b.*",
+      ".*\\bpringles?\\b.*",
+      ".*\\bschoko(lade)?\\b.*"
+    ]
+  }
+}

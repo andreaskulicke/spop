@@ -8,6 +8,7 @@ import {
     Item,
     UnitId,
     units,
+    getInitialItemCategory,
 } from "./data/items";
 import { RootState } from "./store";
 import { Shop, defaultShops } from "./data/shops";
@@ -163,22 +164,23 @@ export const itemsSlice = createSlice({
                     item.unitId = action.payload.item.unitId;
                 }
                 item.categoryId =
-                    action.payload.item.categoryId ??
-                    item.categoryId ??
-                    action.payload.storage?.defaultCategoryId;
+                    action.payload.item.categoryId ?? item.categoryId;
                 item.wanted = true;
             } else {
                 item = {
                     ...action.payload.item,
                     categoryId:
                         action.payload.item.categoryId ??
-                        action.payload.shop?.defaultCategoryId ??
-                        action.payload.storage?.defaultCategoryId,
+                        action.payload.shop?.defaultCategoryId,
                     wanted: true,
                 };
                 item.name = item.name.trim();
                 state.items.unshift(item);
             }
+            item.categoryId =
+                item.categoryId ??
+                action.payload.storage?.defaultCategoryId ??
+                getInitialItemCategory(item.name);
             if (action.payload.shop && action.payload.shop.id !== allShop.id) {
                 let s = item.shops.find(
                     (x) => x.shopId === action.payload.shop?.id,

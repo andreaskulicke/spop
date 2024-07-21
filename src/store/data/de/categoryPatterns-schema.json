@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spop.de/items.json",
+  "title": "Default Items",
+  "description": "Default items definitions",
+  "type": "object",
+  "properties": {
+    "categories": {
+      "type": "object",
+      "properties": {
+        "alcohol": {
+          "type": "array"
+        },
+        "asia": {
+          "type": "array"
+        },
+        "baking": {
+          "type": "array"
+        },
+        "bakery": {
+          "type": "array"
+        },
+        "canned_fruits": {
+          "type": "array"
+        },
+        "cereals": {
+          "type": "array"
+        },
+        "coffee_tea": {
+          "type": "array"
+        },
+        "drinks": {
+          "type": "array"
+        },
+        "eggs": {
+          "type": "array"
+        },
+        "freezer": {
+          "type": "array"
+        },
+        "fridge": {
+          "type": "array"
+        },
+        "fruits_vegetables": {
+          "type": "array"
+        },
+        "household": {
+          "type": "array"
+        },
+        "meat": {
+          "type": "array"
+        },
+        "misc": {
+          "type": "array"
+        },
+        "noodles": {
+          "type": "array"
+        },
+        "nuts": {
+          "type": "array"
+        },
+        "pickled_preserves": {
+          "type": "array"
+        },
+        "rice": {
+          "type": "array"
+        },
+        "sauces": {
+          "type": "array"
+        },
+        "spices": {
+          "type": "array"
+        },
+        "stationary": {
+          "type": "array"
+        },
+        "sweets": {
+          "type": "array"
+        }
+      }
+    }
+  }
+}

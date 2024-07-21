@@ -1,7 +1,8 @@
-import { Category } from "./categories";
+import { Category, categoryIds } from "./categories";
 import { MD3Theme } from "react-native-paper";
 import { ViewStyle } from "react-native";
 import { numberToString } from "../../numberToString";
+import categoryPatternsJson from "./de/categoryPatterns.json";
 
 // Unit
 
@@ -201,9 +202,7 @@ export function getPackagePriceBase(
     item?: Partial<Item>,
 ): number {
     const priceData = getPackagePrice(itemShop, item);
-    const price =
-        priceData.price /
-        (priceData.unit?.factorToBase ?? 1);
+    const price = priceData.price / (priceData.unit?.factorToBase ?? 1);
     return price;
 }
 
@@ -347,3 +346,22 @@ export function isItem(o: undefined | Category | Item): o is Item {
 }
 
 export const defaultItems: Item[] = [];
+
+interface InitialCategory {
+    pattern: string;
+    categoryId: (typeof categoryIds)[number];
+}
+
+export function getInitialItemCategory(
+    name: string,
+): (typeof categoryIds)[number] | undefined {
+    const n = name.toLowerCase();
+    for (const categoryId in categoryPatternsJson.categories) {
+        for (const pattern of categoryPatternsJson.categories[categoryId]) {
+            if (pattern && n.match("^" + pattern + "$")) {
+                return categoryId as (typeof categoryIds)[number];
+            }
+        }
+    }
+    return undefined;
+}
