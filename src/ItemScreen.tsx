@@ -227,8 +227,13 @@ export function ItemScreen(props: {
 
     function handleTextInputNameBlur(): void {
         if (item) {
-            dispatch(setItemName({ itemId: item.id, name: name.trim() }));
-            setName(name.trim());
+            const n = name.trim();
+            if (!n) {
+                setName(item.name);
+            } else {
+                dispatch(setItemName({ itemId: item.id, name: n }));
+                setName(n);
+            }
         }
     }
 

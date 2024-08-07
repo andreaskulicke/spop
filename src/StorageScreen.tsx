@@ -39,10 +39,13 @@ export function StorageScreen(props: {
 
     function handleTextInputNameBlur(): void {
         if (storage) {
-            dispatch(
-                setStorageName({ storageId: storage.id, name: name.trim() }),
-            );
-            setName(name.trim());
+            const n = name.trim();
+            if (!n) {
+                setName(storage.name);
+            } else {
+                dispatch(setStorageName({ storageId: storage.id, name: n }));
+                setName(n);
+            }
         }
     }
 

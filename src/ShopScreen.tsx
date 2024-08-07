@@ -119,8 +119,13 @@ export function ShopScreen(props: {
 
     function handleTextInputNameBlur(): void {
         if (shop) {
-            dispatch(setShopName({ shopId: shop.id, name: name.trim() }));
-            setName(name.trim());
+            const n = name.trim();
+            if (!n) {
+                setName(shop.name);
+            } else {
+                dispatch(setShopName({ shopId: shop.id, name: n }));
+                setName(n);
+            }
         }
     }
 

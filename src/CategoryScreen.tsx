@@ -50,10 +50,13 @@ export function CategoryScreen(props: {
 
     function handleTextInputNameBlur(): void {
         if (category) {
-            dispatch(
-                setCategoryName({ categoryId: category.id, name: name.trim() }),
-            );
-            setName(name.trim());
+            const n = name.trim();
+            if (!n) {
+                setName(category.name);
+            } else {
+                dispatch(setCategoryName({ categoryId: category.id, name: n }));
+                setName(n);
+            }
         }
     }
 
