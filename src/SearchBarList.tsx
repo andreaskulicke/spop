@@ -56,6 +56,7 @@ export function SearchBarList(props: {
         name?: string;
         quantity?: string;
     }>();
+
     const [newItem, setNewItem] = useState<Item>({
         id: uuid.v4() as string,
         name: "",
@@ -148,7 +149,7 @@ export function SearchBarList(props: {
         };
         navigation.addListener("beforeRemove", r);
         return () => navigation.removeListener("beforeRemove", r);
-    });
+    }, []);
 
     useEffect(() => {
         const [q, u] = parseQuantityUnit(filter?.quantity);

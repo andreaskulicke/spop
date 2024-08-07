@@ -133,7 +133,7 @@ export function ShopScreen(props: {
             handleTextInputNameBlur(),
         );
         return () => s.remove();
-    });
+    }, []);
 
     useEffect(() => {
         setName(shop?.name ?? "");

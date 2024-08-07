@@ -1,5 +1,4 @@
 import {
-    Unit,
     UnitId,
     formatPrice,
     getNormalizedPrice,

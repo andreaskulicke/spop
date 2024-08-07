@@ -1,7 +1,7 @@
-import { selectItem, selectItemShopsWithMinPrice } from "./store/dataSlice";
+import { makeSelectItemShopsWithMinPrice, selectItem } from "./store/dataSlice";
 import { useTheme, Icon } from "react-native-paper";
 import { useAppSelector } from "./store/hooks";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 export function SummaryPriceIcon(props: {
     itemId: string;
@@ -9,9 +9,15 @@ export function SummaryPriceIcon(props: {
     onTooltipText?: (text: string) => void;
 }) {
     const item = useAppSelector((state) => selectItem(state, props.itemId));
-    const itemShopsWithMinPrice = useAppSelector((state) =>
-        selectItemShopsWithMinPrice(state, props.itemId),
+
+    const selectItemShopsWithMinPriceMemo = useMemo(
+        makeSelectItemShopsWithMinPrice,
+        [props.itemId],
     );
+    const itemShopsWithMinPrice = useAppSelector((state) =>
+        selectItemShopsWithMinPriceMemo(state, props.itemId),
+    );
+
     const theme = useTheme();
 
     const [numberOfShopsWithPrices, setNumberOfShopsWithPrices] = useState(0);
@@ -61,7 +67,7 @@ export function SummaryPriceIcon(props: {
             }
         }
         props.onTooltipText?.(tooltipText);
-    }, [itemShopsWithMinPrice]);
+    }, [item, itemShopsWithMinPrice]);
 
     return numberOfShopsWithPrices > 1 ? (
         <Icon color={color} source={icon} size={16} />
@@ -76,8 +82,12 @@ export function PriceIcon(props: {
     shopId: string | undefined;
 }) {
     const item = useAppSelector((state) => selectItem(state, props.itemId));
+    const selectItemShopsWithMinPriceMemo = useMemo(
+        makeSelectItemShopsWithMinPrice,
+        [props.itemId],
+    );
     const itemShopsWithMinPrice = useAppSelector((state) =>
-        selectItemShopsWithMinPrice(state, props.itemId),
+        selectItemShopsWithMinPriceMemo(state, props.itemId),
     );
     const theme = useTheme();
 

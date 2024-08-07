@@ -14,6 +14,7 @@ import {
 import { Linking, ScrollView, Share, View } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
 import {
+    addItem,
     resetCategories,
     resetShops,
     resetStorages,
@@ -304,14 +305,45 @@ export function SettingsScreen(props: {
                             <List.Item
                                 title="Dinge"
                                 right={(p) => (
-                                    <Button
-                                        {...p}
-                                        compact
-                                        mode="outlined"
-                                        onPress={() => dispatch(setItems([]))}
-                                    >
-                                        Löschen
-                                    </Button>
+                                    <View style={{ flexDirection: "row" }}>
+                                        <Button
+                                            {...p}
+                                            compact
+                                            mode="outlined"
+                                            onPress={() => {
+                                                const d = new Date();
+                                                for (
+                                                    let index = 0;
+                                                    index < 50;
+                                                    index++
+                                                ) {
+                                                    const id = `item_${d.toISOString()}_${index}`;
+                                                    dispatch(
+                                                        addItem({
+                                                            item: {
+                                                                id: id,
+                                                                name: id,
+                                                                shops: [],
+                                                                storages: [],
+                                                            },
+                                                        }),
+                                                    );
+                                                }
+                                            }}
+                                        >
+                                            Generieren
+                                        </Button>
+                                        <Button
+                                            {...p}
+                                            compact
+                                            mode="outlined"
+                                            onPress={() =>
+                                                dispatch(setItems([]))
+                                            }
+                                        >
+                                            Löschen
+                                        </Button>
+                                    </View>
                                 )}
                             />
                             <List.Item

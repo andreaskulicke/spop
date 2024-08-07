@@ -739,11 +739,9 @@ export const selectItemsNotWanted = createSelector(selectItems, (items) => {
     return items.filter((x) => !x.wanted);
 });
 
-export const selectItem = createSelector(
-    selectItems,
-    (state: RootState, id: string) => id,
-    (items: Item[], id: string) => items.find((x) => x.id === id),
-);
+export function selectItem(state: RootState, itemId: string) {
+    return state.data.items.find((x) => x.id === itemId);
+}
 
 export const selectItemByName = createSelector(
     selectItems,
@@ -1064,32 +1062,33 @@ export const selectItemsNotWantedWithDifferentShop = createSelector(
     (items: Item[]) => items.filter((x) => !x.wanted),
 );
 
-export const selectItemShopsWithMinPrice = createSelector(
-    (state: RootState, itemId: string) => selectItem(state, itemId),
-    (item: Item | undefined) => {
-        if (!item) {
+export const makeSelectItemShopsWithMinPrice = () =>
+    createSelector(
+        (state: RootState, itemId: string) => selectItem(state, itemId),
+        (item: Item | undefined) => {
+            if (!item) {
+                return {
+                    prices: [],
+                    normalizedPrices: [],
+                };
+            }
+            const prices = item.shops
+                .filter((x) => x.price !== undefined && x.price !== null)
+                .map((x) => ({
+                    p: getPackagePriceBase(x, item),
+                    pb: getNormalizedPriceBase(x, item),
+                    s: x,
+                }));
+            const minPrice = Math.min(...prices.map((x) => x.p));
+            const minBasePrice = Math.min(...prices.map((x) => x.pb));
             return {
-                prices: [],
-                normalizedPrices: [],
+                prices: prices.filter((x) => x.p === minPrice).map((x) => x.s),
+                normalizedPrices: prices
+                    .filter((x) => x.pb === minBasePrice)
+                    .map((x) => x.s),
             };
-        }
-        const prices = item.shops
-            .filter((x) => x.price !== undefined && x.price !== null)
-            .map((x) => ({
-                p: getPackagePriceBase(x, item),
-                pb: getNormalizedPriceBase(x, item),
-                s: x,
-            }));
-        const minPrice = Math.min(...prices.map((x) => x.p));
-        const minBasePrice = Math.min(...prices.map((x) => x.pb));
-        return {
-            prices: prices.filter((x) => x.p === minPrice).map((x) => x.s),
-            normalizedPrices: prices
-                .filter((x) => x.pb === minBasePrice)
-                .map((x) => x.s),
-        };
-    },
-);
+        },
+    );
 
 // Shops
 

@@ -357,7 +357,9 @@ export function getInitialItemCategory(
 ): (typeof categoryIds)[number] | undefined {
     const n = name.toLowerCase();
     for (const categoryId in categoryPatternsJson.categories) {
-        for (const pattern of categoryPatternsJson.categories[categoryId]) {
+        for (const pattern of categoryPatternsJson.categories[
+            categoryId as (typeof categoryIds)[number]
+        ]) {
             if (pattern && n.match("^" + pattern + "$")) {
                 return categoryId as (typeof categoryIds)[number];
             }

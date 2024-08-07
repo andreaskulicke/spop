@@ -18,8 +18,9 @@ export function ListSection(
 
     function handlePress(): void {
         if (props.collapsed !== undefined) {
-            props.onExpandChange?.(!expanded);
-            setExpanded((v) => !v);
+            const notExpanded = !expanded;
+            setExpanded(notExpanded);
+            props.onExpandChange?.(notExpanded);
         }
     }
 

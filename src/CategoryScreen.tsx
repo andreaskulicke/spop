@@ -66,7 +66,7 @@ export function CategoryScreen(props: {
             handleTextInputNameBlur(),
         );
         return () => s.remove();
-    });
+    }, []);
 
     useEffect(() => {
         setName(category?.name ?? "");

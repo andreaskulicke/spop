@@ -55,7 +55,7 @@ export function StorageScreen(props: {
             handleTextInputNameBlur(),
         );
         return () => s.remove();
-    });
+    }, []);
 
     useEffect(() => {
         setName(storage?.name ?? "");

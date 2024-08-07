@@ -14,14 +14,13 @@ import React, {
     useRef,
     useState,
 } from "react";
-import sectionListGetItemLayout from "react-native-section-list-get-item-layout";
 
 export type ItemsSectionListItem = undefined | Category | Item;
 
 export interface ItemsSectionListSection {
     title: string;
     icon: string;
-    collapsed?: boolean | [boolean, (expanded: boolean) => void];
+    collapsed: [boolean, (expanded: boolean) => void];
     data: ItemsSectionListItem[];
 }
 
@@ -30,19 +29,8 @@ interface Data extends ItemsSectionListSection {
     onExpandChange: (expanded: boolean) => void;
 }
 
-function isCollapsedArray(
-    collapsed: ItemsSectionListSection["collapsed"] | undefined,
-): collapsed is [boolean, (expanded: boolean) => void] {
-    return collapsed instanceof Array;
-}
-
-function isExpanded(
-    collapsed: ItemsSectionListSection["collapsed"] | undefined,
-): boolean {
-    if (isCollapsedArray(collapsed)) {
-        return !collapsed[0];
-    }
-    return !collapsed;
+function isExpanded(collapsed: ItemsSectionListSection["collapsed"]): boolean {
+    return !collapsed[0];
 }
 
 export function ItemsSectionList(props: {
@@ -61,10 +49,7 @@ export function ItemsSectionList(props: {
         const expandedTmp = [...expanded];
         expandedTmp[i] = exp;
         setExpanded(expandedTmp);
-        const c = props.data[i].collapsed;
-        if (isCollapsedArray(c)) {
-            c[1](exp);
-        }
+        props.data[i].collapsed[1](exp);
     }
 
     function handleRenderSectionHeader(info: {
@@ -106,39 +91,12 @@ export function ItemsSectionList(props: {
         setExpanded(props.data.map((x) => isExpanded(x.collapsed)));
     }, [props.data]);
 
-    useEffect(() => {
-        for (
-            let sectionIndex = 0;
-            sectionIndex < props.data.length;
-            sectionIndex++
-        ) {
-            const itemIndex = props.data[sectionIndex].data.findIndex(
-                (x) => x?.id === props.selectedItemId,
-            );
-            if (itemIndex !== -1) {
-                listRef.current?.scrollToLocation({
-                    sectionIndex: sectionIndex,
-                    itemIndex: itemIndex,
-                    viewOffset: 0,
-                    viewPosition: 0,
-                });
-                break;
-            }
-        }
-    }, [props.selectedItemId]);
-
     const data: Data[] = props.data.map((x, i) => ({
         ...x,
         bold: i === 0,
-        collapsed: !expanded[i],
+        collapsed: [!expanded[i], x.collapsed[1]],
         onExpandChange: (exp) => handleExpandChange(i, exp),
     }));
-
-    const headerHeight = 52;
-    const sectionHeaderHeight = 52;
-    const sectionFooterHeight = 0;
-    const categoryHeight = 52 + 2;
-    const itemHeight = 64 + 2;
 
     return (
         <SectionList
@@ -146,18 +104,6 @@ export function ItemsSectionList(props: {
             sections={data}
             renderSectionHeader={handleRenderSectionHeader}
             renderItem={handleRenderItem}
-            getItemLayout={
-                sectionListGetItemLayout({
-                    getItemHeight: (rowData, sectionIndex, rowIndex) => {
-                        return isItem(rowData) ? itemHeight : categoryHeight;
-                    },
-                    getSectionHeaderHeight: () => sectionHeaderHeight,
-                    listHeaderHeight: headerHeight,
-                }) as (
-                    data: SectionListData<ItemsSectionListItem, Data>[] | null,
-                    index: number,
-                ) => { length: number; offset: number; index: number }
-            }
         ></SectionList>
     );
 }
