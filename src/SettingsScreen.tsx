@@ -314,7 +314,7 @@ export function SettingsScreen(props: {
                                                 const d = new Date();
                                                 for (
                                                     let index = 0;
-                                                    index < 50;
+                                                    index < 10;
                                                     index++
                                                 ) {
                                                     const id = `item_${d.toISOString()}_${index}`;

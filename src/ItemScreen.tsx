@@ -238,23 +238,33 @@ export function ItemScreen(props: {
 
     function handleTextInputQuantityBlur(): void {
         if (item) {
-            dispatch(
-                setItemQuantity({
-                    itemId: item.id,
-                    quantity: stringToNumber(quantity),
-                }),
-            );
+            const q = stringToNumber(quantity);
+            if (q === 0) {
+                setQuantity("");
+            } else {
+                dispatch(
+                    setItemQuantity({
+                        itemId: item.id,
+                        quantity: q,
+                    }),
+                );
+            }
         }
     }
 
     function handleTextInputPackageQuantityBlur(): void {
         if (item) {
-            dispatch(
-                setItemPackageQuantity({
-                    itemId: item.id,
-                    packageQuantity: stringToNumber(packageQuantity),
-                }),
-            );
+            const pq = stringToNumber(packageQuantity);
+            if (pq === 0) {
+                setPackageQuantity("");
+            } else {
+                dispatch(
+                    setItemPackageQuantity({
+                        itemId: item.id,
+                        packageQuantity: pq,
+                    }),
+                );
+            }
         }
     }
 
@@ -265,7 +275,10 @@ export function ItemScreen(props: {
     }
 
     function transformQuantity(text: string): string {
-        let newText = text.replace(/[^0-9,\.]/g, "").replace(".", ",");
+        let newText = text
+            .replace(/[^0-9,\.]/g, "")
+            .replace(/^0/, "")
+            .replace(".", ",");
         if (newText.endsWith(",")) {
             newText = newText.replaceAll(",", "") + ",";
         }
@@ -628,19 +641,19 @@ export function ItemScreen(props: {
                                                                     item,
                                                                 )}
                                                             />
-                                                            <Price
-                                                                itemShop={
-                                                                    currentItemShop
-                                                                }
-                                                                item={item}
-                                                                normalized={
-                                                                    true
-                                                                }
-                                                                priceData={getNormalizedPrice(
-                                                                    currentItemShop,
-                                                                    item,
-                                                                )}
-                                                            />
+                                                            {item.packageQuantity && (
+                                                                <Price
+                                                                    itemShop={
+                                                                        currentItemShop
+                                                                    }
+                                                                    item={item}
+                                                                    normalized
+                                                                    priceData={getNormalizedPrice(
+                                                                        currentItemShop,
+                                                                        item,
+                                                                    )}
+                                                                />
+                                                            )}
                                                         </View>
                                                     </TouchableRipple>
                                                 ) : (
