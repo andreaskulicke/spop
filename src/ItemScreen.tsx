@@ -353,7 +353,11 @@ export function ItemScreen(props: {
                                 label="Name"
                                 mode="outlined"
                                 selectTextOnFocus
-                                style={{ flexGrow: 1, margin: 8 }}
+                                style={{
+                                    flexGrow: 1,
+                                    flexShrink: 1,
+                                    margin: 8,
+                                }}
                                 value={name}
                                 onBlur={handleTextInputNameBlur}
                                 onChangeText={handleTextInputNameChange}
