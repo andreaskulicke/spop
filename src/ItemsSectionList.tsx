@@ -43,7 +43,6 @@ export function ItemsSectionList(props: {
     const [expanded, setExpanded] = useState<boolean[]>(
         props.data.map((x) => isExpanded(x.collapsed)),
     );
-    const listRef = useRef<SectionList<ItemsSectionListItem, Data>>(null);
 
     function handleExpandChange(i: number, exp: boolean): void {
         const expandedTmp = [...expanded];
@@ -100,7 +99,6 @@ export function ItemsSectionList(props: {
 
     return (
         <SectionList
-            ref={listRef}
             sections={data}
             renderSectionHeader={handleRenderSectionHeader}
             renderItem={handleRenderItem}
