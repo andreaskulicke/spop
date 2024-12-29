@@ -26,3 +26,8 @@ Or submit only:
 ```
 eas submit -p android
 ```
+
+Go to Google developer console:
+
+<https://play.google.com/console/u/0/developers/4745463921180105365/app-list>
+
