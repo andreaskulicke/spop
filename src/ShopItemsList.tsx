@@ -14,6 +14,7 @@ import {
     selectItemsWantedWithoutShop,
     selectItemsNotWanted,
     selectItemsNotWantedWithDifferentShop,
+    setItemShopPackage,
 } from "./store/dataSlice";
 import { Calculator } from "./Calculator";
 import { getCalculatorFields } from "./getCalculatorFields";
@@ -106,14 +107,10 @@ export function ShopItemsList(props: {
                 const value = values[1];
                 const item = value.state as Item;
                 dispatch(
-                    setItemPackageQuantity({
+                    setItemShopPackage({
                         itemId: item.id,
+                        shopId: props.shop.id,
                         packageQuantity: value.value,
-                    }),
-                );
-                dispatch(
-                    setItemPackageUnit({
-                        itemId: item.id,
                         packageUnitId: value.unitId ?? "-",
                     }),
                 );

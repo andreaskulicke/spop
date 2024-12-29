@@ -17,8 +17,8 @@ export function getCalculatorFields(item: Item | undefined, shop?: Shop) {
     ];
     data.push({
         title: "Paket Menge",
-        value: item?.packageQuantity,
-        unitId: item?.packageUnitId,
+        value: currentItemShop?.packageQuantity ?? item?.packageQuantity,
+        unitId: currentItemShop?.packageUnitId ?? item?.packageUnitId,
         state: item,
         selected: false,
     });

@@ -10,6 +10,7 @@ import {
     selectItems,
     setItemPackageQuantity,
     setItemPackageUnit,
+    setItemShopPackage,
     setItemShopPrice,
 } from "./store/dataSlice";
 import { Shop } from "./store/data/shops";
@@ -51,18 +52,29 @@ export function HistoryList(props: {
             if (values.length > 0) {
                 const value = values[0];
                 const item = value.state as Item;
-                dispatch(
-                    setItemPackageQuantity({
-                        itemId: item.id,
-                        packageQuantity: value.value,
-                    }),
-                );
-                dispatch(
-                    setItemPackageUnit({
-                        itemId: item.id,
-                        packageUnitId: value.unitId ?? "-",
-                    }),
-                );
+                if (props.shop) {
+                    dispatch(
+                        setItemShopPackage({
+                            itemId: item.id,
+                            shopId: props.shop.id,
+                            packageQuantity: value.value,
+                            packageUnitId: value.unitId ?? "-",
+                        }),
+                    );
+                } else {
+                    dispatch(
+                        setItemPackageQuantity({
+                            itemId: item.id,
+                            packageQuantity: value.value,
+                        }),
+                    );
+                    dispatch(
+                        setItemPackageUnit({
+                            itemId: item.id,
+                            packageUnitId: value.unitId ?? "-",
+                        }),
+                    );
+                }
             }
             if (values.length > 1) {
                 const value = values[1];

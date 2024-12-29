@@ -347,11 +347,11 @@ export const itemsSlice = createSlice({
                 packageUnitId?: UnitId;
             }>,
         ) => {
-            if (action.payload.shopId !== allShop.id) {
-                const item = state.items.find(
-                    (x) => x.id === action.payload.itemId,
-                );
-                if (item) {
+            const item = state.items.find(
+                (x) => x.id === action.payload.itemId,
+            );
+            if (item) {
+                if (action.payload.shopId !== allShop.id) {
                     let shop = item.shops.find(
                         (x) => x.shopId === action.payload.shopId,
                     );
@@ -361,6 +361,10 @@ export const itemsSlice = createSlice({
                     }
                     shop.packageQuantity = action.payload.packageQuantity;
                     shop.packageUnitId = action.payload.packageUnitId; // TODO: check diff unit across item.unitId, item.packageUnitId
+                }
+                if (!item.packageQuantity) {
+                    item.packageQuantity = action.payload.packageQuantity;
+                    item.packageUnitId = action.payload.packageUnitId;
                 }
             }
         },
