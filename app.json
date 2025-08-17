@@ -22,7 +22,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.andreaskulicke.spop",
-      "versionCode": 5
+      "versionCode": 7
     },
     "web": {
       "favicon": "./assets/favicon.png"
