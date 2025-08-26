@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Searchbar, useTheme } from "react-native-paper";
 import { units } from "./store/data/items";
+import { BackHandler } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 
 export function SearchBar(props: {
     text?: string;
@@ -28,6 +30,27 @@ export function SearchBar(props: {
         }
         setSearchQuery(t);
     }
+
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                if (searchQuery) {
+                    props.onChange?.("", "", "");
+                    setSearchQuery("");
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+
+            const subscription = BackHandler.addEventListener(
+                "hardwareBackPress",
+                onBackPress,
+            );
+
+            return () => subscription.remove();
+        }, [searchQuery]),
+    );
 
     useEffect(() => {
         setSearchQuery(props.text ?? "");
