@@ -120,9 +120,7 @@ export function ShopScreen(props: {
     function handleTextInputNameBlur(): void {
         if (shop) {
             const n = name.trim();
-            if (!n) {
-                setName(shop.name);
-            } else {
+            if (n) {
                 dispatch(setShopName({ shopId: shop.id, name: n }));
                 setName(n);
             }
