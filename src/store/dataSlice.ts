@@ -1010,7 +1010,7 @@ export const selectItemsWantedWithShop = createSelector(
                 true,
             ),
     ],
-    (items) => items,
+    (items) => [...items],
 );
 
 export const selectItemsWantedWithShopHidden = createSelector(
