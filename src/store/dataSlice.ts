@@ -718,16 +718,14 @@ export const selectCategories = (state: RootState): Category[] => {
 };
 
 export const selectSortedCategories = createSelector(
-    selectCategories,
+    [selectCategories],
     (categories) =>
         [...categories].sort((x, y) => x.name.localeCompare(y.name)),
 );
 
-export const selectCategory = createSelector(
-    (state: RootState) => state.data.categories,
-    (state: RootState, id: string | undefined) => id,
-    (categories, id) => categories.find((x) => x.id === id),
-);
+export function selectCategory(state: RootState, itemId: string) {
+    return state.data.categories.find((x) => x.id === itemId);
+}
 
 // Items
 
@@ -735,11 +733,11 @@ export function selectItems(state: RootState): Item[] {
     return state.data.items;
 }
 
-export const selectItemsWanted = createSelector(selectItems, (items) => {
+export const selectItemsWanted = createSelector([selectItems], (items) => {
     return items.filter((x) => !!x.wanted);
 });
 
-export const selectItemsNotWanted = createSelector(selectItems, (items) => {
+export const selectItemsNotWanted = createSelector([selectItems], (items) => {
     return items.filter((x) => !x.wanted);
 });
 
@@ -748,8 +746,7 @@ export function selectItem(state: RootState, itemId: string) {
 }
 
 export const selectItemByName = createSelector(
-    selectItems,
-    (state: RootState, name: string | undefined) => name,
+    [selectItems, (state: RootState, name: string | undefined) => name],
     (items: Item[], name: string | undefined) => {
         if (!name) {
             return undefined;
@@ -763,8 +760,7 @@ export const selectItemByName = createSelector(
 // Items: Storages
 
 export const selectItemsWithStorage = createSelector(
-    selectItems,
-    (state: RootState, storageId: string) => storageId,
+    [selectItems, (state: RootState, storageId: string) => storageId],
     (items: Item[], storageId: string) => {
         return items.filter((item) =>
             item.storages.find((storage) => storage.storageId === storageId),
@@ -773,27 +769,30 @@ export const selectItemsWithStorage = createSelector(
 );
 
 export const selectItemsWantedWithStorage = createSelector(
-    (state: RootState, storageId: string) =>
-        selectItemsWithStorage(state, storageId),
-    (items: Item[]) => items.filter((item) => item.wanted),
+    [
+        (state: RootState, storageId: string) =>
+            selectItemsWithStorage(state, storageId),
+    ],
+    (items: Item[]) => items.filter(itemWanted),
 );
 
 export const selectItemsWantedWithoutStorage = createSelector(
-    selectItems,
+    [selectItems],
     (items) => {
         return items.filter((x) => x.wanted && x.storages.length === 0);
     },
 );
 
 export const selectItemsNotWantedWithStorage = createSelector(
-    (state: RootState, storageId: string) =>
-        selectItemsWithStorage(state, storageId),
-    (items: Item[]) => items.filter((item) => !item.wanted),
+    [
+        (state: RootState, storageId: string) =>
+            selectItemsWithStorage(state, storageId),
+    ],
+    (items: Item[]) => items.filter(itemNotWanted),
 );
 
 export const selectItemsWithDifferentStorage = createSelector(
-    selectItems,
-    (state: RootState, storageId: string) => storageId,
+    [selectItems, (state: RootState, storageId: string) => storageId],
     (items: Item[], storageId: string) => {
         return items.filter(
             (x) =>
@@ -804,17 +803,21 @@ export const selectItemsWithDifferentStorage = createSelector(
 );
 
 export const selectItemsNotWantedWithDifferentStorage = createSelector(
-    (state: RootState, storageId: string) =>
-        selectItemsWithDifferentStorage(state, storageId),
+    [
+        (state: RootState, storageId: string) =>
+            selectItemsWithDifferentStorage(state, storageId),
+    ],
     (items) => items.filter((x) => !x.wanted),
 );
 
 // Items: Category
 
 export const selectItemsWithCategory = createSelector(
-    selectItems,
-    selectCategories,
-    (state: RootState, categoryId: string | undefined) => categoryId,
+    [
+        selectItems,
+        selectCategories,
+        (state: RootState, categoryId: string | undefined) => categoryId,
+    ],
     (items: Item[], categories: Category[], categoryId: string | undefined) => {
         const c = new Map(categories.map((x) => [x.id, x]));
         let categoryIdTmp = categoryId;
@@ -830,8 +833,10 @@ export const selectItemsWithCategory = createSelector(
 );
 
 export const selectItemsWantedWithCategory = createSelector(
-    (state: RootState, categoryId: string | undefined) =>
-        selectItemsWithCategory(state, categoryId),
+    [
+        (state: RootState, categoryId: string | undefined) =>
+            selectItemsWithCategory(state, categoryId),
+    ],
     (items) => items.filter((x) => x.wanted),
 );
 
@@ -842,16 +847,20 @@ export const selectItemsNotWantedWithCategory = createSelector(
 );
 
 export const selectItemsWithDifferentCategory = createSelector(
-    selectItems,
-    (state: RootState, categoryId: string | undefined) => categoryId,
+    [
+        selectItems,
+        (state: RootState, categoryId: string | undefined) => categoryId,
+    ],
     (items: Item[], categoryId: string | undefined) =>
         items.filter((x) => x.categoryId !== categoryId),
 );
 
 export const selectItemsNotWantedWithDifferentCategory = createSelector(
-    (state: RootState, categoryId: string | undefined) =>
-        selectItemsWithDifferentCategory(state, categoryId),
-    selectCategories,
+    [
+        (state: RootState, categoryId: string | undefined) =>
+            selectItemsWithDifferentCategory(state, categoryId),
+        selectCategories,
+    ],
     (items: Item[], categories: Category[]) => {
         const c = new Map(categories.map((x) => [x.id, x]));
         return items
@@ -877,33 +886,35 @@ export function sortItemsByCategory(
 // Items: Shop
 
 export const selectItemsWithShop = createSelector(
-    selectItems,
-    selectCategories,
-    selectShops,
-    (state: RootState, shop: Shop) => shop,
-    (state: RootState, shop: Shop, itemFilter: (item: Item) => boolean) =>
-        itemFilter,
-    (
-        state: RootState,
-        shop: Shop,
-        itemFilter: (item: Item) => boolean,
-        shopCategoryFilterOff: boolean | undefined,
-    ) => shopCategoryFilterOff,
-    (
-        state: RootState,
-        shop: Shop,
-        itemFilter: (item: Item) => boolean,
-        shopCategoryFilterOff: boolean | undefined,
-        stopperOff: boolean | undefined,
-    ) => stopperOff,
-    (
-        state: RootState,
-        shop: Shop,
-        itemFilter: (item: Item) => boolean,
-        shopCategoryFilterOff: boolean | undefined,
-        stopperOff: boolean | undefined,
-        sortByCategory: boolean,
-    ) => sortByCategory,
+    [
+        selectItems,
+        selectCategories,
+        selectShops,
+        (state: RootState, shop: Shop) => shop,
+        (state: RootState, shop: Shop, itemFilter: (item: Item) => boolean) =>
+            itemFilter,
+        (
+            state: RootState,
+            shop: Shop,
+            itemFilter: (item: Item) => boolean,
+            shopCategoryFilterOff: boolean | undefined,
+        ) => shopCategoryFilterOff,
+        (
+            state: RootState,
+            shop: Shop,
+            itemFilter: (item: Item) => boolean,
+            shopCategoryFilterOff: boolean | undefined,
+            stopperOff: boolean | undefined,
+        ) => stopperOff,
+        (
+            state: RootState,
+            shop: Shop,
+            itemFilter: (item: Item) => boolean,
+            shopCategoryFilterOff: boolean | undefined,
+            stopperOff: boolean | undefined,
+            sortByCategory: boolean,
+        ) => sortByCategory,
+    ],
     (
         items: Item[],
         categories: Category[],
@@ -983,34 +994,38 @@ export const selectItemsWithShop = createSelector(
 );
 
 export const selectItemsWantedWithShop = createSelector(
-    (
-        state: RootState,
-        shop: Shop,
-        shopCategoryFilterOff: boolean | undefined,
-        stopperOff: boolean | undefined,
-    ) =>
-        selectItemsWithShop(
-            state,
-            shop,
-            (item: Item) => !!item.wanted,
-            shopCategoryFilterOff,
-            stopperOff,
-            true,
-        ),
+    [
+        (
+            state: RootState,
+            shop: Shop,
+            shopCategoryFilterOff: boolean | undefined,
+            stopperOff: boolean | undefined,
+        ) =>
+            selectItemsWithShop(
+                state,
+                shop,
+                itemWanted,
+                shopCategoryFilterOff,
+                stopperOff,
+                true,
+            ),
+    ],
     (items) => items,
 );
 
 export const selectItemsWantedWithShopHidden = createSelector(
-    (state: RootState, shop: Shop, stopperOff: boolean | undefined) =>
-        selectItemsWithShop(
-            state,
-            shop,
-            (item: Item) => !!item.wanted,
-            true,
-            stopperOff,
-            true,
-        ),
-    (state: RootState, shop: Shop) => shop,
+    [
+        (state: RootState, shop: Shop, stopperOff: boolean | undefined) =>
+            selectItemsWithShop(
+                state,
+                shop,
+                itemWanted,
+                true,
+                stopperOff,
+                true,
+            ),
+        (state: RootState, shop: Shop) => shop,
+    ],
     (items: (Category | Item | undefined)[], shop: Shop) => {
         const itemsTmp = items
             .filter((x) => isItem(x) && x.categoryId)
@@ -1027,7 +1042,7 @@ export const selectItemsWantedWithShopHidden = createSelector(
 );
 
 export const selectItemsWantedWithoutShop = createSelector(
-    selectItems,
+    [selectItems],
     (items) => {
         return items.filter(
             (x) => x.wanted && x.shops.filter((x) => x.checked).length === 0,
@@ -1036,22 +1051,23 @@ export const selectItemsWantedWithoutShop = createSelector(
 );
 
 export const selectItemsNotWantedWithShop = createSelector(
-    (state: RootState, shop: Shop, stopperOff: boolean | undefined) =>
-        selectItemsWithShop(
-            state,
-            shop,
-            (item: Item) => !item.wanted,
-            false,
-            stopperOff,
-            false,
-        ),
+    [
+        (state: RootState, shop: Shop, stopperOff: boolean | undefined) =>
+            selectItemsWithShop(
+                state,
+                shop,
+                itemNotWanted,
+                false,
+                stopperOff,
+                false,
+            ),
+    ],
     (items: (Category | Item | undefined)[]) =>
         items.filter((x) => (isItem(x) ? true : false)),
 );
 
 export const selectItemsWithDifferentShop = createSelector(
-    selectItems,
-    (state: RootState, shop: Shop) => shop,
+    [selectItems, (state: RootState, shop: Shop) => shop],
     (items: Item[], shop: Shop) => {
         return items.filter(
             (x) =>
@@ -1062,13 +1078,16 @@ export const selectItemsWithDifferentShop = createSelector(
 );
 
 export const selectItemsNotWantedWithDifferentShop = createSelector(
-    (state: RootState, shop: Shop) => selectItemsWithDifferentShop(state, shop),
+    [
+        (state: RootState, shop: Shop) =>
+            selectItemsWithDifferentShop(state, shop),
+    ],
     (items: Item[]) => items.filter((x) => !x.wanted),
 );
 
 export const makeSelectItemShopsWithMinPrice = () =>
     createSelector(
-        (state: RootState, itemId: string) => selectItem(state, itemId),
+        [(state: RootState, itemId: string) => selectItem(state, itemId)],
         (item: Item | undefined) => {
             if (!item) {
                 return {
@@ -1094,6 +1113,14 @@ export const makeSelectItemShopsWithMinPrice = () =>
         },
     );
 
+function itemNotWanted(item: Item) {
+    return !item.wanted;
+}
+
+function itemWanted(item: Item) {
+    return !!item.wanted;
+}
+
 // Shops
 
 export const allShop: Shop = {
@@ -1105,13 +1132,12 @@ export function selectShops(state: RootState): Shop[] {
     return state.data.shops;
 }
 
-export const selectValidShops = createSelector(selectShops, (shops) =>
+export const selectValidShops = createSelector([selectShops], (shops) =>
     shops.filter((x) => !x.stopper),
 );
 
 export const selectShop = createSelector(
-    selectShops,
-    (state: RootState, id: string) => id,
+    [selectShops, (state: RootState, id: string) => id],
     (shops: Shop[], id: string) => {
         const item = shops.find((x) => x.id === id);
         return item ?? allShop;
@@ -1130,8 +1156,7 @@ export const selectStorages = (state: RootState): Storage[] => {
 };
 
 export const selectStorage = createSelector(
-    selectStorages,
-    (state: RootState, id: string) => id,
+    [selectStorages, (state: RootState, id: string) => id],
     (storages: Storage[], id: string) => {
         const item = storages.find((x) => x.id === id);
         return item ?? allStorage;
