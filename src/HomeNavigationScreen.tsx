@@ -41,7 +41,7 @@ export function HomeNavigationScreen() {
                     },
                 }}
                 options={{
-                    tabBarIcon: (p) => (
+                    tabBarIcon: (p: TabBarIconProps) => (
                         <Icon {...p} size={24} source="home-plus-outline" />
                     ),
                     tabBarLabel: "Vorratsorte",
@@ -61,7 +61,7 @@ export function HomeNavigationScreen() {
                     },
                 }}
                 options={{
-                    tabBarIcon: (p) => (
+                    tabBarIcon: (p: TabBarIconProps) => (
                         <Icon {...p} size={24} source="archive-outline" />
                     ),
                     tabBarLabel: "Kategorien",
@@ -81,7 +81,7 @@ export function HomeNavigationScreen() {
                     },
                 }}
                 options={{
-                    tabBarIcon: (p) => (
+                    tabBarIcon: (p: TabBarIconProps) => (
                         <Icon {...p} size={24} source="cart-outline" />
                     ),
                     tabBarLabel: "Shops",
@@ -89,4 +89,10 @@ export function HomeNavigationScreen() {
             />
         </Tab.Navigator>
     );
+}
+
+interface TabBarIconProps {
+    focused: boolean;
+    color: string;
+    size: number;
 }

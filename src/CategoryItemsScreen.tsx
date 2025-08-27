@@ -34,7 +34,7 @@ export function CategoryItemsScreen(props: {
     route: RouteProp<CategoriesStackParamList, "CategoryItems">;
 }) {
     const category = useAppSelector((state) =>
-        selectCategory(state, props.route.params.id),
+        selectCategory(state, props.route.params.id ?? ""),
     );
     const categories = useAppSelector(selectCategories);
     const itemsWanted = useAppSelector(selectItemsWanted);

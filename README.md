@@ -12,7 +12,7 @@ Make sure to increase `versionCode` in `app.json`.
 To make sure the important `versionCode` in `build.gradle` is updated run:
 
 ```
-npx expo prebuild
+npx expo prebuild --clean
 ```
 
 To build and submit:

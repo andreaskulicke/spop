@@ -53,9 +53,9 @@ export function Calculator(props: {
         ("+" | "-" | "*" | "/" | undefined)[]
     >(Array(3));
 
-    const textInputRef1 = useRef();
-    const textInputRef2 = useRef();
-    const textInputRef3 = useRef();
+    const textInputRef1 = useRef(undefined);
+    const textInputRef2 = useRef(undefined);
+    const textInputRef3 = useRef(undefined);
     const textInputRefs = [textInputRef1, textInputRef2, textInputRef3];
 
     const theme = useTheme();

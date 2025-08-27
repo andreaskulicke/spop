@@ -3,7 +3,6 @@ import { MD3Theme } from "react-native-paper";
 
 export function modalContainerStyle(): StyleProp<ViewStyle> {
     return {
-        alignSelf: "center",
         padding: 12,
         minWidth: 360,
         maxWidth: 400,
