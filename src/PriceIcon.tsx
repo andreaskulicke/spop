@@ -95,8 +95,6 @@ export function PriceIcon(props: {
         ? itemShopsWithMinPrice.normalizedPrices
         : itemShopsWithMinPrice.prices;
     const hasMinPrice = prices.find((x) => x.shopId === props.shopId);
-    console.log("prices=" + JSON.stringify(prices))
-    console.log("normalized=" + props.normalized + ", hasMinPrice=" + !!hasMinPrice + ", shop=" + props.shopId)
     const numberOfShopsWithPrices =
         item?.shops.filter((x) => x.price).length ?? 0;
 

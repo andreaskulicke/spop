@@ -8,8 +8,8 @@ eas build -p android --profile preview
 
 # How to build aab for google play store submission?
 
-Make sure to increase `versionCode` in `app.json`.
-To make sure the important `versionCode` in `build.gradle` is updated run:
+Make sure to increase `version` in `app.json` and ``package.json`.
+Run:
 
 ```
 npx expo prebuild --clean
@@ -30,4 +30,3 @@ eas submit -p android
 Go to Google developer console:
 
 <https://play.google.com/console/u/0/developers/4745463921180105365/app-list>
-
