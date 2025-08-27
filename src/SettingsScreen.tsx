@@ -44,6 +44,7 @@ import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { useState } from "react";
 import appJson from "../app.json";
 import packageJson from "../package.json";
+import DeviceInfo, { getVersion } from "react-native-device-info";
 
 export function SettingsScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -65,7 +66,7 @@ export function SettingsScreen(props: {
     const [dataExpanded, setDataExpanded] = useState(false);
 
     async function handleFeebackPress(): Promise<void> {
-        const url = `mailto:andreaskulicke.apps@gmx.de?subject=Spop ${packageJson.version} (${appJson.expo.android.versionCode})`;
+        const url = `mailto:andreaskulicke.apps@gmx.de?subject=Spop ${getVersionString()}`;
         if (await Linking.canOpenURL(url)) {
             Linking.openURL(url);
         }
@@ -457,14 +458,14 @@ export function SettingsScreen(props: {
                     />
                     <List.Item
                         title="Version"
-                        right={(p) => (
-                            <Text {...p}>
-                                {`${packageJson.version} (${appJson.expo.android.versionCode})`}
-                            </Text>
-                        )}
+                        right={(p) => <Text {...p}>{getVersionString()}</Text>}
                     />
                 </Card>
             </ScrollView>
         </StatusBarView>
     );
+}
+
+function getVersionString() {
+    return `${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`;
 }
