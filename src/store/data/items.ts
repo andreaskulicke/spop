@@ -80,9 +80,11 @@ export function getNormalizedPriceBase(
     if (itemShop.price) {
         const packageQuantity =
             itemShop?.packageQuantity ?? item?.packageQuantity ?? 1;
-        const packageUnit = getUnit(
-            itemShop?.packageUnitId ?? item?.packageUnitId,
-        );
+        let unitTmp =
+            !!itemShop?.packageUnitId && itemShop.packageUnitId !== "-"
+                ? itemShop.packageUnitId
+                : item?.packageUnitId;
+        const packageUnit = getUnit(unitTmp);
         return (
             (itemShop.price * packageUnit.factorToNormalizedPriceBase) /
             packageQuantity
