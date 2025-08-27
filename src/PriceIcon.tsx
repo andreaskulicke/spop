@@ -47,22 +47,22 @@ export function SummaryPriceIcon(props: {
                     setIcon("arrow-right");
                     tooltipText = "Gleiche Preise";
                 } else {
-                    setIcon("arrow-up");
+                    setIcon("arrow-down");
                     tooltipText = "Bester Preis";
                 }
             } else {
                 setColor(theme.colors.error);
-                setIcon("arrow-bottom-right");
+                setIcon("arrow-up-right");
                 tooltipText = "Woanders Preis pro Einheit besser!";
             }
         } else {
             if (hasMinNormalizedPrice) {
                 setColor("green");
-                setIcon("arrow-top-right");
+                setIcon("arrow-bottom-right");
                 tooltipText = "Bester Preis pro Einheit";
             } else {
                 setColor(theme.colors.error);
-                setIcon("arrow-down");
+                setIcon("arrow-up");
                 tooltipText = "Woanders billiger!";
             }
         }
