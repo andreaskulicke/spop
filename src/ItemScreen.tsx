@@ -481,7 +481,6 @@ export function ItemScreen(props: {
                             mode="outlined"
                             multiline
                             scrollEnabled
-                            selectTextOnFocus
                             style={{ flexGrow: 1, margin: 8 }}
                             value={notes}
                             onBlur={handleTextInputNotesBlur}
