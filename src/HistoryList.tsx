@@ -91,7 +91,16 @@ export function HistoryList(props: {
         }
     }
 
-    function handleLongPress(item: Item): void {
+    function handleLongPressExisting(item: Item): void {
+        navigation.navigate("Item", {
+            id: item.id,
+            shopId: props.shop?.id,
+            storageId: props.storage?.id,
+        });
+    }
+
+    function handleLongPressNew(item: Item): void {
+        props.onPress?.(item);
         navigation.navigate("Item", {
             id: item.id,
             shopId: props.shop?.id,
@@ -124,6 +133,7 @@ export function HistoryList(props: {
                     <HistoryListItem
                         item={props.item}
                         onPress={props.onPress}
+                        onLongPress={handleLongPressNew}
                         onIconPress={props.onIconPress}
                     />
                 )}
@@ -178,7 +188,7 @@ export function HistoryList(props: {
                         originalItem={x}
                         shopId={props.shop?.id}
                         onPress={props.onPress}
-                        onLongPress={handleLongPress}
+                        onLongPress={handleLongPressExisting}
                         onCalculatorPress={handleCalculatorPress}
                         onIconPress={props.onIconPress}
                     />

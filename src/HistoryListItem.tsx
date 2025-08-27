@@ -10,7 +10,7 @@ import {
     useTheme,
 } from "react-native-paper";
 import { numberToString } from "./numberToString";
-import { PriceIcon, SummaryPriceIcon } from "./PriceIcon";
+import { SummaryPriceIcon } from "./PriceIcon";
 import { View } from "react-native";
 import React from "react";
 
