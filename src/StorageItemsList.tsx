@@ -45,6 +45,7 @@ import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { withSeparator } from "./with";
 import React, { JSXElementConstructor, ReactElement, useState } from "react";
+import { ItemsListTitle } from "./ItemsListTitle";
 
 export function StorageItemsList(props: {
     storage: Storage;
@@ -138,8 +139,8 @@ export function StorageItemsList(props: {
 
         return (
             <List.Item
+                title={<ItemsListTitle title={item.name} />}
                 description={description ? description : undefined}
-                title={item.name}
                 style={itemListStyle(theme)}
                 right={(p) => (
                     <View

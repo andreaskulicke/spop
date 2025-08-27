@@ -3,8 +3,6 @@ import {
     selectItemsNotWantedWithShop,
     selectItemsWantedWithShop,
     selectValidShops,
-    setItemPackageQuantity,
-    setItemPackageUnit,
     setItemQuantity,
     setItemShop,
     setItemShopPrice,
@@ -50,6 +48,7 @@ import { Text, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { withSeparator } from "./with";
 import React, { JSXElementConstructor, ReactElement, useState } from "react";
+import { ItemsListTitle } from "./ItemsListTitle";
 
 export function ShopItemsList(props: {
     shop: Shop;
@@ -185,8 +184,8 @@ export function ShopItemsList(props: {
 
         return (
             <List.Item
+                title={<ItemsListTitle title={item.name} />}
                 description={description ? description : undefined}
-                title={item.name}
                 style={itemListStyle(theme)}
                 right={(p) => (
                     <View

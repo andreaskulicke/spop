@@ -28,6 +28,7 @@ import {
 import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { View } from "react-native";
+import { ItemsListTitle } from "./ItemsListTitle";
 
 export function CategoryItemsScreen(props: {
     navigation: NavigationProp<RootStackParamList & CategoriesStackParamList>;
@@ -72,7 +73,7 @@ export function CategoryItemsScreen(props: {
     ): ReactElement<any, string | JSXElementConstructor<any>> | null {
         return (
             <List.Item
-                title={item.name}
+                title={<ItemsListTitle title={item.name} />}
                 description={
                     item.categoryId !== category?.id
                         ? getCategoryName(item.categoryId)
