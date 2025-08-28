@@ -14,6 +14,7 @@ import {
     Divider,
     Tooltip,
     Icon,
+    Badge,
 } from "react-native-paper";
 import { AreaItemTitle } from "./AreaItemTitle";
 import { Count } from "./Count";
@@ -70,43 +71,58 @@ export function ShopsScreen(props: {
     }
 
     function handleRenderItem(params: RenderItemParams<Shop>): ReactNode {
+        const shopIndex = shops.findIndex((x) => x.id === params.item.id);
+        const isFallThrough =
+            shopIndex < shops.length - 1 && !shops[shopIndex + 1]?.stopper;
+
         const count = items.filter(
             (i) =>
                 i.wanted &&
                 i.shops.find((s) => s.checked && s.shopId === params.item.id),
         ).length;
-        return params.item.stopper ? (
-            <ScaleDecorator activeScale={2}>
-                <Pressable
-                    onLongPress={() => {
-                        setDraggingStopper(params.item.id);
-                        params.drag();
-                    }}
-                >
-                    <View
-                        style={{
-                            backgroundColor: theme.colors.elevation.level1,
-                            height: 24,
+
+        if (params.item.stopper) {
+            return (
+                <ScaleDecorator activeScale={2}>
+                    <Pressable
+                        onLongPress={() => {
+                            setDraggingStopper(params.item.id);
+                            params.drag();
                         }}
                     >
-                        {draggingStopper === params.item.id ? (
-                            <View
-                                style={{ alignItems: "center", paddingTop: 8 }}
-                            >
-                                <Icon size={8} source="trash-can" />
-                                <Icon size={8} source="chevron-down" />
-                            </View>
-                        ) : (
-                            <View
-                                style={{ alignItems: "center", paddingTop: 2 }}
-                            >
-                                <Icon size={16} source="tray" />
-                            </View>
-                        )}
-                    </View>
-                </Pressable>
-            </ScaleDecorator>
-        ) : (
+                        <View
+                            style={{
+                                backgroundColor: theme.colors.elevation.level1,
+                                height: 24,
+                            }}
+                        >
+                            {draggingStopper === params.item.id ? (
+                                <View
+                                    style={{
+                                        alignItems: "center",
+                                        paddingTop: 8,
+                                    }}
+                                >
+                                    <Icon size={8} source="trash-can" />
+                                    <Icon size={8} source="chevron-down" />
+                                </View>
+                            ) : (
+                                <View
+                                    style={{
+                                        alignItems: "center",
+                                        paddingTop: 2,
+                                    }}
+                                >
+                                    <Icon size={16} source="tray" />
+                                </View>
+                            )}
+                        </View>
+                    </Pressable>
+                </ScaleDecorator>
+            );
+        }
+
+        return (
             <ScaleDecorator>
                 <List.Item
                     title={(p) => (
@@ -116,7 +132,26 @@ export function ShopsScreen(props: {
                             bold={count > 0}
                         />
                     )}
-                    left={(p) => getShopImage(params.item, theme, { ...p })}
+                    left={(p) => (
+                        <View>
+                            <View
+                                style={{
+                                    position: "absolute",
+                                    bottom: -8,
+                                    right: -4,
+                                    zIndex: 999,
+                                }}
+                            >
+                                <Icon
+                                    size={16}
+                                    source={
+                                        isFallThrough ? "arrow-down" : "tray"
+                                    }
+                                />
+                            </View>
+                            {getShopImage(params.item, theme, { ...p })}
+                        </View>
+                    )}
                     right={(p) => <Count {...p} count={count} />}
                     onPress={() => handleShopPress(params.item.id)}
                     onLongPress={() => params.drag()}
