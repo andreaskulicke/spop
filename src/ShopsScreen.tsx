@@ -30,7 +30,7 @@ import { SearchBarList } from "./SearchBarList";
 import { Shop, getShopImage } from "./store/data/shops";
 import { ShopsStackParamList } from "./ShopsNavigationScreen";
 import { StatusBarView } from "./StatusBarView";
-import { TouchableWithoutFeedback, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { UnassignedBadge } from "./UnassignedBadge";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import uuid from "react-native-uuid";
@@ -77,7 +77,7 @@ export function ShopsScreen(props: {
         ).length;
         return params.item.stopper ? (
             <ScaleDecorator activeScale={2}>
-                <TouchableWithoutFeedback
+                <Pressable
                     onLongPress={() => {
                         setDraggingStopper(params.item.id);
                         params.drag();
@@ -104,7 +104,7 @@ export function ShopsScreen(props: {
                             </View>
                         )}
                     </View>
-                </TouchableWithoutFeedback>
+                </Pressable>
             </ScaleDecorator>
         ) : (
             <ScaleDecorator>

@@ -8,8 +8,7 @@ import {
     TextInput,
     Divider,
 } from "react-native-paper";
-import { StyleSheet, View } from "react-native";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { Pressable, StyleSheet, View } from "react-native";
 import { UnitId, getUnitName, units } from "./store/data/items";
 import React, { useEffect, useRef, useState } from "react";
 
@@ -278,7 +277,7 @@ export function Calculator(props: {
                                         padding: 2,
                                     }}
                                 >
-                                    <TouchableWithoutFeedback
+                                    <Pressable
                                         onPress={() =>
                                             setSelectedField((v) => ({
                                                 index: i,
@@ -330,7 +329,7 @@ export function Calculator(props: {
                                                 }
                                             />
                                         </View>
-                                    </TouchableWithoutFeedback>
+                                    </Pressable>
                                 </View>
                             );
                         })}
