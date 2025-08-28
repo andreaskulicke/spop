@@ -6,6 +6,7 @@ import {
     Text,
     TextInput,
     TouchableRipple,
+    useTheme,
 } from "react-native-paper";
 import { Category } from "./store/data/categories";
 import { CategoryIcon } from "./CategoryIcon";
@@ -34,6 +35,7 @@ import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { Keyboard, View } from "react-native";
 import uuid from "react-native-uuid";
+import { getShopImage } from "./store/data/shops";
 
 export function ShopScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -46,6 +48,7 @@ export function ShopScreen(props: {
         selectShop(state, props.route.params.id),
     );
     const dispatch = useAppDispatch();
+    const theme = useTheme();
 
     function handleGoBack() {
         handleTextInputNameBlur();
@@ -158,15 +161,18 @@ export function ShopScreen(props: {
             <NestableScrollContainer>
                 <Card style={{ margin: 8 }}>
                     <Card.Title title="Allgemein" />
-                    <TextInput
-                        label="Name"
-                        mode="outlined"
-                        selectTextOnFocus
-                        style={{ margin: 8 }}
-                        value={name}
-                        onBlur={handleTextInputNameBlur}
-                        onChangeText={handleTextInputNameChange}
-                    />
+                    <View style={{ flexDirection: "row" }}>
+                        {getShopImage(shop, theme, { style: {} })}
+                        <TextInput
+                            label="Name"
+                            mode="outlined"
+                            selectTextOnFocus
+                            style={{ margin: 8, flexGrow: 1 }}
+                            value={name}
+                            onBlur={handleTextInputNameBlur}
+                            onChangeText={handleTextInputNameChange}
+                        />
+                    </View>
                     <CategoryMenu
                         categoryId={shop.defaultCategoryId}
                         title="Standart Kategorie"
