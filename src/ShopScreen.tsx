@@ -8,7 +8,7 @@ import {
     TouchableRipple,
     useTheme,
 } from "react-native-paper";
-import { Category } from "./store/data/categories";
+import { Category, defaultCategories } from "./store/data/categories";
 import { CategoryIcon } from "./CategoryIcon";
 import { CategoryMenu } from "./CategoryMenu";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
@@ -35,14 +35,14 @@ import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { Keyboard, View } from "react-native";
 import uuid from "react-native-uuid";
-import { getShopImage } from "./store/data/shops";
+import { defaultShops, getShopImage } from "./store/data/shops";
 
 export function ShopScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
     route: RouteProp<RootStackParamList, "Shop">;
 }) {
     const [name, setName] = useState("");
-    const [categoriesExpanded, setCategoriesExpanded] = useState(false);
+    const [categoriesExpanded, setCategoriesExpanded] = useState(true);
     const categories = useAppSelector(selectCategories);
     const shop = useAppSelector((state) =>
         selectShop(state, props.route.params.id),
@@ -84,6 +84,18 @@ export function ShopScreen(props: {
     function handleDeletePress(): void {
         dispatch(deleteShop(shop.id));
         props.navigation.goBack();
+    }
+
+    function handleReloadCategoriesPress(): void {
+        dispatch(
+            setShopCategories({
+                shopId: shop.id,
+                categoryIds:
+                    defaultShops.find(
+                        (x) => x.id === shop.id || x.name === shop.name,
+                    )?.categoryIds ?? defaultCategories.map((x) => x.id),
+            }),
+        );
     }
 
     function handleRenderItem(params: RenderItemParams<Category>): ReactNode {
@@ -194,6 +206,11 @@ export function ShopScreen(props: {
                             title="Kategorien"
                             right={(p) => (
                                 <View style={{ flexDirection: "row" }}>
+                                    <IconButton
+                                        {...p}
+                                        icon="reload"
+                                        onPress={handleReloadCategoriesPress}
+                                    />
                                     <IconButton
                                         {...p}
                                         icon="plus-outline"
