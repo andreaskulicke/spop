@@ -248,6 +248,8 @@ export function Calculator(props: {
         (textInputRefs[selectedField.index]?.current as any)?.focus();
     });
 
+    const isItemScreen = props.fields.length === 1;
+
     return (
         <Portal>
             <Modal
@@ -361,21 +363,33 @@ export function Calculator(props: {
                     <View style={style.row}>
                         <UnitButton
                             activeUnitId={values[selectedField.index]?.unitId}
+                            itemUnitId={
+                                isItemScreen ? "ml" : props.fields[0].unitId
+                            }
                             unitId="ml"
                             onPress={(unitId) => handleButtonPress(unitId)}
                         />
                         <UnitButton
                             activeUnitId={values[selectedField.index]?.unitId}
+                            itemUnitId={
+                                isItemScreen ? "l" : props.fields[0].unitId
+                            }
                             unitId="l"
                             onPress={(unitId) => handleButtonPress(unitId)}
                         />
                         <UnitButton
                             activeUnitId={values[selectedField.index]?.unitId}
+                            itemUnitId={
+                                isItemScreen ? "g" : props.fields[0].unitId
+                            }
                             unitId="g"
                             onPress={(unitId) => handleButtonPress(unitId)}
                         />
                         <UnitButton
                             activeUnitId={values[selectedField.index]?.unitId}
+                            itemUnitId={
+                                isItemScreen ? "kg" : props.fields[0].unitId
+                            }
                             unitId="kg"
                             onPress={(unitId) => handleButtonPress(unitId)}
                         />
@@ -520,10 +534,15 @@ export function Calculator(props: {
 
 function UnitButton(props: {
     activeUnitId?: UnitId;
+    itemUnitId?: UnitId;
     unitId: UnitId;
     onPress: (unitId: UnitId, unitName: string) => void;
 }) {
     const unitName = getUnitName(props.unitId);
+
+    const disabled =
+        units.find((x) => x.id === props.unitId)?.group !==
+        units.find((x) => x.id === props.itemUnitId)?.group;
 
     return (
         <Button
@@ -531,6 +550,7 @@ function UnitButton(props: {
                 props.unitId === props.activeUnitId ? "contained" : "outlined"
             }
             compact
+            disabled={disabled}
             style={style.col4}
             onPress={() => props.onPress(props.unitId, unitName)}
         >

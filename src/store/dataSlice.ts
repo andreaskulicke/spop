@@ -9,10 +9,12 @@ import {
     UnitId,
     units,
     getInitialItemCategory,
+    getUnit,
 } from "./data/items";
 import { RootState } from "./store";
 import { Shop, defaultShops } from "./data/shops";
 import { Storage, defaultStorages } from "./data/storages";
+import { WritableDraft } from "immer";
 
 export interface Data {
     version: string;
@@ -311,6 +313,7 @@ export const itemsSlice = createSlice({
                     if (unit?.group && packageUnit.group !== unit?.group) {
                         item.unitId = item.packageUnitId;
                     }
+                    updateItemShopUnits(item);
                 }
             }
         },
@@ -433,6 +436,7 @@ export const itemsSlice = createSlice({
                     if (unit.group !== packageUnit?.group) {
                         item.packageUnitId = item.unitId;
                     }
+                    updateItemShopUnits(item);
                 }
             }
         },
@@ -1162,3 +1166,13 @@ export const selectStorage = createSelector(
         return item ?? allStorage;
     },
 );
+
+function updateItemShopUnits(item: WritableDraft<Item>) {
+    const unit = getUnit(item.unitId);
+    item.shops
+        .filter((s) => getUnit(s.unitId).group !== unit.group)
+        .forEach((s) => {
+            s.unitId = item.unitId;
+            s.packageUnitId = item.unitId;
+        });
+}
