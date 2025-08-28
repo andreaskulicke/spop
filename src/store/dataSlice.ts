@@ -727,7 +727,10 @@ export const selectSortedCategories = createSelector(
         [...categories].sort((x, y) => x.name.localeCompare(y.name)),
 );
 
-export function selectCategory(state: RootState, itemId: string) {
+export function selectCategory(
+    state: RootState,
+    itemId: string,
+): Category | undefined {
     return state.data.categories.find((x) => x.id === itemId);
 }
 

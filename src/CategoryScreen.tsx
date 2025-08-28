@@ -1,18 +1,32 @@
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { Keyboard, ScrollView, View } from "react-native";
-import { Appbar, Card, Portal, TextInput, Dialog } from "react-native-paper";
+import {
+    Appbar,
+    Card,
+    Portal,
+    TextInput,
+    Dialog,
+    IconButton,
+    List,
+    TouchableRipple,
+    useTheme,
+} from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import {
     deleteCategory,
     selectCategory,
+    selectShops,
     setCategoryIcon,
     setCategoryName,
+    setShopCategoryShow,
 } from "./store/dataSlice";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CategoryIcon } from "./CategoryIcon";
 import { StatusBarView } from "./StatusBarView";
 import { categoryIcons } from "./store/data/categories";
+import { SubSection } from "./ShopScreen";
+import { getShopImage, Shop } from "./store/data/shops";
 
 export function CategoryScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -20,14 +34,31 @@ export function CategoryScreen(props: {
 }) {
     const [name, setName] = useState("");
     const [iconModalVisible, setIconModalVisible] = useState(false);
+    const [shopsExpanded, setShopsExpanded] = useState(true);
     const category = useAppSelector((state) =>
         selectCategory(state, props.route.params.id),
     );
+    const shops = useAppSelector(selectShops);
     const dispatch = useAppDispatch();
+    const theme = useTheme();
 
     function handleGoBack() {
         handleTextInputNameBlur();
         props.navigation.goBack();
+    }
+
+    function handleAllShopsPress(show: boolean): void {
+        if (category) {
+            for (const shop of shops) {
+                dispatch(
+                    setShopCategoryShow({
+                        shopId: shop.id,
+                        categoryId: category.id,
+                        show: show,
+                    }),
+                );
+            }
+        }
     }
 
     function handleDeletePress(): void {
@@ -73,6 +104,21 @@ export function CategoryScreen(props: {
         setName(category?.name ?? "");
     }, [category]);
 
+    const shopsShown = shops
+        .filter(
+            (x) =>
+                !x.categoryIds ||
+                x.categoryIds.find((cid) => cid === category?.id),
+        )
+        .sort((a, b) => a.name.localeCompare(b.name));
+    const shopsHidden = shops
+        .filter(
+            (x) =>
+                x.categoryIds &&
+                !x.categoryIds.find((cid) => cid === category?.id),
+        )
+        .sort((a, b) => a.name.localeCompare(b.name));
+
     return (
         <StatusBarView bottomPadding>
             <Appbar.Header elevated>
@@ -111,6 +157,64 @@ export function CategoryScreen(props: {
                         />
                     </View>
                 </Card>
+                <Card style={{ margin: 8 }}>
+                    <TouchableRipple
+                        onPress={() => setShopsExpanded((x) => !x)}
+                    >
+                        <Card.Title
+                            title="Shops"
+                            right={(p) => (
+                                <View style={{ flexDirection: "row" }}>
+                                    <IconButton
+                                        {...p}
+                                        icon={
+                                            shopsExpanded
+                                                ? "chevron-up"
+                                                : "chevron-down"
+                                        }
+                                        onPress={() =>
+                                            setShopsExpanded((x) => !x)
+                                        }
+                                    />
+                                </View>
+                            )}
+                        />
+                    </TouchableRipple>
+                    {shopsExpanded && (
+                        <SubSection
+                            title="Verwendet"
+                            icon="eye-off-outline"
+                            onButtonPress={() => handleAllShopsPress(false)}
+                        >
+                            {shopsShown.map((x) => (
+                                <ListItem
+                                    key={x.id}
+                                    navigation={props.navigation}
+                                    categoryId={category!.id}
+                                    shop={x}
+                                    show={false}
+                                />
+                            ))}
+                        </SubSection>
+                    )}
+                    {shopsExpanded && shopsHidden.length > 0 && (
+                        <SubSection
+                            title="Nicht verwendet"
+                            icon="eye-outline"
+                            onButtonPress={() => handleAllShopsPress(true)}
+                        >
+                            {shopsHidden.map((x) => (
+                                <ListItem
+                                    key={x.id}
+                                    navigation={props.navigation}
+                                    categoryId={category!.id}
+                                    shop={x}
+                                    show={true}
+                                />
+                            ))}
+                        </SubSection>
+                    )}
+                </Card>
             </ScrollView>
         </StatusBarView>
     );
@@ -148,5 +252,41 @@ function IconModal(props: {
                 </Dialog.Content>
             </Dialog>
         </Portal>
+    );
+}
+
+function ListItem(props: {
+    navigation: NavigationProp<RootStackParamList>;
+    shop: Shop;
+    categoryId: string;
+    show: boolean;
+}) {
+    const dispatch = useAppDispatch();
+    const theme = useTheme();
+
+    return (
+        <List.Item
+            title={props.shop.name}
+            left={(p) => getShopImage(props.shop, theme, { ...p })}
+            right={(p) => (
+                <IconButton
+                    icon={props.show ? "eye-outline" : "eye-off-outline"}
+                    onPress={() =>
+                        dispatch(
+                            setShopCategoryShow({
+                                shopId: props.shop.id,
+                                categoryId: props.categoryId,
+                                show: props.show,
+                            }),
+                        )
+                    }
+                />
+            )}
+            onPress={() =>
+                props.navigation.navigate("Shop", {
+                    id: props.shop.id,
+                })
+            }
+        />
     );
 }

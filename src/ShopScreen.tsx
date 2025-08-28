@@ -279,7 +279,7 @@ export function ShopScreen(props: {
     );
 }
 
-function SubSection(
+export function SubSection(
     props: React.PropsWithChildren<{
         title: string;
         icon: string;

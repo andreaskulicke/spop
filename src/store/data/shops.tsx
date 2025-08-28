@@ -41,6 +41,7 @@ export function getShopImage(
         const imageStyle: StyleProp<ViewStyle> = {
             backgroundColor: theme.colors.elevation.level3,
             alignItems: "center",
+            alignSelf: "center",
             justifyContent: "center",
             marginLeft: 16,
         };
