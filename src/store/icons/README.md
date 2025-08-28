@@ -16,7 +16,7 @@ Added viewBox.
 
 28.08.2025: https://commons.wikimedia.org/wiki/File:Deutsche_Apotheke_Logo.svg
 
-Removed width and height properties.
+Replaced width and heigth properties with viewBox.
 
 # Bäcker.svg
 
@@ -55,6 +55,12 @@ Cut out main logo for better display.
 # Obi.svg
 
 24.11.2023: https://de.wikipedia.org/wiki/Obi_(Baumarkt)#/media/Datei:Obi.svg
+
+# Obst.svg
+
+28.08.2025: https://commons.wikimedia.org/wiki/File:Apple_fruit_icon.svg
+
+Replaced width and heigth properties with viewBox.
 
 # Rewe.svg
 

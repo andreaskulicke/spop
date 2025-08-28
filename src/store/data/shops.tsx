@@ -12,6 +12,7 @@ import HornbachSvg from "../icons/Hornbach";
 import LidlSvg from "../icons/Lidl";
 import MuellerSvg from "../icons/Mueller";
 import NormaSvg from "../icons/Norma";
+import ObstSvg from "../icons/Obst";
 import ObiSvg from "../icons/Obi";
 import ReweSvg from "../icons/Rewe";
 import RossmannSvg from "../icons/Rossmann";
@@ -78,7 +79,7 @@ export function getShopImage(
     if (/apotheke/i.test(shop.name)) {
         return (
             <Avatar.Image
-                {...avatarBackgroundProps}
+                {...getAvatarBorderProps("#df091d")}
                 source={() => <ApothekeSvg {...s} />}
             />
         );
@@ -144,6 +145,14 @@ export function getShopImage(
             <Avatar.Image
                 {...getAvatarBorderProps("#ff7313")}
                 source={() => <ObiSvg {...s} />}
+            />
+        );
+    }
+    if (/.*obst.*/i.test(shop.name)) {
+        return (
+            <Avatar.Image
+                {...getAvatarBorderProps("#757f3f")}
+                source={() => <ObstSvg {...s} />}
             />
         );
     }
