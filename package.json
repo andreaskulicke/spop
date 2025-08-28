@@ -52,6 +52,7 @@
     "build:prod": "npx expo prebuild --clean && eas build -p android --auto-submit",
     "format": "prettier --editorconfig --write .",
     "test": "jest",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "ios": "expo run:ios"
   }
 }

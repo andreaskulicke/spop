@@ -12,6 +12,12 @@ Combined and modified.
 
 Added viewBox.
 
+# Apotheke.svg
+
+28.08.2025: https://commons.wikimedia.org/wiki/File:Deutsche_Apotheke_Logo.svg
+
+Removed width and height properties.
+
 # Bäcker.svg
 
 01.12.2023: https://upload.wikimedia.org/wikipedia/commons/6/6e/Iceland_road_sign_E08.43.svg

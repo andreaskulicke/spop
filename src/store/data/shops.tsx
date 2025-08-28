@@ -4,6 +4,7 @@ import { Style } from "react-native-paper/lib/typescript/components/List/utils";
 import { StyleProp, ViewStyle } from "react-native";
 import { SvgProps } from "react-native-svg";
 import AldiSvg from "../icons/Aldi";
+import ApothekeSvg from "../icons/Apotheke";
 import BaeckerSvg from "../icons/Baecker";
 import DmSvg from "../icons/Dm";
 import EdekaSvg from "../icons/Edeka";
@@ -70,6 +71,15 @@ export function getShopImage(
             <Avatar.Image
                 {...getAvatarProps("#00005f")}
                 source={() => <AldiSvg {...s} />}
+            />
+        );
+    }
+
+    if (/apotheke/i.test(shop.name)) {
+        return (
+            <Avatar.Image
+                {...avatarBackgroundProps}
+                source={() => <ApothekeSvg {...s} />}
             />
         );
     }
