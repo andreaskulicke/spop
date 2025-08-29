@@ -8,6 +8,7 @@ import ApothekeSvg from "../icons/Apotheke";
 import BaeckerSvg from "../icons/Baecker";
 import DmSvg from "../icons/Dm";
 import EdekaSvg from "../icons/Edeka";
+import FressnapfSvg from "../icons/Fressnapf";
 import HornbachSvg from "../icons/Hornbach";
 import LidlSvg from "../icons/Lidl";
 import MuellerSvg from "../icons/Mueller";
@@ -105,6 +106,14 @@ export function getShopImage(
             <Avatar.Image
                 {...getAvatarProps("#FFD400")}
                 source={() => <EdekaSvg {...s} />}
+            />
+        );
+    }
+    if (/fressnapf/i.test(shop.name)) {
+        return (
+            <Avatar.Image
+                {...getAvatarBorderProps("#00652d")}
+                source={() => <FressnapfSvg {...s} />}
             />
         );
     }

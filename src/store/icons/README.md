@@ -1,4 +1,8 @@
-https://react-svgr.com/playground/?native=true
+# How to?
+
+Convert `svg` icons to `jsx` with:
+
+<https://react-svgr.com/playground/?native=true>
 
 # logo/\*
 
@@ -31,6 +35,12 @@ Added viewBox.
 # Edeka.svg
 
 24.11.2023: https://de.wikipedia.org/wiki/Edeka#/media/Datei:Edeka_Logo_Aktuell.svg
+
+# Fressnapf.svg
+
+29.08.2025: https://commons.wikimedia.org/wiki/File:Fressnapf_Logo_2023.svg
+
+Removed text, adjusted viewBox, changed color `white` to `#00652d`.
 
 # Hornbach\*.svg
 
