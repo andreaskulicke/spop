@@ -14,6 +14,7 @@ import { useAppSelector } from "./store/hooks";
 import { View } from "react-native";
 import React, { useState } from "react";
 import TrayOff from "./store/icons/tray-off";
+import { getShopImage } from "./store/data/shops";
 
 export function ShopItemsScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -48,6 +49,8 @@ export function ShopItemsScreen(props: {
         <StatusBarView>
             <Appbar.Header elevated>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
+                {getShopImage(shop, theme, { style: {} })}
+                <View style={{ marginRight: 8 }}></View>
                 <Appbar.Content title={shop?.name ?? allShop.name} />
                 {shop.id !== allShop.id &&
                     itemsWantedThisShopHidden.length > 0 && (

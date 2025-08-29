@@ -29,6 +29,7 @@ import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { View } from "react-native";
 import { ItemsListTitle } from "./ItemsListTitle";
+import { CategoryIcon } from "./CategoryIcon";
 
 export function CategoryItemsScreen(props: {
     navigation: NavigationProp<RootStackParamList & CategoriesStackParamList>;
@@ -206,6 +207,7 @@ export function CategoryItemsScreen(props: {
         <StatusBarView>
             <Appbar.Header elevated>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
+                <CategoryIcon icon={category?.icon} />
                 <Appbar.Content title={category?.name ?? "Alle Dinge"} />
                 {category && (
                     <Appbar.Action
