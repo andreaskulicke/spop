@@ -46,6 +46,10 @@ Added viewBox.
 
 Removed text, adjusted viewBox, changed color `white` to `#00652d`.
 
+# Herzogenaurach.svg
+
+29.08.2025: https://commons.wikimedia.org/wiki/File:DEU_Herzogenaurach_COA.svg
+
 # Hornbach.svg
 
 24.11.2023: https://de.wikipedia.org/wiki/Hornbach_(Baumarkt)#/media/Datei:Hornbach_Logo_black.svg

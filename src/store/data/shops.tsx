@@ -10,6 +10,7 @@ import BofrostSvg from "../icons/Bofrost";
 import DmSvg from "../icons/Dm";
 import EdekaSvg from "../icons/Edeka";
 import FressnapfSvg from "../icons/Fressnapf";
+import HerzogenaurachSvg from "../icons/Herzogenaurach";
 import HornbachSvg from "../icons/Hornbach";
 import IkeaSvg from "../icons/Ikea";
 import LidlSvg from "../icons/Lidl";
@@ -125,6 +126,14 @@ export function getShopImage(
             <Avatar.Image
                 {...getAvatarBorderProps("#00652d")}
                 source={() => <FressnapfSvg {...s} />}
+            />
+        );
+    }
+    if (/.*herzo.*/i.test(shop.name)) {
+        return (
+            <Avatar.Image
+                {...getAvatarProps("gold")}
+                source={() => <HerzogenaurachSvg {...s} />}
             />
         );
     }
