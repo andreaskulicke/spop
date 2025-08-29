@@ -6,6 +6,7 @@ import { SvgProps } from "react-native-svg";
 import AldiSvg from "../icons/Aldi";
 import ApothekeSvg from "../icons/Apotheke";
 import BaeckerSvg from "../icons/Baecker";
+import BofrostSvg from "../icons/Bofrost";
 import DmSvg from "../icons/Dm";
 import EdekaSvg from "../icons/Edeka";
 import FressnapfSvg from "../icons/Fressnapf";
@@ -93,6 +94,15 @@ export function getShopImage(
             />
         );
     }
+    if (/bofrost/i.test(shop.name)) {
+        return (
+            <Avatar.Image
+                {...getAvatarBorderProps("#0d194d")}
+                source={() => <BofrostSvg {...s} />}
+            />
+        );
+    }
+
     if (/dm/i.test(shop.name)) {
         return (
             <Avatar.Image

@@ -28,6 +28,10 @@ Replaced width and heigth properties with viewBox.
 
 Added viewBox.
 
+# Bofrost.svg
+
+01.12.2023: https://commons.wikimedia.org/wiki/File:Bofrost.svg
+
 # Dm.svg
 
 24.11.2023: https://de.wikipedia.org/wiki/Dm-drogerie_markt#/media/Datei:Dm-drogerie_markt_logo.svg
