@@ -30,7 +30,7 @@ Added viewBox.
 
 # Bofrost.svg
 
-01.12.2023: https://commons.wikimedia.org/wiki/File:Bofrost.svg
+29.08.2025: https://commons.wikimedia.org/wiki/File:Bofrost.svg
 
 # Dm.svg
 
@@ -46,11 +46,17 @@ Added viewBox.
 
 Removed text, adjusted viewBox, changed color `white` to `#00652d`.
 
-# Hornbach\*.svg
+# Hornbach.svg
 
 24.11.2023: https://de.wikipedia.org/wiki/Hornbach_(Baumarkt)#/media/Datei:Hornbach_Logo_black.svg
 
 Cut out main logo for better display.
+
+# Ikea.svg
+
+29.08.2025: https://commons.wikimedia.org/wiki/File:Ikea_logo.svg
+
+Replaced width and heigth properties with viewBox.
 
 # Lidl.svg
 

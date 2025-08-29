@@ -11,6 +11,7 @@ import DmSvg from "../icons/Dm";
 import EdekaSvg from "../icons/Edeka";
 import FressnapfSvg from "../icons/Fressnapf";
 import HornbachSvg from "../icons/Hornbach";
+import IkeaSvg from "../icons/Ikea";
 import LidlSvg from "../icons/Lidl";
 import MuellerSvg from "../icons/Mueller";
 import NormaSvg from "../icons/Norma";
@@ -132,6 +133,14 @@ export function getShopImage(
             <Avatar.Image
                 {...getAvatarProps("#f7911a")}
                 source={() => <HornbachSvg {...s} />}
+            />
+        );
+    }
+    if (/ikea/i.test(shop.name)) {
+        return (
+            <Avatar.Image
+                {...getAvatarProps("#FBD914")}
+                source={() => <IkeaSvg {...s} />}
             />
         );
     }
