@@ -30,6 +30,7 @@ import {
     setShopCategories,
     setShopDefaultCategory,
     selectCategories,
+    setShopExternalAppId,
 } from "./store/dataSlice";
 import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
@@ -42,6 +43,7 @@ export function ShopScreen(props: {
     route: RouteProp<RootStackParamList, "Shop">;
 }) {
     const [name, setName] = useState("");
+    const [externalAppId, setExternalAppId] = useState("");
     const [categoriesExpanded, setCategoriesExpanded] = useState(true);
     const categories = useAppSelector(selectCategories);
     const shop = useAppSelector((state) =>
@@ -52,6 +54,7 @@ export function ShopScreen(props: {
 
     function handleGoBack() {
         handleTextInputNameBlur();
+        handleTextInputExternalAppIdBlur();
         props.navigation.goBack();
     }
 
@@ -132,6 +135,25 @@ export function ShopScreen(props: {
         );
     }
 
+    function handleTextInputExternalAppIdBlur(): void {
+        if (shop) {
+            const id = externalAppId.trim();
+            if (id) {
+                dispatch(
+                    setShopExternalAppId({
+                        shopId: shop.id,
+                        externalAppId: id,
+                    }),
+                );
+                setExternalAppId(id);
+            }
+        }
+    }
+
+    function handleTextInputExternalAppIdChange(text: string): void {
+        setExternalAppId(text);
+    }
+
     function handleTextInputNameBlur(): void {
         if (shop) {
             const n = name.trim();
@@ -155,6 +177,7 @@ export function ShopScreen(props: {
 
     useEffect(() => {
         setName(shop?.name ?? "");
+        setExternalAppId(shop?.externalAppId ?? "");
     }, [shop]);
 
     const c = new Map(categories.map((x) => [x.id, x]));
@@ -197,6 +220,17 @@ export function ShopScreen(props: {
                             )
                         }
                     />
+                    <TextInput
+                        label="Externe App ID"
+                        autoCapitalize="none"
+                        mode="outlined"
+                        placeholder="de.edeka.genuss, de.rewe.app.mobile"
+                        selectTextOnFocus
+                        style={{ margin: 8, flexGrow: 1 }}
+                        value={externalAppId}
+                        onBlur={handleTextInputExternalAppIdBlur}
+                        onChangeText={handleTextInputExternalAppIdChange}
+                    />{" "}
                 </Card>
                 <Card style={{ margin: 8 }}>
                     <TouchableRipple

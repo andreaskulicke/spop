@@ -548,6 +548,17 @@ export const itemsSlice = createSlice({
                 shop.name = action.payload.name;
             }
         },
+        setShopExternalAppId: (
+            state,
+            action: PayloadAction<{ shopId: string; externalAppId: string }>,
+        ) => {
+            const shop = state.shops.find(
+                (x) => x.id === action.payload.shopId,
+            );
+            if (shop) {
+                shop.externalAppId = action.payload.externalAppId;
+            }
+        },
         // Shops - Categories
         addShopCategory: (
             state,
@@ -710,6 +721,7 @@ export const {
     setShopCategoryShow,
     setShopDefaultCategory,
     setShopName,
+    setShopExternalAppId,
     setShops,
 
     // Storages

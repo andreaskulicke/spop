@@ -28,6 +28,7 @@ export interface Shop {
     defaultCategoryId?: (string & {}) | (typeof categoryIds)[number];
     /** Category IDs that are present here are shown in the order of this array */
     categoryIds?: ((string & {}) | (typeof categoryIds)[number])[];
+    externalAppId?: string;
     stopper?: boolean;
 }
 

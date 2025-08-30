@@ -11,7 +11,7 @@ import { ShopItemsList } from "./ShopItemsList";
 import { ShopsStackParamList } from "./ShopsNavigationScreen";
 import { StatusBarView } from "./StatusBarView";
 import { useAppSelector } from "./store/hooks";
-import { View } from "react-native";
+import { Linking, View } from "react-native";
 import React, { useState } from "react";
 import TrayOff from "./store/icons/tray-off";
 import { getShopImage } from "./store/data/shops";
@@ -37,6 +37,19 @@ export function ShopItemsScreen(props: {
         props.navigation.navigate("Shop", { id: shop.id });
     }
 
+    async function handleOpenPress(): Promise<void> {
+        if (shop.externalAppId) {
+            const url = `market://launch?id=${shop.externalAppId}`;
+            try {
+                if (await Linking.canOpenURL(url)) {
+                    await Linking.openURL(url);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
+
     function handleShowHiddenPress(): void {
         setShowHidden((v) => !v);
     }
@@ -52,6 +65,12 @@ export function ShopItemsScreen(props: {
                 {getShopImage(shop, theme, { style: {} })}
                 <View style={{ marginRight: 8 }}></View>
                 <Appbar.Content title={shop?.name ?? allShop.name} />
+                {shop.externalAppId && (
+                    <Appbar.Action
+                        icon="open-in-new"
+                        onPress={handleOpenPress}
+                    />
+                )}
                 {shop.id !== allShop.id &&
                     itemsWantedThisShopHidden.length > 0 && (
                         <View>
