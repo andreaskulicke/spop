@@ -12,8 +12,11 @@ import { StorageScreen } from "./src/StorageScreen";
 import { persistor, store } from "./src/store/store";
 import { useAppSelector } from "./src/store/hooks";
 import { useColorScheme } from "react-native";
-import { selectTheme } from "./src/store/settingsSlice";
+import { selectSettings, selectTheme } from "./src/store/settingsSlice";
 import { PersistGate } from "redux-persist/integration/react";
+import { StrictMode } from "react";
+import { ShoppingListScreen } from "./src/ShoppingListScreen";
+import { ShoppingListsScreen } from "./src/ShoppingListsScreen";
 
 export type RootStackParamList = {
     Category: { id: string };
@@ -21,6 +24,8 @@ export type RootStackParamList = {
     Item: { id: string; storageId?: string; shopId?: string };
     Settings: undefined;
     Shop: { id: string };
+    ShoppingList: { id: string };
+    ShoppingLists: { id: string };
     Storage: { id: string };
 };
 
@@ -28,17 +33,19 @@ const RootStack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
     return (
-        <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-                <AppWithStore />
-            </PersistGate>
-        </Provider>
+        <StrictMode>
+            <Provider store={store}>
+                <PersistGate loading={null} persistor={persistor}>
+                    <AppWithStore />
+                </PersistGate>
+            </Provider>
+        </StrictMode>
     );
 }
 
 function AppWithStore() {
     const colorScheme = useColorScheme();
-    const settings = useAppSelector((state) => state.settings);
+    const settings = useAppSelector(selectSettings);
     const theme = useAppSelector((state) =>
         selectTheme(
             state,
@@ -84,6 +91,22 @@ function AppWithStore() {
                         <RootStack.Screen
                             component={SettingsScreen}
                             name="Settings"
+                            options={{
+                                headerShown: false,
+                                statusBarHidden: false,
+                            }}
+                        />
+                        <RootStack.Screen
+                            component={ShoppingListsScreen}
+                            name="ShoppingLists"
+                            options={{
+                                headerShown: false,
+                                statusBarHidden: false,
+                            }}
+                        />
+                        <RootStack.Screen
+                            component={ShoppingListScreen}
+                            name="ShoppingList"
                             options={{
                                 headerShown: false,
                                 statusBarHidden: false,

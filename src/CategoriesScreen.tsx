@@ -3,14 +3,14 @@ import {
     selectItems,
     selectSortedCategories,
 } from "./store/dataSlice";
-import { Appbar, Tooltip, Menu, Divider, List } from "react-native-paper";
+import { Appbar, Tooltip, Divider, List } from "react-native-paper";
 import { AreaItemTitle } from "./AreaItemTitle";
 import { CategoriesStackParamList } from "./CategoriesNavigationScreen";
 import { Category } from "./store/data/categories";
 import { Count } from "./Count";
 import { CategoryIcon } from "./CategoryIcon";
 import { FlatList } from "react-native-gesture-handler";
-import { JSXElementConstructor, ReactElement, useState } from "react";
+import { JSXElementConstructor, ReactElement } from "react";
 import { ListRenderItemInfo, View } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
@@ -19,11 +19,12 @@ import { StatusBarView } from "./StatusBarView";
 import { UnassignedBadge } from "./UnassignedBadge";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import uuid from "react-native-uuid";
+import { MainMenu } from "./MainMenu";
+import { AppbarContentTitle } from "./AppbarContentTitle";
 
 export function CategoriesScreen(props: {
     navigation: NavigationProp<RootStackParamList & CategoriesStackParamList>;
 }) {
-    const [menuVisible, setMenuVisible] = useState(false);
     const items = useAppSelector(selectItems);
     const categories = useAppSelector(selectSortedCategories);
     const dispatch = useAppDispatch();
@@ -32,15 +33,6 @@ export function CategoriesScreen(props: {
         const id = uuid.v4() as string;
         dispatch(addCategory(id));
         props.navigation.navigate("Category", { id });
-    }
-
-    function handleDotsPress(): void {
-        setMenuVisible(true);
-    }
-
-    function handleSettingsPress(): void {
-        setMenuVisible(false);
-        props.navigation.navigate("Settings");
     }
 
     function handleCategoryPress(id: string | undefined): void {
@@ -75,30 +67,18 @@ export function CategoriesScreen(props: {
     return (
         <StatusBarView>
             <Appbar.Header elevated>
-                <Appbar.Content title="Kategorien" />
+                <AppbarContentTitle title="Kategorien" />
                 <Tooltip title="Neue Kategorie hinzufügen">
                     <Appbar.Action
                         icon="plus-outline"
                         onPress={handleAddCategoryPress}
                     />
                 </Tooltip>
-                <Menu
-                    anchor={
-                        <Appbar.Action
-                            icon="dots-vertical"
-                            onPress={handleDotsPress}
-                        />
+                <MainMenu
+                    navigation={
+                        props.navigation as NavigationProp<RootStackParamList>
                     }
-                    anchorPosition="bottom"
-                    visible={menuVisible}
-                    onDismiss={() => setMenuVisible(false)}
-                >
-                    <Menu.Item
-                        leadingIcon="cog-outline"
-                        title="Einstellungen"
-                        onPress={handleSettingsPress}
-                    />
-                </Menu>
+                />
             </Appbar.Header>
             <SearchBarList
                 list={

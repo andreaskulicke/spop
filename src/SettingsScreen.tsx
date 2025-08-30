@@ -16,13 +16,13 @@ import { NavigationProp } from "@react-navigation/native";
 import {
     addItem,
     resetCategories,
+    resetData,
     resetShops,
     resetStorages,
     selectCategories,
     selectItems,
     selectShops,
     selectStorages,
-    setData,
     setItems,
     setShops,
     setStorages,
@@ -32,7 +32,9 @@ import {
     selectKeepAwakeCategories,
     selectKeepAwakeShops,
     selectKeepAwakeStorages,
+    selectSettings,
     setColorTheme,
+    setHideShoppingListInTitle,
     setKeepAwake,
     setTheme,
 } from "./store/settingsSlice";
@@ -42,28 +44,23 @@ import { store } from "./store/store";
 import { themes } from "./store/themes/themes";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { useState } from "react";
-import appJson from "../app.json";
-import packageJson from "../package.json";
-import DeviceInfo, { getVersion } from "react-native-device-info";
+import DeviceInfo from "react-native-device-info";
+import { resetShoppingLists } from "./store/otherDataSlice";
 
 export function SettingsScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
 }) {
-    const settings = useAppSelector((state) => state.settings);
-    const dataVersion = useAppSelector((state) => state.data.version);
+    const settings = useAppSelector(selectSettings);
     const isKeepAwakeCategories = useAppSelector(selectKeepAwakeCategories);
     const isKeepAwakeShops = useAppSelector(selectKeepAwakeShops);
     const isKeepAwakeStorages = useAppSelector(selectKeepAwakeStorages);
 
-    const categories = useAppSelector(selectCategories);
-    const items = useAppSelector(selectItems);
-    const shops = useAppSelector(selectShops);
-    const storages = useAppSelector(selectStorages);
-    const dispatch = useAppDispatch();
     const [buttonsDisabled, setButtonsDisabled] = useState(false);
     const [colorThemeMenuVisible, setColorThemeMenuVisible] = useState(false);
     const [themeMenuVisible, setThemeMenuVisible] = useState(false);
     const [dataExpanded, setDataExpanded] = useState(false);
+
+    const dispatch = useAppDispatch();
 
     async function handleFeebackPress(): Promise<void> {
         const url = `mailto:andreaskulicke.apps@gmx.de?subject=Spop ${getVersionString()}`;
@@ -191,12 +188,32 @@ export function SettingsScreen(props: {
                             />
                         ))}
                     </Menu>
+                    <List.Item
+                        title="Shopping Liste in Titel anzeigen?"
+                        right={() => (
+                            <Checkbox
+                                status={
+                                    settings.display.hideShoppingListInTitle
+                                        ? "unchecked"
+                                        : "checked"
+                                }
+                                onPress={() =>
+                                    dispatch(
+                                        setHideShoppingListInTitle(
+                                            !settings.display
+                                                .hideShoppingListInTitle,
+                                        ),
+                                    )
+                                }
+                            />
+                        )}
+                    />
                     <Card style={{ margin: 8 }}>
                         <Card.Title title="Bildschirm anlassen in:" />
                         <View>
                             <List.Item
                                 title="Vorratsorte"
-                                right={(p) => (
+                                right={() => (
                                     <Checkbox
                                         status={
                                             isKeepAwakeStorages
@@ -217,7 +234,7 @@ export function SettingsScreen(props: {
                             />
                             <List.Item
                                 title="Kategorien"
-                                right={(p) => (
+                                right={() => (
                                     <Checkbox
                                         status={
                                             isKeepAwakeCategories
@@ -238,7 +255,7 @@ export function SettingsScreen(props: {
                             />
                             <List.Item
                                 title="Shops"
-                                right={(p) => (
+                                right={() => (
                                     <Checkbox
                                         status={
                                             isKeepAwakeShops
@@ -288,15 +305,8 @@ export function SettingsScreen(props: {
                                         mode="outlined"
                                         onPress={() => {
                                             dispatch(resetSettings());
-                                            dispatch(
-                                                setData({
-                                                    version: dataVersion,
-                                                    categories: categories,
-                                                    items: items,
-                                                    shops: shops,
-                                                    storages: storages,
-                                                }),
-                                            );
+                                            dispatch(resetData());
+                                            dispatch(resetShoppingLists());
                                         }}
                                     >
                                         Standard

@@ -16,6 +16,7 @@ import {
     setItemShopPrice,
     setItemNotes,
     setItemShopPackage,
+    selectStorages,
 } from "./store/dataSlice";
 import {
     Appbar,
@@ -88,7 +89,7 @@ export function ItemScreen(props: {
         selectItem(state, props.route.params.id),
     )!;
     const shops = useAppSelector(selectValidShops);
-    const storages = useAppSelector((state) => state.data.storages);
+    const storages = useAppSelector(selectStorages);
     const dispatch = useAppDispatch();
     const theme = useTheme();
 

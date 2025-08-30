@@ -8,6 +8,15 @@ export function AvatarText(props: {
 }) {
     const theme = useTheme();
 
+    // Use first chars of first  two words or first two chars of one word only
+    const label = props.label
+        .split(" ")
+        .concat(props.label[1] ?? "")
+        .slice(0, 2)
+        .map((x) => x[0])
+        .join("")
+        .toUpperCase();
+
     return (
         <TouchableRipple
             style={{
@@ -25,7 +34,7 @@ export function AvatarText(props: {
                     fontWeight: "bold",
                 }}
                 color={theme.colors.primary}
-                label={props.label.substring(0, 2).toUpperCase()}
+                label={label}
                 size={40}
             />
         </TouchableRipple>

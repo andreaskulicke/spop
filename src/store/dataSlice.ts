@@ -15,23 +15,21 @@ import { RootState } from "./store";
 import { Shop, defaultShops } from "./data/shops";
 import { Storage, defaultStorages } from "./data/storages";
 import { WritableDraft } from "immer";
-
-export interface Data {
-    version: string;
-    categories: Category[];
-    items: Item[];
-    shops: Shop[];
-    storages: Storage[];
-}
+import uuid from "react-native-uuid";
+import { Data } from "./data/data";
 
 // Define the initial state using that type
 const initialState: Data = {
+    id: uuid.v4(),
+    name: "Neue Liste",
     version: "1.0.0",
     categories: defaultCategories,
     items: defaultItems,
     shops: [],
     storages: [],
 };
+
+export const initialDataState = initialState;
 
 function initializeShopCategoryIds(data: Data, shop: Shop) {
     if (!shop.categoryIds) {
@@ -46,11 +44,21 @@ export const itemsSlice = createSlice({
     name: "items",
     initialState,
     reducers: {
-        resetData: (state, action: PayloadAction<Data>) => {
+        resetData: (state, action: PayloadAction<void>) => {
             return initialState;
         },
         setData: (state, action: PayloadAction<Data>) => {
             return action.payload;
+        },
+
+        setDataName: (state, action: PayloadAction<string>) => {
+            state.name = action.payload;
+        },
+        setDataDescription: (
+            state,
+            action: PayloadAction<string | undefined>,
+        ) => {
+            state.description = action.payload;
         },
 
         // Categories
@@ -662,6 +670,9 @@ export const {
     resetData,
     setData,
 
+    setDataName,
+    setDataDescription,
+
     // Categories
     addCategory,
     deleteCategory,
@@ -736,16 +747,20 @@ export function selectCategory(
 
 // Items
 
+export function selectData(state: RootState): Data {
+    return state.data;
+}
+
 export function selectItems(state: RootState): Item[] {
     return state.data.items;
 }
 
-export const selectItemsWanted = createSelector([selectItems], (items) => {
-    return items.filter((x) => !!x.wanted);
-});
-
 export const selectItemsNotWanted = createSelector([selectItems], (items) => {
     return items.filter((x) => !x.wanted);
+});
+
+export const selectItemsWanted = createSelector([selectItems], (items) => {
+    return items.filter((x) => x.wanted);
 });
 
 export function selectItem(state: RootState, itemId: string) {

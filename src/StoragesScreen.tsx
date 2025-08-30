@@ -1,11 +1,12 @@
 import {
     addStorage,
     allStorage,
+    selectData,
     selectItems,
     selectStorages,
     setStorages,
 } from "./store/dataSlice";
-import { Appbar, Divider, List, Menu } from "react-native-paper";
+import { Appbar, Divider, List, Text } from "react-native-paper";
 import { AreaItemTitle } from "./AreaItemTitle";
 import { AvatarText } from "./AvatarText";
 import { CategoryIcon } from "./CategoryIcon";
@@ -25,25 +26,18 @@ import { StoragesStackParamList } from "./StoragesNavigationScreen";
 import { UnassignedBadge } from "./UnassignedBadge";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { View } from "react-native";
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 import uuid from "react-native-uuid";
+import { MainMenu } from "./MainMenu";
+import { selectSettings } from "./store/settingsSlice";
+import { AppbarContentTitle } from "./AppbarContentTitle";
 
 export function StoragesScreen(props: {
     navigation: NavigationProp<RootStackParamList & StoragesStackParamList>;
 }) {
-    const [menuVisible, setMenuVisible] = useState(false);
     const items = useAppSelector(selectItems);
     const storages = useAppSelector(selectStorages);
     const dispatch = useAppDispatch();
-
-    function handleDotsPress(): void {
-        setMenuVisible(true);
-    }
-
-    function handleSettingsPress(): void {
-        setMenuVisible(false);
-        props.navigation.navigate("Settings");
-    }
 
     function handleAddStoragePress(): void {
         const id = uuid.v4() as string;
@@ -85,28 +79,16 @@ export function StoragesScreen(props: {
     return (
         <StatusBarView>
             <Appbar.Header elevated>
-                <Appbar.Content title="Vorratsorte" />
+                <AppbarContentTitle title="Vorratsorte" />
                 <Appbar.Action
                     icon="plus-outline"
                     onPress={handleAddStoragePress}
                 />
-                <Menu
-                    anchor={
-                        <Appbar.Action
-                            icon="dots-vertical"
-                            onPress={handleDotsPress}
-                        />
+                <MainMenu
+                    navigation={
+                        props.navigation as NavigationProp<RootStackParamList>
                     }
-                    anchorPosition="bottom"
-                    visible={menuVisible}
-                    onDismiss={() => setMenuVisible(false)}
-                >
-                    <Menu.Item
-                        leadingIcon="cog-outline"
-                        title="Einstellungen"
-                        onPress={handleSettingsPress}
-                    />
-                </Menu>
+                />
             </Appbar.Header>
             <SearchBarList
                 list={

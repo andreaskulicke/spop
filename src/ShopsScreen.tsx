@@ -9,12 +9,10 @@ import {
 import {
     Appbar,
     List,
-    Menu,
     useTheme,
     Divider,
     Tooltip,
     Icon,
-    Badge,
 } from "react-native-paper";
 import { AreaItemTitle } from "./AreaItemTitle";
 import { Count } from "./Count";
@@ -35,20 +33,17 @@ import { Pressable, View } from "react-native";
 import { UnassignedBadge } from "./UnassignedBadge";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import uuid from "react-native-uuid";
+import { MainMenu } from "./MainMenu";
+import { AppbarContentTitle } from "./AppbarContentTitle";
 
 export function ShopsScreen(props: {
     navigation: NavigationProp<RootStackParamList & ShopsStackParamList>;
 }) {
-    const [menuVisible, setMenuVisible] = useState(false);
     const [draggingStopper, setDraggingStopper] = useState("");
     const items = useAppSelector(selectItems);
     const shops = useAppSelector(selectShops);
     const dispatch = useAppDispatch();
     const theme = useTheme();
-
-    function handleDotsPress(): void {
-        setMenuVisible(true);
-    }
 
     function handleAddShopPress(): void {
         const id = uuid.v4() as string;
@@ -59,11 +54,6 @@ export function ShopsScreen(props: {
     function handleAddShopStopperPress(): void {
         const id = uuid.v4() as string;
         dispatch(addShopStopper(id));
-    }
-
-    function handleSettingsPress(): void {
-        setMenuVisible(false);
-        props.navigation.navigate("Settings");
     }
 
     function handleShopPress(id: string): void {
@@ -165,7 +155,7 @@ export function ShopsScreen(props: {
     return (
         <StatusBarView>
             <Appbar.Header elevated>
-                <Appbar.Content title="Shops" />
+                <AppbarContentTitle title="Shops" />
                 <Tooltip title="Dinge-Stopper hinzufügen">
                     <Appbar.Action
                         icon="tray-plus"
@@ -178,23 +168,11 @@ export function ShopsScreen(props: {
                         onPress={handleAddShopPress}
                     />
                 </Tooltip>
-                <Menu
-                    anchor={
-                        <Appbar.Action
-                            icon="dots-vertical"
-                            onPress={handleDotsPress}
-                        />
+                <MainMenu
+                    navigation={
+                        props.navigation as NavigationProp<RootStackParamList>
                     }
-                    anchorPosition="bottom"
-                    visible={menuVisible}
-                    onDismiss={() => setMenuVisible(false)}
-                >
-                    <Menu.Item
-                        leadingIcon="cog-outline"
-                        title="Einstellungen"
-                        onPress={handleSettingsPress}
-                    />
-                </Menu>
+                />
             </Appbar.Header>
             <SearchBarList
                 list={

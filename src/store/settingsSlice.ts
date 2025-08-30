@@ -1,7 +1,7 @@
 import { ColorSchemeName } from "react-native";
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
-import { ThemeName, themes, ThemeType } from "./themes/themes";
+import { ThemeName, themes } from "./themes/themes";
 
 export type KeepAwakeArea = "storages" | "categories" | "shops";
 
@@ -11,6 +11,7 @@ export interface Settings {
         colorTheme: ColorSchemeName;
         theme: ThemeName;
         keepAwake: KeepAwakeArea[];
+        hideShoppingListInTitle?: boolean;
     };
 }
 
@@ -34,6 +35,9 @@ export const settingsSlice = createSlice({
 
         setColorTheme: (state, action: PayloadAction<ColorSchemeName>) => {
             state.display.colorTheme = action.payload;
+        },
+        setHideShoppingListInTitle: (state, action: PayloadAction<boolean>) => {
+            state.display.hideShoppingListInTitle = action.payload;
         },
         setKeepAwake: (
             state,
@@ -67,6 +71,7 @@ export const {
     resetSettings,
 
     setColorTheme,
+    setHideShoppingListInTitle,
     setKeepAwake,
     setTheme,
 } = settingsSlice.actions;
@@ -84,6 +89,10 @@ export const selectTheme = createSelector(
         return isDark ? t.dark : t.light;
     },
 );
+
+export function selectSettings(state: RootState): Settings {
+    return state.settings;
+}
 
 export function selectKeepAwakeCategories(state: RootState): boolean {
     if (state.settings.display.keepAwake) {
