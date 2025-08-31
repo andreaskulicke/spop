@@ -225,6 +225,18 @@ export function getShopImage(
 
 export const defaultShops: Shop[] = [
     {
+        id: "apotheke",
+        name: "Apotheke",
+        defaultCategoryId: "household",
+        categoryIds: ["misc", "household"],
+    },
+    {
+        id: "_1",
+        name: "_1",
+        stopper: true,
+    },
+
+    {
         id: "fruitmarket",
         name: "Obstmarkt",
         defaultCategoryId: "fruits_vegetables",
@@ -239,6 +251,7 @@ export const defaultShops: Shop[] = [
     {
         id: "aldi",
         name: "Aldi",
+        externalAppId: "de.apptiv.business.android.aldi_de",
         categoryIds: [
             "fruits_vegetables",
             "meat",
@@ -268,10 +281,28 @@ export const defaultShops: Shop[] = [
     {
         id: "rewe",
         name: "Rewe",
+        externalAppId: "de.rewe.app.mobile",
+    },
+    {
+        id: "rossmann",
+        name: "Rossmann",
+        defaultCategoryId: "household",
+        externalAppId: "de.rossmann.app.android",
+        categoryIds: [
+            "misc",
+            "household",
+            "stationary",
+            "coffee_tea",
+            "nuts",
+            "sweets",
+            "drinks",
+            "alcohol",
+        ],
     },
     {
         id: "edeka",
         name: "Edeka",
+        externalAppId: "de.edeka.genuss",
         categoryIds: [
             "misc",
             "fruits_vegetables",
@@ -301,18 +332,34 @@ export const defaultShops: Shop[] = [
         ],
     },
     {
-        id: "rossmann",
-        name: "Rossmann",
+        id: "_2",
+        name: "_2",
+        stopper: true,
+    },
+    {
+        id: "fressnapf",
+        name: "Fressnapf",
         defaultCategoryId: "household",
-        categoryIds: [
-            "misc",
-            "household",
-            "stationary",
-            "coffee_tea",
-            "nuts",
-            "sweets",
-            "drinks",
-            "alcohol",
-        ],
+        externalAppId: "com.fressnapf.mobileapp",
+        categoryIds: ["misc", "household"],
+    },
+    {
+        id: "_3",
+        name: "_3",
+        stopper: true,
+    },
+    {
+        id: "hornbach",
+        name: "Hornbach",
+        defaultCategoryId: "household",
+        externalAppId: "de.hornbach",
+        categoryIds: ["misc", "household"],
+    },
+    {
+        id: "obi",
+        name: "Obi",
+        defaultCategoryId: "household",
+        externalAppId: "de.obi.app",
+        categoryIds: ["misc", "household"],
     },
 ];

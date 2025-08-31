@@ -1,7 +1,6 @@
 import {
     addStorage,
     allStorage,
-    selectData,
     selectItems,
     selectStorages,
     setStorages,
@@ -29,7 +28,6 @@ import { View } from "react-native";
 import React, { ReactNode } from "react";
 import uuid from "react-native-uuid";
 import { MainMenu } from "./MainMenu";
-import { selectSettings } from "./store/settingsSlice";
 import { AppbarContentTitle } from "./AppbarContentTitle";
 
 export function StoragesScreen(props: {
