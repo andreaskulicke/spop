@@ -1,9 +1,11 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import {
     FLUSH,
+    MigrationManifest,
     PAUSE,
     PERSIST,
     PURGE,
+    PersistedState,
     REGISTER,
     REHYDRATE,
     createMigrate,
@@ -16,27 +18,34 @@ import otherDataSlice from "./otherDataSlice";
 import settingsSlice from "./settingsSlice";
 import uiSlice from "./uiSlice";
 import uuid from "react-native-uuid";
+import { Data } from "./data/data";
 
-const migrations = {
-    0: (state: any) => {
-        const newState = { ...state };
-        newState.data.id = uuid.v4();
-        newState.data.name = "Standart";
-        newState.data.description = "";
-        newState.otherData = [];
+const dataMigrations: MigrationManifest = {
+    0: (state: PersistedState): PersistedState => {
+        const newState: PersistedState & Data = { ...state } as PersistedState &
+            Data;
+        newState.id = uuid.v4();
+        newState.name = "Standart";
+        newState.description = "";
         return newState;
     },
 };
 
-const persistConfig = {
+const dataPersistConfig = {
     key: "root",
-    migrate: createMigrate(migrations, { debug: false }),
+    migrate: createMigrate(dataMigrations, { debug: false }),
     storage: AsyncStorage,
     version: 0,
 };
 
+const persistConfig = {
+    key: "root",
+    storage: AsyncStorage,
+    version: -1,
+};
+
 const rootReducer = combineReducers({
-    data: persistReducer(persistConfig, dataSlice),
+    data: persistReducer(dataPersistConfig, dataSlice),
     otherData: persistReducer(persistConfig, otherDataSlice),
     settings: persistReducer(persistConfig, settingsSlice),
     ui: uiSlice,
