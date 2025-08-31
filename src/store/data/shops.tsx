@@ -33,10 +33,17 @@ export interface Shop {
 }
 
 export function getShopImage(
-    shop: Shop,
+    shop: Shop | string,
     theme: MD3Theme,
-    props: { style: Style },
+    props?: { style: Style },
 ) {
+    let shopName: string;
+    if (typeof shop === "string") {
+        shopName = shop;
+    } else {
+        shopName = shop.name;
+    }
+
     const s: SvgProps = {
         height: 28,
         width: 28,
@@ -72,7 +79,7 @@ export function getShopImage(
         };
     }
 
-    if (/aldi/i.test(shop.name)) {
+    if (/aldi/i.test(shopName)) {
         return (
             <Avatar.Image
                 {...getAvatarProps("#00005f")}
@@ -81,7 +88,7 @@ export function getShopImage(
         );
     }
 
-    if (/apotheke/i.test(shop.name)) {
+    if (/apotheke/i.test(shopName)) {
         return (
             <Avatar.Image
                 {...getAvatarBorderProps("#df091d")}
@@ -89,7 +96,7 @@ export function getShopImage(
             />
         );
     }
-    if (/baecker|bäcker|backer|polster/i.test(shop.name)) {
+    if (/baecker|bäcker|backer|polster/i.test(shopName)) {
         return (
             <Avatar.Image
                 {...getAvatarProps("#2163ad")}
@@ -97,7 +104,7 @@ export function getShopImage(
             />
         );
     }
-    if (/bofrost/i.test(shop.name)) {
+    if (/bofrost/i.test(shopName)) {
         return (
             <Avatar.Image
                 {...getAvatarBorderProps("#0d194d")}
@@ -106,7 +113,7 @@ export function getShopImage(
         );
     }
 
-    if (/dm/i.test(shop.name)) {
+    if (/dm/i.test(shopName)) {
         return (
             <Avatar.Image
                 {...getAvatarProps("#fec700")}
@@ -114,7 +121,7 @@ export function getShopImage(
             />
         );
     }
-    if (/edeka/i.test(shop.name)) {
+    if (/edeka/i.test(shopName)) {
         return (
             <Avatar.Image
                 {...getAvatarProps("#FFD400")}
@@ -122,7 +129,7 @@ export function getShopImage(
             />
         );
     }
-    if (/fressnapf/i.test(shop.name)) {
+    if (/fressnapf/i.test(shopName)) {
         return (
             <Avatar.Image
                 {...getAvatarBorderProps("#00652d")}
@@ -130,7 +137,7 @@ export function getShopImage(
             />
         );
     }
-    if (/.*herzo.*/i.test(shop.name)) {
+    if (/.*herzo.*/i.test(shopName)) {
         return (
             <Avatar.Image
                 {...getAvatarProps("gold")}
@@ -138,7 +145,7 @@ export function getShopImage(
             />
         );
     }
-    if (/hornbach/i.test(shop.name)) {
+    if (/hornbach/i.test(shopName)) {
         return (
             <Avatar.Image
                 {...getAvatarProps("#f7911a")}
@@ -146,7 +153,7 @@ export function getShopImage(
             />
         );
     }
-    if (/ikea/i.test(shop.name)) {
+    if (/ikea/i.test(shopName)) {
         return (
             <Avatar.Image
                 {...getAvatarProps("#FBD914")}
@@ -154,7 +161,7 @@ export function getShopImage(
             />
         );
     }
-    if (/lidl/i.test(shop.name)) {
+    if (/lidl/i.test(shopName)) {
         return (
             <Avatar.Image
                 {...getAvatarProps("#0050aa")}
@@ -162,7 +169,7 @@ export function getShopImage(
             />
         );
     }
-    if (/mueller|müller|muller/i.test(shop.name)) {
+    if (/mueller|müller|muller/i.test(shopName)) {
         return (
             <Avatar.Image
                 {...getAvatarBorderProps("#f16426")}
@@ -170,7 +177,7 @@ export function getShopImage(
             />
         );
     }
-    if (/norma/i.test(shop.name)) {
+    if (/norma/i.test(shopName)) {
         return (
             <Avatar.Image
                 {...getAvatarProps("#D60F19")}
@@ -178,7 +185,7 @@ export function getShopImage(
             />
         );
     }
-    if (/obi/i.test(shop.name)) {
+    if (/obi/i.test(shopName)) {
         return (
             <Avatar.Image
                 {...getAvatarBorderProps("#ff7313")}
@@ -186,7 +193,7 @@ export function getShopImage(
             />
         );
     }
-    if (/.*obst.*/i.test(shop.name)) {
+    if (/.*obst.*/i.test(shopName)) {
         return (
             <Avatar.Image
                 {...getAvatarBorderProps("#757f3f")}
@@ -194,7 +201,7 @@ export function getShopImage(
             />
         );
     }
-    if (/rewe/i.test(shop.name)) {
+    if (/rewe/i.test(shopName)) {
         return (
             <Avatar.Image
                 {...getAvatarProps("#cc071e")}
@@ -202,7 +209,7 @@ export function getShopImage(
             />
         );
     }
-    if (/rossman/i.test(shop.name)) {
+    if (/rossman/i.test(shopName)) {
         return (
             <Avatar.Image
                 {...avatarBackgroundProps}

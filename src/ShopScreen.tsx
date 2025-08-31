@@ -3,6 +3,7 @@ import {
     Card,
     IconButton,
     List,
+    Menu,
     Text,
     TextInput,
     TouchableRipple,
@@ -43,6 +44,8 @@ export function ShopScreen(props: {
     route: RouteProp<RootStackParamList, "Shop">;
 }) {
     const [name, setName] = useState("");
+    const [externalAppIdMenuVisible, setExternalAppIdMenuVisible] =
+        useState(false);
     const [externalAppId, setExternalAppId] = useState("");
     const [categoriesExpanded, setCategoriesExpanded] = useState(true);
     const categories = useAppSelector(selectCategories);
@@ -82,6 +85,11 @@ export function ShopScreen(props: {
                 }),
             );
         }
+    }
+
+    function handleExternalAppIdMenuPress(appId: string): void {
+        setExternalAppId(appId);
+        setExternalAppIdMenuVisible(false);
     }
 
     function handleDeletePress(): void {
@@ -228,24 +236,97 @@ export function ShopScreen(props: {
                         }
                     />
                     <View
-                        style={{ flexDirection: "row", alignItems: "center" }}
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                        }}
                     >
-                        <TextInput
-                            label="Externe App ID"
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            mode="outlined"
-                            placeholder="de.edeka.genuss, de.rewe.app.mobile"
-                            selectTextOnFocus
-                            style={{
-                                marginBottom: 8,
-                                marginLeft: 8,
-                                flexGrow: 1,
-                            }}
-                            value={externalAppId}
-                            onBlur={handleTextInputExternalAppIdBlur}
-                            onChangeText={handleTextInputExternalAppIdChange}
-                        />
+                        <View style={{ flexGrow: 1, flexShrink: 1 }}>
+                            <Menu
+                                anchor={
+                                    <TouchableRipple
+                                        onPress={() =>
+                                            setExternalAppIdMenuVisible(true)
+                                        }
+                                    >
+                                        <TextInput
+                                            label="Externe App ID"
+                                            autoCapitalize="none"
+                                            autoCorrect={false}
+                                            mode="outlined"
+                                            selectTextOnFocus
+                                            style={{
+                                                marginBottom: 8,
+                                                marginLeft: 8,
+                                                flexGrow: 1,
+                                            }}
+                                            value={externalAppId}
+                                            right={
+                                                <TextInput.Icon
+                                                    icon={
+                                                        externalAppIdMenuVisible
+                                                            ? "chevron-up"
+                                                            : "chevron-down"
+                                                    }
+                                                    onPress={() =>
+                                                        setExternalAppIdMenuVisible(
+                                                            true,
+                                                        )
+                                                    }
+                                                />
+                                            }
+                                            onBlur={
+                                                handleTextInputExternalAppIdBlur
+                                            }
+                                            onChangeText={
+                                                handleTextInputExternalAppIdChange
+                                            }
+                                        />
+                                    </TouchableRipple>
+                                }
+                                anchorPosition="bottom"
+                                visible={externalAppIdMenuVisible}
+                                onDismiss={() =>
+                                    setExternalAppIdMenuVisible(false)
+                                }
+                            >
+                                <ExternalAppIdMenuItem
+                                    name="Aldi"
+                                    appId="de.apptiv.business.android.aldi_de"
+                                    onPress={handleExternalAppIdMenuPress}
+                                />
+                                <ExternalAppIdMenuItem
+                                    name="Edeka"
+                                    appId="de.edeka.genuss"
+                                    onPress={handleExternalAppIdMenuPress}
+                                />
+                                <ExternalAppIdMenuItem
+                                    name="Fressnapf"
+                                    appId="com.fressnapf.mobileapp"
+                                    onPress={handleExternalAppIdMenuPress}
+                                />
+                                <ExternalAppIdMenuItem
+                                    name="Hornbach"
+                                    appId="de.hornbach"
+                                    onPress={handleExternalAppIdMenuPress}
+                                />
+                                <ExternalAppIdMenuItem
+                                    name="Obi"
+                                    appId="de.obi.app"
+                                    onPress={handleExternalAppIdMenuPress}
+                                />
+                                <ExternalAppIdMenuItem
+                                    name="Rewe"
+                                    appId="de.rewe.app.mobile"
+                                    onPress={handleExternalAppIdMenuPress}
+                                />
+                                <ExternalAppIdMenuItem
+                                    name="Rossmann"
+                                    appId="de.rossmann.app.android"
+                                    onPress={handleExternalAppIdMenuPress}
+                                />
+                            </Menu>
+                        </View>
                         <IconButton
                             disabled={!externalAppId}
                             icon="open-in-new"
@@ -383,5 +464,24 @@ export function SubSection(
             </View>
             {props.children}
         </View>
+    );
+}
+
+function ExternalAppIdMenuItem(props: {
+    name: string;
+    appId: string;
+    onPress: (appId: string) => void;
+}) {
+    const theme = useTheme();
+
+    return (
+        <Menu.Item
+            contentStyle={{ marginLeft: 32 }}
+            title={props.name}
+            leadingIcon={(p) => getShopImage(props.name, theme)}
+            onPress={() => {
+                props.onPress(props.appId);
+            }}
+        />
     );
 }
