@@ -19,6 +19,7 @@ import {
     setDataDescription,
     setDataName,
 } from "./store/dataSlice";
+import { Count } from "./Count";
 
 export function ShoppingListScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -167,7 +168,7 @@ function Stat(props: { title: string; count: number | undefined }) {
     return (
         <List.Item
             title={props.title}
-            right={(p) => <Text {...p}>{props.count ?? 0}</Text>}
+            right={(p) => <Count {...p} count={props.count ?? 0} />}
         />
     );
 }
