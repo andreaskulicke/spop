@@ -223,6 +223,7 @@ export function ShopScreen(props: {
                     <TextInput
                         label="Externe App ID"
                         autoCapitalize="none"
+                        autoCorrect={false}
                         mode="outlined"
                         placeholder="de.edeka.genuss, de.rewe.app.mobile"
                         selectTextOnFocus
