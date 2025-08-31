@@ -37,16 +37,10 @@ export function ShopItemsScreen(props: {
         props.navigation.navigate("Shop", { id: shop.id });
     }
 
-    async function handleOpenPress(): Promise<void> {
+    function handleOpenPress(): void {
         if (shop.externalAppId) {
             const url = `market://launch?id=${shop.externalAppId}`;
-            try {
-                if (await Linking.canOpenURL(url)) {
-                    await Linking.openURL(url);
-                }
-            } catch (error) {
-                console.log(error);
-            }
+            Linking.openURL(url);
         }
     }
 

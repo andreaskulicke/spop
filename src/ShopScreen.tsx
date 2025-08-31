@@ -34,7 +34,7 @@ import {
 } from "./store/dataSlice";
 import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { Keyboard, View } from "react-native";
+import { Keyboard, Linking, View } from "react-native";
 import uuid from "react-native-uuid";
 import { defaultShops, getShopImage } from "./store/data/shops";
 
@@ -87,6 +87,13 @@ export function ShopScreen(props: {
     function handleDeletePress(): void {
         dispatch(deleteShop(shop.id));
         props.navigation.goBack();
+    }
+
+    function handleOpenPress(): void {
+        if (externalAppId) {
+            const url = `market://launch?id=${shop.externalAppId}`;
+            Linking.openURL(url);
+        }
     }
 
     function handleReloadCategoriesPress(): void {
@@ -220,18 +227,31 @@ export function ShopScreen(props: {
                             )
                         }
                     />
-                    <TextInput
-                        label="Externe App ID"
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        mode="outlined"
-                        placeholder="de.edeka.genuss, de.rewe.app.mobile"
-                        selectTextOnFocus
-                        style={{ margin: 8, flexGrow: 1 }}
-                        value={externalAppId}
-                        onBlur={handleTextInputExternalAppIdBlur}
-                        onChangeText={handleTextInputExternalAppIdChange}
-                    />{" "}
+                    <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                        <TextInput
+                            label="Externe App ID"
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            mode="outlined"
+                            placeholder="de.edeka.genuss, de.rewe.app.mobile"
+                            selectTextOnFocus
+                            style={{
+                                marginBottom: 8,
+                                marginLeft: 8,
+                                flexGrow: 1,
+                            }}
+                            value={externalAppId}
+                            onBlur={handleTextInputExternalAppIdBlur}
+                            onChangeText={handleTextInputExternalAppIdChange}
+                        />
+                        <IconButton
+                            disabled={!externalAppId}
+                            icon="open-in-new"
+                            onPress={handleOpenPress}
+                        />
+                    </View>
                 </Card>
                 <Card style={{ margin: 8 }}>
                     <TouchableRipple

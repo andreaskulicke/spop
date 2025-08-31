@@ -47,6 +47,7 @@ export function CategoryMenu(props: {
                 flexDirection: "row",
                 alignItems: "center",
                 marginLeft: 8,
+                marginBottom: 8,
             }}
         >
             <View style={{ flexGrow: 1, flexShrink: 1 }}>
