@@ -17,6 +17,8 @@ import {
     deleteCategory,
     selectCategory,
     selectShops,
+    selectShopsHiddenInCategory,
+    selectShopsShownInCategory,
     setCategoryIcon,
     setCategoryName,
     setShopCategoryShow,
@@ -40,7 +42,13 @@ export function CategoryScreen(props: {
     );
     const shops = useAppSelector(selectShops);
     const dispatch = useAppDispatch();
-    const theme = useTheme();
+
+    const shopsShown = useAppSelector((state) =>
+        selectShopsShownInCategory(state, category?.id),
+    );
+    const shopsHidden = useAppSelector((state) =>
+        selectShopsHiddenInCategory(state, category?.id),
+    );
 
     function handleGoBack() {
         handleTextInputNameBlur();
@@ -103,21 +111,6 @@ export function CategoryScreen(props: {
     useEffect(() => {
         setName(category?.name ?? "");
     }, [category]);
-
-    const shopsShown = shops
-        .filter(
-            (x) =>
-                !x.categoryIds ||
-                x.categoryIds.find((cid) => cid === category?.id),
-        )
-        .sort((a, b) => a.name.localeCompare(b.name));
-    const shopsHidden = shops
-        .filter(
-            (x) =>
-                x.categoryIds &&
-                !x.categoryIds.find((cid) => cid === category?.id),
-        )
-        .sort((a, b) => a.name.localeCompare(b.name));
 
     return (
         <StatusBarView bottomPadding>

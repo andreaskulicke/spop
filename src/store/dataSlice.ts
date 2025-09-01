@@ -1176,6 +1176,40 @@ export const selectValidShops = createSelector([selectShops], (shops) =>
     shops.filter((x) => !x.stopper),
 );
 
+export const selectShopsShownInCategory = createSelector(
+    [
+        selectValidShops,
+        (state: RootState, categoryId: Category["id"] | undefined) =>
+            categoryId,
+    ],
+    (shops: Shop[], categoryId: Category["id"] | undefined) => {
+        return shops
+            .filter(
+                (x) =>
+                    !x.categoryIds ||
+                    x.categoryIds.find((cid) => cid === categoryId),
+            )
+            .sort((a, b) => a.name.localeCompare(b.name));
+    },
+);
+
+export const selectShopsHiddenInCategory = createSelector(
+    [
+        selectValidShops,
+        (state: RootState, categoryId: Category["id"] | undefined) =>
+            categoryId,
+    ],
+    (shops: Shop[], categoryId: Category["id"] | undefined) => {
+        return shops
+            .filter(
+                (x) =>
+                    x.categoryIds &&
+                    !x.categoryIds.find((cid) => cid === categoryId),
+            )
+            .sort((a, b) => a.name.localeCompare(b.name));
+    },
+);
+
 export const selectShop = createSelector(
     [selectShops, (state: RootState, id: string) => id],
     (shops: Shop[], id: string) => {
