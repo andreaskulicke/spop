@@ -1,9 +1,10 @@
 import {
     addCategory,
+    allCategory,
     selectItems,
     selectSortedCategories,
 } from "./store/dataSlice";
-import { Appbar, Tooltip, Divider, List } from "react-native-paper";
+import { Appbar, Tooltip, Divider, List, useTheme } from "react-native-paper";
 import { AreaItemTitle } from "./AreaItemTitle";
 import { CategoriesStackParamList } from "./CategoriesNavigationScreen";
 import { Category } from "./store/data/categories";
@@ -28,6 +29,7 @@ export function CategoriesScreen(props: {
     const items = useAppSelector(selectItems);
     const categories = useAppSelector(selectSortedCategories);
     const dispatch = useAppDispatch();
+    const theme = useTheme();
 
     function handleAddCategoryPress(): void {
         const id = uuid.v4() as string;
@@ -42,6 +44,27 @@ export function CategoriesScreen(props: {
     function handleRenderItem(
         info: ListRenderItemInfo<Category>,
     ): ReactElement<any, string | JSXElementConstructor<any>> | null {
+        if (info.item.id === allCategory.id) {
+            return (
+                <View>
+                    <List.Item
+                        title="Alle Dinge"
+                        style={{ backgroundColor: theme.colors.background }}
+                        left={(p) => <CategoryIcon {...p} icon="check-all" />}
+                        right={(p) => (
+                            <UnassignedBadge
+                                p={p}
+                                tooltip="Gewünschte Dinge und ohne Kategorie"
+                                unassignedFilter={(item) => !item.categoryId}
+                            />
+                        )}
+                        onPress={() => handleCategoryPress(undefined)}
+                    />
+                    <Divider />
+                </View>
+            );
+        }
+
         const count = items.filter(
             (i) => i.wanted && i.categoryId === info.item.id,
         ).length;
@@ -62,8 +85,6 @@ export function CategoriesScreen(props: {
         );
     }
 
-    const heightOfAllThingsListItem = 68;
-
     return (
         <StatusBarView>
             <Appbar.Header elevated>
@@ -82,29 +103,13 @@ export function CategoriesScreen(props: {
             </Appbar.Header>
             <SearchBarList
                 list={
-                    <View style={{ paddingBottom: heightOfAllThingsListItem }}>
-                        <Divider />
-                        <List.Item
-                            title="Alle Dinge"
-                            style={{ height: heightOfAllThingsListItem }}
-                            left={(p) => (
-                                <CategoryIcon {...p} icon="check-all" />
-                            )}
-                            right={(p) => (
-                                <UnassignedBadge
-                                    p={p}
-                                    tooltip="Gewünschte Dinge und ohne Kategorie"
-                                    unassignedFilter={(item) =>
-                                        !item.categoryId
-                                    }
-                                />
-                            )}
-                            onPress={() => handleCategoryPress(undefined)}
-                        />
+                    <View>
                         <Divider />
                         <FlatList
-                            data={categories}
+                            data={[allCategory].concat(categories)}
                             renderItem={handleRenderItem}
+                            stickyHeaderIndices={[0]}
+                            stickyHeaderHiddenOnScroll={true}
                         ></FlatList>
                     </View>
                 }

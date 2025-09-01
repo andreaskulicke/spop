@@ -61,6 +61,30 @@ export function ShopsScreen(props: {
     }
 
     function handleRenderItem(params: RenderItemParams<Shop>): ReactNode {
+        if (params.item.id === allShop.id) {
+            return (
+                <View>
+                    <List.Item
+                        title={allShop.name}
+                        style={{ backgroundColor: theme.colors.background }}
+                        left={(p) => getShopImage(allShop, theme, { ...p })}
+                        right={(p) => (
+                            <UnassignedBadge
+                                p={p}
+                                tooltip="Gewünschte Dinge und ohne Shop"
+                                unassignedFilter={(item) =>
+                                    (item.shops?.filter((x) => x.checked)
+                                        .length ?? 0) === 0
+                                }
+                            />
+                        )}
+                        onPress={() => handleShopPress(allShop.id)}
+                    />
+                    <Divider />
+                </View>
+            );
+        }
+
         const shopIndex = shops.findIndex((x) => x.id === params.item.id);
         const isFallThrough =
             shopIndex < shops.length - 1 && !shops[shopIndex + 1]?.stopper;
@@ -150,8 +174,6 @@ export function ShopsScreen(props: {
         );
     }
 
-    const heightOfAllThingsListItem = 68;
-
     return (
         <StatusBarView>
             <Appbar.Header elevated>
@@ -176,30 +198,15 @@ export function ShopsScreen(props: {
             </Appbar.Header>
             <SearchBarList
                 list={
-                    <View style={{ paddingBottom: heightOfAllThingsListItem }}>
-                        <Divider />
-                        <List.Item
-                            title={allShop.name}
-                            style={{ height: heightOfAllThingsListItem }}
-                            left={(p) => getShopImage(allShop, theme, { ...p })}
-                            right={(p) => (
-                                <UnassignedBadge
-                                    p={p}
-                                    tooltip="Gewünschte Dinge und ohne Shop"
-                                    unassignedFilter={(item) =>
-                                        (item.shops?.filter((x) => x.checked)
-                                            .length ?? 0) === 0
-                                    }
-                                />
-                            )}
-                            onPress={() => handleShopPress(allShop.id)}
-                        />
+                    <View>
                         <Divider />
                         <NestableScrollContainer>
                             <NestableDraggableFlatList
-                                data={shops}
+                                data={[allShop].concat(shops)}
                                 keyExtractor={(x) => x.id}
                                 renderItem={handleRenderItem}
+                                stickyHeaderIndices={[0]}
+                                stickyHeaderHiddenOnScroll={true}
                                 onDragEnd={({ data }) => {
                                     setDraggingStopper("");
                                     dispatch(setShops(data));

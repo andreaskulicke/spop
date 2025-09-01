@@ -207,7 +207,7 @@ export function CategoryItemsScreen(props: {
         <StatusBarView>
             <Appbar.Header elevated>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
-                <CategoryIcon icon={category?.icon} />
+                <CategoryIcon icon={category?.icon ?? "check-all"} />
                 <Appbar.Content title={category?.name ?? "Alle Dinge"} />
                 {category && (
                     <Appbar.Action

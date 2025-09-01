@@ -740,6 +740,12 @@ export default itemsSlice.reducer;
 
 // Categories
 
+export const allCategory: Category = {
+    icon: "check-all",
+    id: "_",
+    name: "Alle Dinge",
+};
+
 export const selectCategories = (state: RootState): Category[] => {
     return state.data.categories;
 };

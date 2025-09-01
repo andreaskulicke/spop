@@ -24,7 +24,7 @@ export const categoryIds = [
     "sweets",
 ] as const;
 
-// https://static.enapter.com/rn/icons/material-community.html
+// https://pictogrammers.com/library/mdi/
 export const categoryIcons = [
     "baguette",
     "barley",

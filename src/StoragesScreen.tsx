@@ -5,7 +5,7 @@ import {
     selectStorages,
     setStorages,
 } from "./store/dataSlice";
-import { Appbar, Divider, List, Text } from "react-native-paper";
+import { Appbar, Divider, List, Text, useTheme } from "react-native-paper";
 import { AreaItemTitle } from "./AreaItemTitle";
 import { AvatarText } from "./AvatarText";
 import { CategoryIcon } from "./CategoryIcon";
@@ -36,6 +36,7 @@ export function StoragesScreen(props: {
     const items = useAppSelector(selectItems);
     const storages = useAppSelector(selectStorages);
     const dispatch = useAppDispatch();
+    const theme = useTheme();
 
     function handleAddStoragePress(): void {
         const id = uuid.v4() as string;
@@ -48,6 +49,29 @@ export function StoragesScreen(props: {
     }
 
     function handleRenderItem(params: RenderItemParams<Storage>): ReactNode {
+        if (params.item.id === allStorage.id) {
+            return (
+                <View>
+                    <List.Item
+                        title={allStorage.name}
+                        style={{ backgroundColor: theme.colors.background }}
+                        left={(p) => <CategoryIcon {...p} icon="check-all" />}
+                        right={(p) => (
+                            <UnassignedBadge
+                                p={p}
+                                tooltip="Gewünschte Dinge und ohne Vorratsort"
+                                unassignedFilter={(item) =>
+                                    (item.storages?.length ?? 0) === 0
+                                }
+                            />
+                        )}
+                        onPress={() => handleStoragePress(allStorage.id)}
+                    />
+                    <Divider />
+                </View>
+            );
+        }
+
         const count = items.filter(
             (i) =>
                 i.wanted &&
@@ -72,8 +96,6 @@ export function StoragesScreen(props: {
         );
     }
 
-    const heightOfAllThingsListItem = 68;
-
     return (
         <StatusBarView>
             <Appbar.Header elevated>
@@ -90,31 +112,15 @@ export function StoragesScreen(props: {
             </Appbar.Header>
             <SearchBarList
                 list={
-                    <View style={{ paddingBottom: heightOfAllThingsListItem }}>
-                        <Divider />
-                        <List.Item
-                            title={allStorage.name}
-                            style={{ height: heightOfAllThingsListItem }}
-                            left={(p) => (
-                                <CategoryIcon {...p} icon="check-all" />
-                            )}
-                            right={(p) => (
-                                <UnassignedBadge
-                                    p={p}
-                                    tooltip="Gewünschte Dinge und ohne Vorratsort"
-                                    unassignedFilter={(item) =>
-                                        (item.storages?.length ?? 0) === 0
-                                    }
-                                />
-                            )}
-                            onPress={() => handleStoragePress(allStorage.id)}
-                        />
+                    <View>
                         <Divider />
                         <NestableScrollContainer>
                             <NestableDraggableFlatList
-                                data={storages}
+                                data={[allStorage].concat(storages)}
                                 keyExtractor={(x) => x.id}
                                 renderItem={handleRenderItem}
+                                stickyHeaderIndices={[0]}
+                                stickyHeaderHiddenOnScroll={true}
                                 onDragEnd={({ data }) =>
                                     dispatch(setStorages(data))
                                 }
