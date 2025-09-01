@@ -190,10 +190,11 @@ export function ShopItemsList(props: {
                 right={(p) => (
                     <View
                         style={{
-                            flexDirection: "row",
                             alignItems: "center",
-                            justifyContent: "flex-end",
+                            flexDirection: "row",
                             gap: 8,
+                            justifyContent: "flex-end",
+                            marginLeft: 4,
                         }}
                     >
                         <QuantityPrice
@@ -351,15 +352,14 @@ function QuantityPrice(props: {
         <Tooltip title={tooltipText}>
             <TouchableRipple
                 style={{
-                    justifyContent: "center",
-                    minHeight: 40,
-                    minWidth: 80,
-                    paddingHorizontal: 8,
-
                     alignItems: "flex-end",
                     backgroundColor: theme.colors.elevation.level3,
                     borderColor: theme.colors.elevation.level3,
                     borderRadius: theme.roundness,
+                    justifyContent: "center",
+                    minHeight: 40,
+                    minWidth: 72,
+                    paddingHorizontal: 8,
                 }}
                 onPress={props.onPress}
             >
