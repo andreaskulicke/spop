@@ -43,7 +43,7 @@ import { themes } from "./store/themes/themes";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { useState } from "react";
 import DeviceInfo from "react-native-device-info";
-import { resetShoppingLists } from "./store/otherDataSlice";
+import { resetShoppingLists, setShoppingLists } from "./store/otherDataSlice";
 import { violetDark } from "./store/themes/violet";
 
 const styles = StyleSheet.create({
@@ -65,7 +65,7 @@ export function SettingsScreen(props: {
     const isKeepAwakeStorages = useAppSelector(selectKeepAwakeStorages);
 
     const [dialogVisible, setDialogVisible] = useState<
-        "items" | "shops" | "storages" | undefined
+        "items" | "shops" | "storages" | "shoppingLists" | undefined
     >();
     const [buttonsDisabled, setButtonsDisabled] = useState(false);
     const [colorThemeMenuVisible, setColorThemeMenuVisible] = useState(false);
@@ -82,6 +82,8 @@ export function SettingsScreen(props: {
                 return "Wirklich alle Shops löschen?";
             case "storages":
                 return "Wirklich alle Vorratsorte löschen?";
+            case "shoppingLists":
+                return "Wirklich alle anderen Shopping Listen löschen?";
         }
         return "";
     }
@@ -96,6 +98,9 @@ export function SettingsScreen(props: {
                 break;
             case "storages":
                 dispatch(setStorages([]));
+                break;
+            case "shoppingLists":
+                dispatch(resetShoppingLists());
                 break;
         }
         setDialogVisible(undefined);
@@ -473,6 +478,26 @@ export function SettingsScreen(props: {
                                             }
                                         >
                                             Standard
+                                        </Button>
+                                    </View>
+                                )}
+                            />
+                            <List.Item
+                                title="Shopping Listen"
+                                right={(p) => (
+                                    <View style={styles.buttons}>
+                                        <Button
+                                            {...p}
+                                            compact
+                                            mode="outlined"
+                                            style={styles.button}
+                                            onPress={() =>
+                                                setDialogVisible(
+                                                    "shoppingLists",
+                                                )
+                                            }
+                                        >
+                                            Löschen
                                         </Button>
                                     </View>
                                 )}
