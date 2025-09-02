@@ -290,41 +290,21 @@ export function ShopScreen(props: {
                                     setExternalAppIdMenuVisible(false)
                                 }
                             >
-                                <ExternalAppIdMenuItem
-                                    name="Aldi"
-                                    appId="de.apptiv.business.android.aldi_de"
-                                    onPress={handleExternalAppIdMenuPress}
-                                />
-                                <ExternalAppIdMenuItem
-                                    name="Edeka"
-                                    appId="de.edeka.genuss"
-                                    onPress={handleExternalAppIdMenuPress}
-                                />
-                                <ExternalAppIdMenuItem
-                                    name="Fressnapf"
-                                    appId="com.fressnapf.mobileapp"
-                                    onPress={handleExternalAppIdMenuPress}
-                                />
-                                <ExternalAppIdMenuItem
-                                    name="Hornbach"
-                                    appId="de.hornbach"
-                                    onPress={handleExternalAppIdMenuPress}
-                                />
-                                <ExternalAppIdMenuItem
-                                    name="Obi"
-                                    appId="de.obi.app"
-                                    onPress={handleExternalAppIdMenuPress}
-                                />
-                                <ExternalAppIdMenuItem
-                                    name="Rewe"
-                                    appId="de.rewe.app.mobile"
-                                    onPress={handleExternalAppIdMenuPress}
-                                />
-                                <ExternalAppIdMenuItem
-                                    name="Rossmann"
-                                    appId="de.rossmann.app.android"
-                                    onPress={handleExternalAppIdMenuPress}
-                                />
+                                {defaultShops
+                                    .filter((x) => !!x.externalAppId)
+                                    .sort((a, b) =>
+                                        a.name.localeCompare(b.name),
+                                    )
+                                    .map((x) => (
+                                        <ExternalAppIdMenuItem
+                                            key={x.id}
+                                            name={x.name}
+                                            appId={x.externalAppId!}
+                                            onPress={
+                                                handleExternalAppIdMenuPress
+                                            }
+                                        />
+                                    ))}
                             </Menu>
                         </View>
                         <IconButton

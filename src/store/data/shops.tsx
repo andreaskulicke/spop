@@ -356,6 +356,25 @@ export const defaultShops: Shop[] = [
         stopper: true,
     },
     {
+        id: "mueller",
+        name: "Müller",
+        defaultCategoryId: "household",
+        externalAppId: "at.helloagain.muellerde",
+        categoryIds: [
+            "misc",
+            "household",
+            "sweets",
+            "coffee_tea",
+            "cereals",
+            "stationary",
+        ],
+    },
+    {
+        id: "_4",
+        name: "_4",
+        stopper: true,
+    },
+    {
         id: "hornbach",
         name: "Hornbach",
         defaultCategoryId: "household",
