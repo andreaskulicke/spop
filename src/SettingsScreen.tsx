@@ -3,15 +3,17 @@ import {
     Button,
     Card,
     Checkbox,
+    Dialog,
     Icon,
     IconButton,
     List,
     Menu,
+    Portal,
     Text,
     TextInput,
     TouchableRipple,
 } from "react-native-paper";
-import { Linking, ScrollView, Share, View } from "react-native";
+import { Linking, ScrollView, Share, StyleSheet, View } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
 import {
     addItem,
@@ -19,10 +21,6 @@ import {
     resetData,
     resetShops,
     resetStorages,
-    selectCategories,
-    selectItems,
-    selectShops,
-    selectStorages,
     setItems,
     setShops,
     setStorages,
@@ -46,6 +44,17 @@ import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { useState } from "react";
 import DeviceInfo from "react-native-device-info";
 import { resetShoppingLists } from "./store/otherDataSlice";
+import { violetDark } from "./store/themes/violet";
+
+const styles = StyleSheet.create({
+    button: {
+        width: 96,
+    },
+    buttons: {
+        flexDirection: "row",
+        gap: 4,
+    },
+});
 
 export function SettingsScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -55,12 +64,42 @@ export function SettingsScreen(props: {
     const isKeepAwakeShops = useAppSelector(selectKeepAwakeShops);
     const isKeepAwakeStorages = useAppSelector(selectKeepAwakeStorages);
 
+    const [dialogVisible, setDialogVisible] = useState<
+        "items" | "shops" | "storages" | undefined
+    >();
     const [buttonsDisabled, setButtonsDisabled] = useState(false);
     const [colorThemeMenuVisible, setColorThemeMenuVisible] = useState(false);
     const [themeMenuVisible, setThemeMenuVisible] = useState(false);
     const [dataExpanded, setDataExpanded] = useState(false);
 
     const dispatch = useAppDispatch();
+
+    function getDialogText(): string {
+        switch (dialogVisible) {
+            case "items":
+                return "Wirklich alle Dinge löschen?";
+            case "shops":
+                return "Wirklich alle Shops löschen?";
+            case "storages":
+                return "Wirklich alle Vorratsorte löschen?";
+        }
+        return "";
+    }
+
+    function handleDeleteYes(): void {
+        switch (dialogVisible) {
+            case "items":
+                dispatch(setItems([]));
+                break;
+            case "shops":
+                dispatch(setShops([]));
+                break;
+            case "storages":
+                dispatch(setStorages([]));
+                break;
+        }
+        setDialogVisible(undefined);
+    }
 
     async function handleFeebackPress(): Promise<void> {
         const url = `mailto:andreaskulicke.apps@gmx.de?subject=Spop ${getVersionString()}`;
@@ -299,28 +338,43 @@ export function SettingsScreen(props: {
                             <List.Item
                                 title="Einstellungen"
                                 right={(p) => (
-                                    <Button
-                                        {...p}
-                                        compact
-                                        mode="outlined"
-                                        onPress={() => {
-                                            dispatch(resetSettings());
-                                            dispatch(resetData());
-                                            dispatch(resetShoppingLists());
-                                        }}
-                                    >
-                                        Standard
-                                    </Button>
+                                    <View style={styles.buttons}>
+                                        <Button
+                                            {...p}
+                                            compact
+                                            mode="outlined"
+                                            style={styles.button}
+                                            onPress={() => {
+                                                dispatch(resetSettings());
+                                                dispatch(resetData());
+                                                dispatch(resetShoppingLists());
+                                            }}
+                                        >
+                                            Standard
+                                        </Button>
+                                    </View>
                                 )}
                             />
                             <List.Item
                                 title="Dinge"
                                 right={(p) => (
-                                    <View style={{ flexDirection: "row" }}>
+                                    <View style={styles.buttons}>
                                         <Button
                                             {...p}
                                             compact
                                             mode="outlined"
+                                            style={styles.button}
+                                            onPress={() =>
+                                                setDialogVisible("items")
+                                            }
+                                        >
+                                            Löschen
+                                        </Button>
+                                        <Button
+                                            {...p}
+                                            compact
+                                            mode="outlined"
+                                            style={styles.button}
                                             onPress={() => {
                                                 const d = new Date();
                                                 for (
@@ -344,57 +398,52 @@ export function SettingsScreen(props: {
                                         >
                                             Generieren
                                         </Button>
-                                        <Button
-                                            {...p}
-                                            compact
-                                            mode="outlined"
-                                            onPress={() =>
-                                                dispatch(setItems([]))
-                                            }
-                                        >
-                                            Löschen
-                                        </Button>
                                     </View>
                                 )}
                             />
                             <List.Item
                                 title="Kategorien"
                                 right={(p) => (
-                                    <Button
-                                        {...p}
-                                        compact
-                                        mode="outlined"
-                                        onPress={() =>
-                                            dispatch(resetCategories())
-                                        }
-                                    >
-                                        Standard
-                                    </Button>
+                                    <View style={styles.buttons}>
+                                        <Button
+                                            {...p}
+                                            compact
+                                            mode="outlined"
+                                            style={styles.button}
+                                            onPress={() =>
+                                                dispatch(resetCategories())
+                                            }
+                                        >
+                                            Standard
+                                        </Button>
+                                    </View>
                                 )}
                             />
                             <List.Item
                                 title="Shops"
                                 right={(p) => (
-                                    <View style={{ flexDirection: "row" }}>
+                                    <View style={styles.buttons}>
                                         <Button
                                             {...p}
                                             compact
                                             mode="outlined"
+                                            style={styles.button}
                                             onPress={() =>
-                                                dispatch(resetShops())
+                                                setDialogVisible("shops")
                                             }
                                         >
-                                            Standard
+                                            Löschen
                                         </Button>
                                         <Button
                                             {...p}
                                             compact
                                             mode="outlined"
+                                            style={styles.button}
                                             onPress={() =>
-                                                dispatch(setShops([]))
+                                                dispatch(resetShops())
                                             }
                                         >
-                                            Löschen
+                                            Standard
                                         </Button>
                                     </View>
                                 )}
@@ -402,26 +451,28 @@ export function SettingsScreen(props: {
                             <List.Item
                                 title="Vorratsorte"
                                 right={(p) => (
-                                    <View style={{ flexDirection: "row" }}>
+                                    <View style={styles.buttons}>
                                         <Button
                                             {...p}
                                             compact
                                             mode="outlined"
+                                            style={styles.button}
                                             onPress={() =>
-                                                dispatch(resetStorages())
+                                                setDialogVisible("storages")
                                             }
                                         >
-                                            Standard
+                                            Löschen
                                         </Button>
                                         <Button
                                             {...p}
                                             compact
                                             mode="outlined"
+                                            style={styles.button}
                                             onPress={() =>
-                                                dispatch(setStorages([]))
+                                                dispatch(resetStorages())
                                             }
                                         >
-                                            Löschen
+                                            Standard
                                         </Button>
                                     </View>
                                 )}
@@ -429,12 +480,13 @@ export function SettingsScreen(props: {
                             <List.Item
                                 title="Daten"
                                 right={(p) => (
-                                    <View style={{ flexDirection: "row" }}>
+                                    <View style={styles.buttons}>
                                         <Button
                                             {...p}
                                             compact
                                             disabled={buttonsDisabled}
                                             mode="outlined"
+                                            style={styles.button}
                                             onPress={async () => {
                                                 setButtonsDisabled(true);
                                                 await Share.share({
@@ -472,6 +524,22 @@ export function SettingsScreen(props: {
                     />
                 </Card>
             </ScrollView>
+            <Portal>
+                <Dialog
+                    visible={!!dialogVisible}
+                    onDismiss={() => setDialogVisible(undefined)}
+                >
+                    <Dialog.Content>
+                        <Text>{getDialogText()}</Text>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={handleDeleteYes}>Ja</Button>
+                        <Button onPress={() => setDialogVisible(undefined)}>
+                            Nein
+                        </Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
         </StatusBarView>
     );
 }
