@@ -209,7 +209,7 @@ export function ShopsScreen(props: {
                                 stickyHeaderHiddenOnScroll={true}
                                 onDragEnd={({ data }) => {
                                     setDraggingStopper("");
-                                    dispatch(setShops(data));
+                                    dispatch(setShops(data.slice(1)));
                                 }}
                             />
                         </NestableScrollContainer>

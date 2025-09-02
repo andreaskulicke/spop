@@ -122,7 +122,7 @@ export function StoragesScreen(props: {
                                 stickyHeaderIndices={[0]}
                                 stickyHeaderHiddenOnScroll={true}
                                 onDragEnd={({ data }) =>
-                                    dispatch(setStorages(data))
+                                    dispatch(setStorages(data.slice(1)))
                                 }
                             />
                         </NestableScrollContainer>
