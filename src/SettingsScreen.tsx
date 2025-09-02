@@ -558,10 +558,10 @@ export function SettingsScreen(props: {
                         <Text>{getDialogText()}</Text>
                     </Dialog.Content>
                     <Dialog.Actions>
-                        <Button onPress={handleDeleteYes}>Ja</Button>
                         <Button onPress={() => setDialogVisible(undefined)}>
-                            Nein
+                            NEIN
                         </Button>
+                        <Button onPress={handleDeleteYes}>JA</Button>
                     </Dialog.Actions>
                 </Dialog>
             </Portal>
