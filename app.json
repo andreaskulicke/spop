@@ -3,18 +3,32 @@
     "name": "Spop",
     "slug": "Spop",
     "version": "1.0.0",
+    "assetBundlePatterns": ["**/*"],
+    "extra": {
+      "eas": {
+        "projectId": "fd9688b6-ab00-4e57-8f4d-ec9b2519de13"
+      }
+    },
+    "icon": "./assets/icon.png",
     "newArchEnabled": true,
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "buildToolsVersion": "35.0.0"
+          }
+        }
+      ]
+    ],
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
-    },
-    "assetBundlePatterns": ["**/*"],
-    "ios": {
-      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
@@ -23,14 +37,6 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.andreaskulicke.spop"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "fd9688b6-ab00-4e57-8f4d-ec9b2519de13"
-      }
     }
   }
 }
