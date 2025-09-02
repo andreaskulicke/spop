@@ -86,7 +86,7 @@ export function CategoryMenu(props: {
                             />
                         </TouchableRipple>
                     }
-                    anchorPosition="bottom"
+                    anchorPosition="top"
                     visible={categoryMenuVisible}
                     onDismiss={() => setCategoryMenuVisible(false)}
                 >
