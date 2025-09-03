@@ -42,9 +42,8 @@ import { store } from "./store/store";
 import { themes } from "./store/themes/themes";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { useState } from "react";
-import DeviceInfo from "react-native-device-info";
-import { resetShoppingLists, setShoppingLists } from "./store/otherDataSlice";
-import { violetDark } from "./store/themes/violet";
+import { resetShoppingLists } from "./store/otherDataSlice";
+import * as Application from "expo-application";
 
 const styles = StyleSheet.create({
     button: {
@@ -570,5 +569,5 @@ export function SettingsScreen(props: {
 }
 
 function getVersionString() {
-    return `${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`;
+    return `${Application.nativeApplicationVersion} (${Application.nativeBuildVersion})`;
 }
