@@ -25,7 +25,7 @@ export type RootStackParamList = {
     Settings: undefined;
     Shop: { id: string };
     ShoppingList: { id: string };
-    ShoppingLists: { id: string };
+    ShoppingLists: undefined;
     Storage: { id: string };
 };
 
