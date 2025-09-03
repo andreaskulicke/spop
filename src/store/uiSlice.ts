@@ -42,6 +42,13 @@ export const uiSlice = createSlice({
     name: "ui",
     initialState,
     reducers: {
+        resetUi: (state, action: PayloadAction<void>) => {
+            return initialState;
+        },
+        setUi: (state, action: PayloadAction<UiState>) => {
+            return action.payload;
+        },
+
         setUiItemsListItems: (
             state,
             action: PayloadAction<{ expanded: boolean }>,
@@ -70,6 +77,9 @@ export const uiSlice = createSlice({
 });
 
 export const {
+    resetUi,
+    setUi,
+
     setUiItemsListItems,
     setUiItemsListWithout,
     setUiItemsListLatestInArea,

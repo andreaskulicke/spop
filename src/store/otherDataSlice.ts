@@ -3,8 +3,12 @@ import { RootState } from "./store";
 import { Data } from "./data/data";
 import { initialDataState } from "./dataSlice";
 
+export interface OtherData {
+    lists: Data[];
+}
+
 // Define the initial state using that type
-const initialState: { lists: Data[] } = { lists: [] };
+const initialState: OtherData = { lists: [] };
 
 export const initialOtherDataState = initialState;
 
@@ -12,8 +16,11 @@ export const otherDataSlice = createSlice({
     name: "otherData",
     initialState,
     reducers: {
-        resetShoppingLists: (state, action: PayloadAction<void>) => {
+        resetOtherData: (state, action: PayloadAction<void>) => {
             return initialState;
+        },
+        setOtherData: (state, action: PayloadAction<OtherData>) => {
+            return action.payload;
         },
         setShoppingLists: (state, action: PayloadAction<Data[]>) => {
             state.lists = action.payload;
@@ -74,7 +81,8 @@ export const otherDataSlice = createSlice({
 });
 
 export const {
-    resetShoppingLists,
+    resetOtherData,
+    setOtherData,
     setShoppingLists,
     addShoppingList,
     deleteShoppingList,

@@ -21,6 +21,7 @@ import {
     resetData,
     resetShops,
     resetStorages,
+    setData,
     setItems,
     setShops,
     setStorages,
@@ -34,16 +35,24 @@ import {
     setColorTheme,
     setHideShoppingListInTitle,
     setKeepAwake,
+    setSettings,
     setTheme,
 } from "./store/settingsSlice";
 import { RootStackParamList } from "../App";
 import { StatusBarView } from "./StatusBarView";
-import { store } from "./store/store";
+import { isRootState, store } from "./store/store";
 import { themes } from "./store/themes/themes";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { useState } from "react";
-import { resetShoppingLists } from "./store/otherDataSlice";
+import {
+    resetOtherData,
+    setOtherData,
+    setShoppingLists,
+} from "./store/otherDataSlice";
 import * as Application from "expo-application";
+import * as DocumentPicker from "expo-document-picker";
+import * as FileSystem from "expo-file-system";
+import { resetUi, setUi } from "./store/uiSlice";
 
 const styles = StyleSheet.create({
     button: {
@@ -99,7 +108,7 @@ export function SettingsScreen(props: {
                 dispatch(setStorages([]));
                 break;
             case "shoppingLists":
-                dispatch(resetShoppingLists());
+                dispatch(setShoppingLists([]));
                 break;
         }
         setDialogVisible(undefined);
@@ -110,6 +119,35 @@ export function SettingsScreen(props: {
         if (await Linking.canOpenURL(url)) {
             Linking.openURL(url);
         }
+    }
+
+    async function handleExportState(): Promise<void> {
+        setButtonsDisabled(true);
+        await Share.share({
+            message: JSON.stringify(store.getState()),
+        });
+        setButtonsDisabled(false);
+    }
+
+    async function handleImportState(): Promise<void> {
+        setButtonsDisabled(true);
+        const result = await DocumentPicker.getDocumentAsync({
+            copyToCacheDirectory: true,
+            type: ["application/json", "text/*"],
+        });
+        if (!result.canceled) {
+            const stateString = await FileSystem.readAsStringAsync(
+                result.assets[0].uri,
+            );
+            const state = JSON.parse(stateString);
+            if (isRootState(state)) {
+                dispatch(setData(state.data));
+                dispatch(setOtherData(state.otherData));
+                dispatch(setSettings(state.settings));
+                dispatch(setUi(state.ui));
+            }
+        }
+        setButtonsDisabled(false);
     }
 
     let colorSchemeLabel = "System";
@@ -349,9 +387,10 @@ export function SettingsScreen(props: {
                                             mode="outlined"
                                             style={styles.button}
                                             onPress={() => {
-                                                dispatch(resetSettings());
                                                 dispatch(resetData());
-                                                dispatch(resetShoppingLists());
+                                                dispatch(resetOtherData());
+                                                dispatch(resetSettings());
+                                                dispatch(resetUi());
                                             }}
                                         >
                                             Standard
@@ -511,17 +550,19 @@ export function SettingsScreen(props: {
                                             disabled={buttonsDisabled}
                                             mode="outlined"
                                             style={styles.button}
-                                            onPress={async () => {
-                                                setButtonsDisabled(true);
-                                                await Share.share({
-                                                    message: JSON.stringify(
-                                                        store.getState(),
-                                                    ),
-                                                });
-                                                setButtonsDisabled(false);
-                                            }}
+                                            onPress={handleExportState}
                                         >
                                             Exportieren
+                                        </Button>
+                                        <Button
+                                            {...p}
+                                            compact
+                                            disabled={buttonsDisabled}
+                                            mode="outlined"
+                                            style={styles.button}
+                                            onPress={handleImportState}
+                                        >
+                                            Importieren
                                         </Button>
                                     </View>
                                 )}

@@ -32,6 +32,9 @@ export const settingsSlice = createSlice({
         resetSettings: () => {
             return initialState;
         },
+        setSettings: (state, action: PayloadAction<Settings>) => {
+            return action.payload;
+        },
 
         setColorTheme: (state, action: PayloadAction<ColorSchemeName>) => {
             state.display.colorTheme = action.payload;
@@ -69,6 +72,7 @@ export const settingsSlice = createSlice({
 
 export const {
     resetSettings,
+    setSettings,
 
     setColorTheme,
     setHideShoppingListInTitle,

@@ -72,3 +72,7 @@ export const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+export function isRootState(state: any): state is RootState {
+    return (state as RootState).data !== undefined;
+}
