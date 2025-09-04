@@ -2,24 +2,56 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import uuid from "react-native-uuid";
 import {
+    createMigrate,
     FLUSH,
     MigrationManifest,
     PAUSE,
     PERSIST,
-    PURGE,
     PersistConfig,
     PersistedState,
-    REGISTER,
-    REHYDRATE,
-    createMigrate,
     persistReducer,
     persistStore,
+    PURGE,
+    REGISTER,
+    REHYDRATE,
+    Storage as ReduxPersistStorage,
 } from "redux-persist";
 import { Data } from "./data/data";
 import dataSlice from "./dataSlice";
 import otherDataSlice, { OtherData } from "./otherDataSlice";
 import settingsSlice, { Settings } from "./settingsSlice";
 import uiSlice from "./uiSlice";
+
+// Storage getItem/setItem:
+// 'key' is always `persist:${persistConfig.key}`.
+// 'value' is always complete slice data.
+
+function DebugStorage(slice: string): ReduxPersistStorage {
+    const logStorageCalls = false;
+
+    return {
+        getItem: (key: string, ...args: Array<any>): any => {
+            if (logStorageCalls) {
+                console.log(`${slice}/getItem: key=${key}, args=${args}`);
+            }
+            return AsyncStorage.getItem(key, args[0]);
+        },
+        setItem: (key: string, value: any, ...args: Array<any>): any => {
+            if (logStorageCalls) {
+                console.log(
+                    `${slice}/setItem: key=${key}, value=${value}, args=${args}`,
+                );
+            }
+            return AsyncStorage.setItem(key, value, args[0]);
+        },
+        removeItem: (key: string, ...args: Array<any>): any => {
+            if (logStorageCalls) {
+                console.log(`${slice}/removeItem: key=${key}, args=${args}`);
+            }
+            return AsyncStorage.removeItem(key, args[0]);
+        },
+    } as ReduxPersistStorage;
+}
 
 const migrationsData: MigrationManifest = {
     0: (state: PersistedState): PersistedState => {
@@ -33,21 +65,21 @@ const migrationsData: MigrationManifest = {
 };
 
 const persistConfigData: PersistConfig<Data> = {
-    key: "root",
+    key: "data",
     migrate: createMigrate(migrationsData, { debug: false }),
-    storage: AsyncStorage,
+    storage: DebugStorage("data"),
     version: 0,
 };
 
 const persistConfigOtherData: PersistConfig<OtherData> = {
-    key: "root",
-    storage: AsyncStorage,
+    key: "otherData",
+    storage: DebugStorage("otherData"),
     version: -1,
 };
 
 const persistConfigSettings: PersistConfig<Settings> = {
-    key: "root",
-    storage: AsyncStorage,
+    key: "settings",
+    storage: DebugStorage("settings"),
     version: -1,
 };
 
@@ -65,11 +97,11 @@ export const store = configureStore({
             serializableCheck: {
                 ignoredActions: [
                     FLUSH,
-                    REHYDRATE,
                     PAUSE,
                     PERSIST,
                     PURGE,
                     REGISTER,
+                    REHYDRATE,
                 ],
             },
         }),
