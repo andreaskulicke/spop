@@ -36,7 +36,10 @@ export const settingsSlice = createSlice({
             return action.payload;
         },
 
-        setColorTheme: (state, action: PayloadAction<ColorSchemeName>) => {
+        setColorTheme: (
+            state,
+            action: PayloadAction<ColorSchemeName | undefined>,
+        ) => {
             state.display.colorTheme = action.payload;
         },
         setHideShoppingListInTitle: (state, action: PayloadAction<boolean>) => {
