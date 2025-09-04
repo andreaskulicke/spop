@@ -21,7 +21,7 @@ import { Data } from "./data/data";
 // Define the initial state using that type
 const initialState: Data = {
     id: uuid.v4(),
-    name: "Neue Liste",
+    name: "Standart",
     version: "1.0.0",
     categories: defaultCategories,
     items: defaultItems,

@@ -31,6 +31,7 @@ export const otherDataSlice = createSlice({
             state.lists.push({
                 ...initialDataState,
                 id: id,
+                name: "Neue Liste",
             });
         },
         deleteShoppingList: (state, action: PayloadAction<string>) => {
