@@ -1,10 +1,13 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import uuid from "react-native-uuid";
 import {
     FLUSH,
     MigrationManifest,
     PAUSE,
     PERSIST,
     PURGE,
+    PersistConfig,
     PersistedState,
     REGISTER,
     REHYDRATE,
@@ -12,15 +15,13 @@ import {
     persistReducer,
     persistStore,
 } from "redux-persist";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import dataSlice from "./dataSlice";
-import otherDataSlice from "./otherDataSlice";
-import settingsSlice from "./settingsSlice";
-import uiSlice from "./uiSlice";
-import uuid from "react-native-uuid";
 import { Data } from "./data/data";
+import dataSlice from "./dataSlice";
+import otherDataSlice, { OtherData } from "./otherDataSlice";
+import settingsSlice, { Settings } from "./settingsSlice";
+import uiSlice from "./uiSlice";
 
-const dataMigrations: MigrationManifest = {
+const migrationsData: MigrationManifest = {
     0: (state: PersistedState): PersistedState => {
         const newState: PersistedState & Data = { ...state } as PersistedState &
             Data;
@@ -31,23 +32,29 @@ const dataMigrations: MigrationManifest = {
     },
 };
 
-const dataPersistConfig = {
+const persistConfigData: PersistConfig<Data> = {
     key: "root",
-    migrate: createMigrate(dataMigrations, { debug: false }),
+    migrate: createMigrate(migrationsData, { debug: false }),
     storage: AsyncStorage,
     version: 0,
 };
 
-const persistConfig = {
+const persistConfigOtherData: PersistConfig<OtherData> = {
+    key: "root",
+    storage: AsyncStorage,
+    version: -1,
+};
+
+const persistConfigSettings: PersistConfig<Settings> = {
     key: "root",
     storage: AsyncStorage,
     version: -1,
 };
 
 const rootReducer = combineReducers({
-    data: persistReducer(dataPersistConfig, dataSlice),
-    otherData: persistReducer(persistConfig, otherDataSlice),
-    settings: persistReducer(persistConfig, settingsSlice),
+    data: persistReducer(persistConfigData, dataSlice),
+    otherData: persistReducer(persistConfigOtherData, otherDataSlice),
+    settings: persistReducer(persistConfigSettings, settingsSlice),
     ui: uiSlice,
 });
 
