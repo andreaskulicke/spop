@@ -17,6 +17,11 @@ export interface UiState {
             expanded: boolean;
         };
     };
+    settings: {
+        data: {
+            expanded: boolean;
+        };
+    };
     showUndo?: boolean;
 }
 
@@ -34,6 +39,11 @@ const initialState: UiState = {
             expanded: false,
         },
         latest: {
+            expanded: false,
+        },
+    },
+    settings: {
+        data: {
             expanded: false,
         },
     },
@@ -75,6 +85,13 @@ export const uiSlice = createSlice({
             state.itemsList.latest.expanded = action.payload.expanded;
         },
 
+        setUiSettingsData: (
+            state,
+            action: PayloadAction<{ expanded: boolean }>,
+        ) => {
+            state.settings.data.expanded = action.payload.expanded;
+        },
+
         setUiShowUndo: (state, action: PayloadAction<boolean>) => {
             state.showUndo = action.payload;
         },
@@ -90,6 +107,8 @@ export const {
     setUiItemsListLatestInArea,
     setUiItemsListLatest,
 
+    setUiSettingsData,
+
     setUiShowUndo,
 } = uiSlice.actions;
 
@@ -100,6 +119,10 @@ export default uiSlice.reducer;
 
 export function selectUiItemsList(state: RootState): UiState["itemsList"] {
     return state.ui.itemsList;
+}
+
+export function selectUiSettingsDataExpanded(state: RootState): boolean {
+    return state.ui.settings.data.expanded;
 }
 
 export function selectUiShowUndo(state: RootState): boolean {

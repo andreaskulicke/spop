@@ -52,7 +52,12 @@ import {
 import * as Application from "expo-application";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
-import { resetUi, setUi } from "./store/uiSlice";
+import {
+    resetUi,
+    selectUiSettingsDataExpanded,
+    setUi,
+    setUiSettingsData,
+} from "./store/uiSlice";
 
 const styles = StyleSheet.create({
     button: {
@@ -71,6 +76,7 @@ export function SettingsScreen(props: {
     const isKeepAwakeCategories = useAppSelector(selectKeepAwakeCategories);
     const isKeepAwakeShops = useAppSelector(selectKeepAwakeShops);
     const isKeepAwakeStorages = useAppSelector(selectKeepAwakeStorages);
+    const dataExpanded = useAppSelector(selectUiSettingsDataExpanded);
 
     const [dialogVisible, setDialogVisible] = useState<
         "items" | "shops" | "storages" | "shoppingLists" | undefined
@@ -78,7 +84,6 @@ export function SettingsScreen(props: {
     const [buttonsDisabled, setButtonsDisabled] = useState(false);
     const [colorThemeMenuVisible, setColorThemeMenuVisible] = useState(false);
     const [themeMenuVisible, setThemeMenuVisible] = useState(false);
-    const [dataExpanded, setDataExpanded] = useState(false);
 
     const dispatch = useAppDispatch();
 
@@ -94,6 +99,10 @@ export function SettingsScreen(props: {
                 return "Wirklich alle anderen Shopping Listen löschen?";
         }
         return "";
+    }
+
+    function handleDataExpandedToggle(): void {
+        dispatch(setUiSettingsData({ expanded: !dataExpanded }));
     }
 
     function handleDeleteYes(): void {
@@ -168,7 +177,7 @@ export function SettingsScreen(props: {
             </Appbar.Header>
             <ScrollView>
                 <Card style={{ margin: 8 }}>
-                    <Card.Title title="Anzeige" />
+                    <Card.Title title="Allgemein" />
                     <Menu
                         anchor={
                             <TouchableRipple
@@ -289,77 +298,75 @@ export function SettingsScreen(props: {
                             />
                         )}
                     />
-                    <Card style={{ margin: 8 }}>
-                        <Card.Title title="Bildschirm anlassen in:" />
-                        <View>
-                            <List.Item
-                                title="Vorratsorte"
-                                right={() => (
-                                    <Checkbox
-                                        status={
-                                            isKeepAwakeStorages
-                                                ? "checked"
-                                                : "unchecked"
-                                        }
-                                        onPress={() =>
-                                            dispatch(
-                                                setKeepAwake({
-                                                    area: "storages",
-                                                    keepAwake:
-                                                        !isKeepAwakeStorages,
-                                                }),
-                                            )
-                                        }
-                                    />
-                                )}
-                            />
-                            <List.Item
-                                title="Kategorien"
-                                right={() => (
-                                    <Checkbox
-                                        status={
-                                            isKeepAwakeCategories
-                                                ? "checked"
-                                                : "unchecked"
-                                        }
-                                        onPress={() =>
-                                            dispatch(
-                                                setKeepAwake({
-                                                    area: "categories",
-                                                    keepAwake:
-                                                        !isKeepAwakeCategories,
-                                                }),
-                                            )
-                                        }
-                                    />
-                                )}
-                            />
-                            <List.Item
-                                title="Shops"
-                                right={() => (
-                                    <Checkbox
-                                        status={
-                                            isKeepAwakeShops
-                                                ? "checked"
-                                                : "unchecked"
-                                        }
-                                        onPress={() =>
-                                            dispatch(
-                                                setKeepAwake({
-                                                    area: "shops",
-                                                    keepAwake:
-                                                        !isKeepAwakeShops,
-                                                }),
-                                            )
-                                        }
-                                    />
-                                )}
-                            />
-                        </View>
-                    </Card>
                 </Card>
                 <Card style={{ margin: 8 }}>
-                    <TouchableRipple onPress={() => setDataExpanded((x) => !x)}>
+                    <Card.Title title="Bildschirm anlassen in" />
+                    <View>
+                        <List.Item
+                            title="Vorratsorte"
+                            right={() => (
+                                <Checkbox
+                                    status={
+                                        isKeepAwakeStorages
+                                            ? "checked"
+                                            : "unchecked"
+                                    }
+                                    onPress={() =>
+                                        dispatch(
+                                            setKeepAwake({
+                                                area: "storages",
+                                                keepAwake: !isKeepAwakeStorages,
+                                            }),
+                                        )
+                                    }
+                                />
+                            )}
+                        />
+                        <List.Item
+                            title="Kategorien"
+                            right={() => (
+                                <Checkbox
+                                    status={
+                                        isKeepAwakeCategories
+                                            ? "checked"
+                                            : "unchecked"
+                                    }
+                                    onPress={() =>
+                                        dispatch(
+                                            setKeepAwake({
+                                                area: "categories",
+                                                keepAwake:
+                                                    !isKeepAwakeCategories,
+                                            }),
+                                        )
+                                    }
+                                />
+                            )}
+                        />
+                        <List.Item
+                            title="Shops"
+                            right={() => (
+                                <Checkbox
+                                    status={
+                                        isKeepAwakeShops
+                                            ? "checked"
+                                            : "unchecked"
+                                    }
+                                    onPress={() =>
+                                        dispatch(
+                                            setKeepAwake({
+                                                area: "shops",
+                                                keepAwake: !isKeepAwakeShops,
+                                            }),
+                                        )
+                                    }
+                                />
+                            )}
+                        />
+                    </View>
+                </Card>
+                <Card style={{ margin: 8 }}>
+                    <TouchableRipple onPress={handleDataExpandedToggle}>
                         <Card.Title
                             title="Daten"
                             right={(p) => (
@@ -370,7 +377,7 @@ export function SettingsScreen(props: {
                                             ? "chevron-up"
                                             : "chevron-down"
                                     }
-                                    onPress={() => setDataExpanded((x) => !x)}
+                                    onPress={handleDataExpandedToggle}
                                 />
                             )}
                         />
