@@ -141,9 +141,9 @@ export function SettingsScreen(props: {
             );
             const state = JSON.parse(stateString);
             if (isRootState(state)) {
-                dispatch(setData(state.data));
-                dispatch(setOtherData(state.otherData));
-                dispatch(setSettings(state.settings));
+                dispatch(setData(state.data.present));
+                dispatch(setOtherData(state.otherData.present));
+                dispatch(setSettings(state.settings.present));
                 dispatch(setUi(state.ui));
             }
         }
@@ -161,7 +161,7 @@ export function SettingsScreen(props: {
     }
 
     return (
-        <StatusBarView bottomPadding>
+        <StatusBarView>
             <Appbar.Header elevated>
                 <Appbar.BackAction onPress={() => props.navigation.goBack()} />
                 <Appbar.Content title={"Einstellungen"} />

@@ -1,19 +1,18 @@
-import { Category } from "./store/data/categories";
-import { CategorySection } from "./CategorySection";
-import { Item, isItem } from "./store/data/items";
-import { ListSection } from "./ListSection";
+import React, {
+    JSXElementConstructor,
+    ReactElement,
+    useEffect,
+    useState,
+} from "react";
 import {
     SectionList,
     SectionListData,
     SectionListRenderItemInfo,
 } from "react-native";
-import React, {
-    JSXElementConstructor,
-    ReactElement,
-    useEffect,
-    useRef,
-    useState,
-} from "react";
+import { CategorySection } from "./CategorySection";
+import { ListSection } from "./ListSection";
+import { Category } from "./store/data/categories";
+import { Item, isItem } from "./store/data/items";
 
 export type ItemsSectionListItem = undefined | Category | Item;
 

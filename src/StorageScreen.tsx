@@ -13,6 +13,7 @@ import {
 import { CategoryMenu } from "./CategoryMenu";
 import { StatusBarView } from "./StatusBarView";
 import { useEffect, useState } from "react";
+import { setUiShowUndo } from "./store/uiSlice";
 
 export function StorageScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -33,6 +34,7 @@ export function StorageScreen(props: {
     }
 
     function handleDeletePress(): void {
+        dispatch(setUiShowUndo(true));
         dispatch(deleteStorage(storage.id));
         props.navigation.goBack();
     }
@@ -63,7 +65,7 @@ export function StorageScreen(props: {
     }, [storage]);
 
     return (
-        <StatusBarView bottomPadding>
+        <StatusBarView>
             <Appbar.Header elevated>
                 <Appbar.BackAction onPress={handleGoBack} />
                 <Appbar.Content title={storage?.name ?? "Vorrat"} />

@@ -24,12 +24,14 @@ import {
     setUiItemsListLatest,
     setUiItemsListLatestInArea,
     setUiItemsListWithout,
+    setUiShowUndo,
 } from "./store/uiSlice";
 import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { View } from "react-native";
 import { ItemsListTitle } from "./ItemsListTitle";
 import { CategoryIcon } from "./CategoryIcon";
+import { UndoSnackBar } from "./UndoSnackBar";
 
 export function CategoryItemsScreen(props: {
     navigation: NavigationProp<RootStackParamList & CategoriesStackParamList>;
@@ -54,6 +56,7 @@ export function CategoryItemsScreen(props: {
         selectItemsNotWantedWithDifferentCategory(state, category?.id),
     );
     const uiItemsList = useAppSelector(selectUiItemsList);
+    
     const dispatch = useAppDispatch();
     const theme = useTheme();
 
@@ -67,6 +70,11 @@ export function CategoryItemsScreen(props: {
         if (category) {
             props.navigation.navigate("Category", { id: category.id });
         }
+    }
+
+    function handleGoBack() {
+        dispatch(setUiShowUndo(false));
+        props.navigation.goBack();
     }
 
     function handleRenderItem(
@@ -206,7 +214,7 @@ export function CategoryItemsScreen(props: {
     return (
         <StatusBarView>
             <Appbar.Header elevated>
-                <Appbar.BackAction onPress={() => props.navigation.goBack()} />
+                <Appbar.BackAction onPress={handleGoBack} />
                 <CategoryIcon icon={category?.icon ?? "check-all"} />
                 <Appbar.Content title={category?.name ?? "Alle Dinge"} />
                 {category && (
@@ -225,6 +233,7 @@ export function CategoryItemsScreen(props: {
                 }
                 category={category}
             />
+            <UndoSnackBar contextName="CategoryItemsScreen" />
         </StatusBarView>
     );
 }

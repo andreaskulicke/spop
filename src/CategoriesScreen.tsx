@@ -1,27 +1,28 @@
+import { NavigationProp } from "@react-navigation/native";
+import { JSXElementConstructor, ReactElement } from "react";
+import { ListRenderItemInfo, View } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
+import { Appbar, Divider, List, Tooltip, useTheme } from "react-native-paper";
+import uuid from "react-native-uuid";
+import { RootStackParamList } from "../App";
+import { AppbarContentTitle } from "./AppbarContentTitle";
+import { AreaItemTitle } from "./AreaItemTitle";
+import { CategoriesStackParamList } from "./CategoriesNavigationScreen";
+import { CategoryIcon } from "./CategoryIcon";
+import { Count } from "./Count";
+import { MainMenu } from "./MainMenu";
+import { SearchBarList } from "./SearchBarList";
+import { StatusBarView } from "./StatusBarView";
+import { UnassignedBadge } from "./UnassignedBadge";
+import { UndoSnackBar } from "./UndoSnackBar";
+import { Category } from "./store/data/categories";
 import {
     addCategory,
     allCategory,
     selectItems,
     selectSortedCategories,
 } from "./store/dataSlice";
-import { Appbar, Tooltip, Divider, List, useTheme } from "react-native-paper";
-import { AreaItemTitle } from "./AreaItemTitle";
-import { CategoriesStackParamList } from "./CategoriesNavigationScreen";
-import { Category } from "./store/data/categories";
-import { Count } from "./Count";
-import { CategoryIcon } from "./CategoryIcon";
-import { FlatList } from "react-native-gesture-handler";
-import { JSXElementConstructor, ReactElement } from "react";
-import { ListRenderItemInfo, View } from "react-native";
-import { NavigationProp } from "@react-navigation/native";
-import { RootStackParamList } from "../App";
-import { SearchBarList } from "./SearchBarList";
-import { StatusBarView } from "./StatusBarView";
-import { UnassignedBadge } from "./UnassignedBadge";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import uuid from "react-native-uuid";
-import { MainMenu } from "./MainMenu";
-import { AppbarContentTitle } from "./AppbarContentTitle";
 
 export function CategoriesScreen(props: {
     navigation: NavigationProp<RootStackParamList & CategoriesStackParamList>;
@@ -114,6 +115,7 @@ export function CategoriesScreen(props: {
                     </View>
                 }
             />
+            <UndoSnackBar contextName="CategoriesScreen" />
         </StatusBarView>
     );
 }

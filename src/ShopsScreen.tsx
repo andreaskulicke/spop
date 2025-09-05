@@ -35,6 +35,7 @@ import { useAppDispatch, useAppSelector } from "./store/hooks";
 import uuid from "react-native-uuid";
 import { MainMenu } from "./MainMenu";
 import { AppbarContentTitle } from "./AppbarContentTitle";
+import { UndoSnackBar } from "./UndoSnackBar";
 
 export function ShopsScreen(props: {
     navigation: NavigationProp<RootStackParamList & ShopsStackParamList>;
@@ -217,6 +218,7 @@ export function ShopsScreen(props: {
                 }
                 shop={allShop}
             />
+            <UndoSnackBar contextName="ShopsScreen" />
         </StatusBarView>
     );
 }

@@ -17,6 +17,7 @@ export interface UiState {
             expanded: boolean;
         };
     };
+    showUndo?: boolean;
 }
 
 // Define the initial state using that type
@@ -73,6 +74,10 @@ export const uiSlice = createSlice({
         ) => {
             state.itemsList.latest.expanded = action.payload.expanded;
         },
+
+        setUiShowUndo: (state, action: PayloadAction<boolean>) => {
+            state.showUndo = action.payload;
+        },
     },
 });
 
@@ -84,6 +89,8 @@ export const {
     setUiItemsListWithout,
     setUiItemsListLatestInArea,
     setUiItemsListLatest,
+
+    setUiShowUndo,
 } = uiSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
@@ -93,4 +100,8 @@ export default uiSlice.reducer;
 
 export function selectUiItemsList(state: RootState): UiState["itemsList"] {
     return state.ui.itemsList;
+}
+
+export function selectUiShowUndo(state: RootState): boolean {
+    return !!state.ui.showUndo;
 }

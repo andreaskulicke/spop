@@ -59,6 +59,7 @@ import { useAppDispatch, useAppSelector } from "./store/hooks";
 import React, { useEffect, useState } from "react";
 import uuid from "react-native-uuid";
 import { withPrefix } from "./with";
+import { setUiShowUndo } from "./store/uiSlice";
 
 type CalculatorCallSource = "quantity" | "packageQuantity" | "shop";
 
@@ -91,7 +92,6 @@ export function ItemScreen(props: {
     const shops = useAppSelector(selectValidShops);
     const storages = useAppSelector(selectStorages);
     const dispatch = useAppDispatch();
-    const theme = useTheme();
 
     function handleGoBack() {
         handleTextInputNameBlur();
@@ -102,6 +102,7 @@ export function ItemScreen(props: {
     }
 
     function handleDeletePress(): void {
+        dispatch(setUiShowUndo(true));
         dispatch(deleteItem(item.id));
         props.navigation.goBack();
     }
@@ -336,7 +337,7 @@ export function ItemScreen(props: {
     });
 
     return (
-        <StatusBarView bottomPadding>
+        <StatusBarView>
             <Appbar.Header elevated>
                 <Appbar.BackAction onPress={handleGoBack} />
                 <Appbar.Content title={item?.name ?? "Item"} />

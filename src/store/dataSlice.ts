@@ -747,7 +747,7 @@ export const allCategory: Category = {
 };
 
 export const selectCategories = (state: RootState): Category[] => {
-    return state.data.categories;
+    return state.data.present.categories;
 };
 
 export const selectSortedCategories = createSelector(
@@ -760,17 +760,17 @@ export function selectCategory(
     state: RootState,
     itemId: string,
 ): Category | undefined {
-    return state.data.categories.find((x) => x.id === itemId);
+    return state.data.present.categories.find((x) => x.id === itemId);
 }
 
 // Items
 
 export function selectData(state: RootState): Data {
-    return state.data;
+    return state.data.present;
 }
 
 export function selectItems(state: RootState): Item[] {
-    return state.data.items;
+    return state.data.present.items;
 }
 
 export const selectItemsNotWanted = createSelector([selectItems], (items) => {
@@ -781,8 +781,8 @@ export const selectItemsWanted = createSelector([selectItems], (items) => {
     return items.filter((x) => x.wanted);
 });
 
-export function selectItem(state: RootState, itemId: string) {
-    return state.data.items.find((x) => x.id === itemId);
+export function selectItem(state: RootState, itemId: string): Item | undefined {
+    return state.data.present.items.find((x) => x.id === itemId);
 }
 
 export const selectItemByName = createSelector(
@@ -1169,7 +1169,7 @@ export const allShop: Shop = {
 };
 
 export function selectShops(state: RootState): Shop[] {
-    return state.data.shops;
+    return state.data.present.shops;
 }
 
 export const selectValidShops = createSelector([selectShops], (shops) =>
@@ -1226,7 +1226,7 @@ export const allStorage: Storage = {
 };
 
 export const selectStorages = (state: RootState): Storage[] => {
-    return state.data.storages;
+    return state.data.present.storages;
 };
 
 export const selectStorage = createSelector(

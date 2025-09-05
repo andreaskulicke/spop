@@ -98,7 +98,7 @@ export const {
 export default otherDataSlice.reducer;
 
 export const selectShoppingLists = (state: RootState): Data[] => {
-    return state.otherData.lists ?? [];
+    return state.otherData.present.lists ?? [];
 };
 
 export const selectShoppingList = createSelector(

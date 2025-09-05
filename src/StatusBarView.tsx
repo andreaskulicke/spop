@@ -1,10 +1,6 @@
 import { SafeAreaView } from "react-native";
 
-export function StatusBarView(
-    props: React.PropsWithChildren<{
-        bottomPadding?: boolean;
-    }>,
-) {
+export function StatusBarView(props: React.PropsWithChildren<{}>) {
     return (
         <SafeAreaView
             style={{

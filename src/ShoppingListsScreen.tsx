@@ -23,6 +23,8 @@ import { Data } from "./store/data/data";
 import { AreaItemTitle } from "./AreaItemTitle";
 import { AvatarText } from "./AvatarText";
 import { CategoryIcon } from "./CategoryIcon";
+import { UndoSnackBar } from "./UndoSnackBar";
+import { setUiShowUndo } from "./store/uiSlice";
 
 export function ShoppingListsScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -35,6 +37,11 @@ export function ShoppingListsScreen(props: {
         const id = uuid.v4() as string;
         dispatch(addShoppingList(id));
         props.navigation.navigate("ShoppingList", { id });
+    }
+
+    function handleGoBack() {
+        dispatch(setUiShowUndo(false));
+        props.navigation.goBack();
     }
 
     function handlePlayPress(newData: Data): void {
@@ -73,9 +80,9 @@ export function ShoppingListsScreen(props: {
         );
     }
     return (
-        <StatusBarView bottomPadding>
+        <StatusBarView>
             <Appbar.Header elevated>
-                <Appbar.BackAction onPress={() => props.navigation.goBack()} />
+                <Appbar.BackAction onPress={handleGoBack} />
                 <Appbar.Content title={"Shopping Listen"} />
                 <Appbar.Action
                     icon="plus-outline"
@@ -100,6 +107,10 @@ export function ShoppingListsScreen(props: {
                     />
                 </NestableScrollContainer>
             </View>
+            <UndoSnackBar
+                contextName="ShoppingListsScreen"
+                insetOffset={true}
+            />
         </StatusBarView>
     );
 }

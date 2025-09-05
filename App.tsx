@@ -1,22 +1,23 @@
-import { CategoryScreen } from "./src/CategoryScreen";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { HomeNavigationScreen } from "./src/HomeNavigationScreen";
-import { ItemScreen } from "./src/ItemScreen";
 import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { StrictMode } from "react";
+import { useColorScheme } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { PaperProvider } from "react-native-paper";
 import { Provider } from "react-redux";
-import { SettingsScreen } from "./src/SettingsScreen";
-import { ShopScreen } from "./src/ShopScreen";
-import { StorageScreen } from "./src/StorageScreen";
-import { persistor, store } from "./src/store/store";
-import { useAppSelector } from "./src/store/hooks";
-import { useColorScheme } from "react-native";
-import { selectSettings, selectTheme } from "./src/store/settingsSlice";
 import { PersistGate } from "redux-persist/integration/react";
-import { StrictMode } from "react";
+import { CategoryScreen } from "./src/CategoryScreen";
+import { HomeNavigationScreen } from "./src/HomeNavigationScreen";
+import { ItemScreen } from "./src/ItemScreen";
+import { ignoreKnownLogs } from "./src/logs";
+import { SettingsScreen } from "./src/SettingsScreen";
 import { ShoppingListScreen } from "./src/ShoppingListScreen";
 import { ShoppingListsScreen } from "./src/ShoppingListsScreen";
+import { ShopScreen } from "./src/ShopScreen";
+import { StorageScreen } from "./src/StorageScreen";
+import { useAppSelector } from "./src/store/hooks";
+import { selectSettings, selectTheme } from "./src/store/settingsSlice";
+import { persistor, store } from "./src/store/store";
 
 export type RootStackParamList = {
     Category: { id: string };
@@ -30,6 +31,8 @@ export type RootStackParamList = {
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
+
+ignoreKnownLogs();
 
 export default function App() {
     return (

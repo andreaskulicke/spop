@@ -1,20 +1,22 @@
-import {
-    allShop,
-    selectItemsWantedWithShopHidden,
-    selectShop,
-} from "./store/dataSlice";
-import { Appbar, Badge, Tooltip, useTheme } from "react-native-paper";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
+import React, { useState } from "react";
+import { Linking, View } from "react-native";
+import { Appbar, Badge, Tooltip, useTheme } from "react-native-paper";
 import { RootStackParamList } from "../App";
 import { SearchBarList } from "./SearchBarList";
 import { ShopItemsList } from "./ShopItemsList";
 import { ShopsStackParamList } from "./ShopsNavigationScreen";
 import { StatusBarView } from "./StatusBarView";
-import { useAppSelector } from "./store/hooks";
-import { Linking, View } from "react-native";
-import React, { useState } from "react";
-import TrayOff from "./store/icons/tray-off";
 import { getShopImage } from "./store/data/shops";
+import {
+    allShop,
+    selectItemsWantedWithShopHidden,
+    selectShop,
+} from "./store/dataSlice";
+import { useAppDispatch, useAppSelector } from "./store/hooks";
+import TrayOff from "./store/icons/tray-off";
+import { setUiShowUndo } from "./store/uiSlice";
+import { UndoSnackBar } from "./UndoSnackBar";
 
 export function ShopItemsScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -31,10 +33,16 @@ export function ShopItemsScreen(props: {
         selectItemsWantedWithShopHidden(state, shop, stopperOff),
     );
 
+    const dispatch = useAppDispatch();
     const theme = useTheme();
 
     function handleEditPress(): void {
         props.navigation.navigate("Shop", { id: shop.id });
+    }
+
+    function handleGoBack() {
+        dispatch(setUiShowUndo(false));
+        props.navigation.goBack();
     }
 
     function handleOpenPress(): void {
@@ -55,7 +63,7 @@ export function ShopItemsScreen(props: {
     return (
         <StatusBarView>
             <Appbar.Header elevated>
-                <Appbar.BackAction onPress={() => props.navigation.goBack()} />
+                <Appbar.BackAction onPress={handleGoBack} />
                 {getShopImage(shop, theme, { style: {} })}
                 <View style={{ marginRight: 8 }}></View>
                 <Appbar.Content title={shop?.name ?? allShop.name} />
@@ -133,6 +141,7 @@ export function ShopItemsScreen(props: {
                 shop={shop}
                 onItemPress={(itemId) => setSelectedItemId(itemId)}
             />
+            <UndoSnackBar contextName="ShopItemsScreen" />
         </StatusBarView>
     );
 }

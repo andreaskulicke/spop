@@ -29,6 +29,7 @@ import { StatusBarView } from "./StatusBarView";
 import { categoryIcons } from "./store/data/categories";
 import { SubSection } from "./ShopScreen";
 import { getShopImage, Shop } from "./store/data/shops";
+import { setUiShowUndo } from "./store/uiSlice";
 
 export function CategoryScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -71,6 +72,7 @@ export function CategoryScreen(props: {
 
     function handleDeletePress(): void {
         if (category) {
+            dispatch(setUiShowUndo(true));
             dispatch(deleteCategory(category.id));
         }
         props.navigation.goBack();
@@ -113,7 +115,7 @@ export function CategoryScreen(props: {
     }, [category]);
 
     return (
-        <StatusBarView bottomPadding>
+        <StatusBarView>
             <Appbar.Header elevated>
                 <Appbar.BackAction onPress={handleGoBack} />
                 <Appbar.Content title={category?.name ?? "Category"} />

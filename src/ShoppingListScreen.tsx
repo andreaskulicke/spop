@@ -1,17 +1,10 @@
 import { NavigationProp, RouteProp } from "@react-navigation/native";
-import { RootStackParamList } from "../App";
+import { useEffect, useState } from "react";
 import { Keyboard, ScrollView, Text } from "react-native";
 import { Appbar, Card, List, TextInput } from "react-native-paper";
-import { useAppDispatch, useAppSelector } from "./store/hooks";
+import { RootStackParamList } from "../App";
+import { Count } from "./Count";
 import { StatusBarView } from "./StatusBarView";
-import { useEffect, useState } from "react";
-import {
-    deleteShoppingList,
-    selectShoppingList,
-    setShoppingListDescription,
-    setShoppingListName,
-    updateActiveShoppingList,
-} from "./store/otherDataSlice";
 import {
     initialDataState,
     selectData,
@@ -19,7 +12,15 @@ import {
     setDataDescription,
     setDataName,
 } from "./store/dataSlice";
-import { Count } from "./Count";
+import { useAppDispatch, useAppSelector } from "./store/hooks";
+import {
+    deleteShoppingList,
+    selectShoppingList,
+    setShoppingListDescription,
+    setShoppingListName,
+    updateActiveShoppingList,
+} from "./store/otherDataSlice";
+import { setUiShowUndo } from "./store/uiSlice";
 
 export function ShoppingListScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -41,6 +42,7 @@ export function ShoppingListScreen(props: {
     }
 
     function handleDeletePress(): void {
+        dispatch(setUiShowUndo(true));
         if (shoppingListTmp) {
             dispatch(deleteShoppingList(shoppingList.id));
         } else {
@@ -109,7 +111,7 @@ export function ShoppingListScreen(props: {
     }, [shoppingList]);
 
     return (
-        <StatusBarView bottomPadding>
+        <StatusBarView>
             <Appbar.Header elevated>
                 <Appbar.BackAction onPress={handleGoBack} />
                 <Appbar.Content

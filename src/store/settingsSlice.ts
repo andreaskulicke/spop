@@ -89,7 +89,7 @@ export const {
 export default settingsSlice.reducer;
 
 export const selectTheme = createSelector(
-    (state: RootState) => state.settings.display.theme,
+    (state: RootState) => state.settings.present.display.theme,
     (state: RootState, isDark: boolean) => isDark,
     (themeName: ThemeName, isDark: boolean) => {
         const t = themes.find((x) => x.id === themeName) ?? themes[0];
@@ -98,12 +98,12 @@ export const selectTheme = createSelector(
 );
 
 export function selectSettings(state: RootState): Settings {
-    return state.settings;
+    return state.settings.present;
 }
 
 export function selectKeepAwakeCategories(state: RootState): boolean {
-    if (state.settings.display.keepAwake) {
-        return !!state.settings.display.keepAwake.find(
+    if (state.settings.present.display.keepAwake) {
+        return !!state.settings.present.display.keepAwake.find(
             (x) => x === "categories",
         );
     }
@@ -111,21 +111,25 @@ export function selectKeepAwakeCategories(state: RootState): boolean {
 }
 
 export function selectKeepAwakeShops(state: RootState): boolean {
-    if (state.settings.display.keepAwake) {
-        return !!state.settings.display.keepAwake.find((x) => x === "shops");
+    if (state.settings.present.display.keepAwake) {
+        return !!state.settings.present.display.keepAwake.find(
+            (x) => x === "shops",
+        );
     }
     return true;
 }
 
 export function selectKeepAwakeStorages(state: RootState): boolean {
-    if (state.settings.display.keepAwake) {
-        return !!state.settings.display.keepAwake.find((x) => x === "storages");
+    if (state.settings.present.display.keepAwake) {
+        return !!state.settings.present.display.keepAwake.find(
+            (x) => x === "storages",
+        );
     }
     return true;
 }
 
 export const selectKeepAwake = createSelector(
-    (state: RootState) => state.settings.display.keepAwake,
+    (state: RootState) => state.settings.present.display.keepAwake,
     (state: RootState, area: KeepAwakeArea) => area,
     (keepAwake: KeepAwakeArea[], area: KeepAwakeArea) => {
         if (keepAwake) {

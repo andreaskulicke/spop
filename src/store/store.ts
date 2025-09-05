@@ -21,11 +21,11 @@ import dataSlice from "./dataSlice";
 import otherDataSlice, { OtherData } from "./otherDataSlice";
 import settingsSlice, { Settings } from "./settingsSlice";
 import uiSlice from "./uiSlice";
+import undoable from "redux-undo";
 
 // Storage getItem/setItem:
 // 'key' is always `persist:${persistConfig.key}`.
 // 'value' is always complete slice data.
-
 function DebugStorage(slice: string): ReduxPersistStorage {
     const logStorageCalls = false;
 
@@ -83,10 +83,18 @@ const persistConfigSettings: PersistConfig<Settings> = {
     version: -1,
 };
 
+const undoLimit = 10;
 const rootReducer = combineReducers({
-    data: persistReducer(persistConfigData, dataSlice),
-    otherData: persistReducer(persistConfigOtherData, otherDataSlice),
-    settings: persistReducer(persistConfigSettings, settingsSlice),
+    data: undoable(persistReducer(persistConfigData, dataSlice), {
+        limit: undoLimit,
+    }),
+    otherData: undoable(
+        persistReducer(persistConfigOtherData, otherDataSlice),
+        { limit: undoLimit },
+    ),
+    settings: undoable(persistReducer(persistConfigSettings, settingsSlice), {
+        limit: undoLimit,
+    }),
     ui: uiSlice,
 });
 

@@ -1,3 +1,27 @@
+import { NavigationProp } from "@react-navigation/native";
+import React, { ReactNode } from "react";
+import { View } from "react-native";
+import {
+    NestableDraggableFlatList,
+    NestableScrollContainer,
+    RenderItemParams,
+    ScaleDecorator,
+} from "react-native-draggable-flatlist";
+import { Appbar, Divider, List, useTheme } from "react-native-paper";
+import uuid from "react-native-uuid";
+import { RootStackParamList } from "../App";
+import { AppbarContentTitle } from "./AppbarContentTitle";
+import { AreaItemTitle } from "./AreaItemTitle";
+import { AvatarText } from "./AvatarText";
+import { CategoryIcon } from "./CategoryIcon";
+import { Count } from "./Count";
+import { MainMenu } from "./MainMenu";
+import { SearchBarList } from "./SearchBarList";
+import { StatusBarView } from "./StatusBarView";
+import { StoragesStackParamList } from "./StoragesNavigationScreen";
+import { UnassignedBadge } from "./UnassignedBadge";
+import { UndoSnackBar } from "./UndoSnackBar";
+import { Storage } from "./store/data/storages";
 import {
     addStorage,
     allStorage,
@@ -5,30 +29,7 @@ import {
     selectStorages,
     setStorages,
 } from "./store/dataSlice";
-import { Appbar, Divider, List, Text, useTheme } from "react-native-paper";
-import { AreaItemTitle } from "./AreaItemTitle";
-import { AvatarText } from "./AvatarText";
-import { CategoryIcon } from "./CategoryIcon";
-import { Count } from "./Count";
-import { NavigationProp } from "@react-navigation/native";
-import {
-    NestableDraggableFlatList,
-    NestableScrollContainer,
-    RenderItemParams,
-    ScaleDecorator,
-} from "react-native-draggable-flatlist";
-import { RootStackParamList } from "../App";
-import { SearchBarList } from "./SearchBarList";
-import { StatusBarView } from "./StatusBarView";
-import { Storage } from "./store/data/storages";
-import { StoragesStackParamList } from "./StoragesNavigationScreen";
-import { UnassignedBadge } from "./UnassignedBadge";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { View } from "react-native";
-import React, { ReactNode } from "react";
-import uuid from "react-native-uuid";
-import { MainMenu } from "./MainMenu";
-import { AppbarContentTitle } from "./AppbarContentTitle";
 
 export function StoragesScreen(props: {
     navigation: NavigationProp<RootStackParamList & StoragesStackParamList>;
@@ -130,6 +131,7 @@ export function StoragesScreen(props: {
                 }
                 storage={allStorage}
             />
+            <UndoSnackBar contextName="StoragesScreen" />
         </StatusBarView>
     );
 }

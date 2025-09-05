@@ -38,6 +38,7 @@ import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { Keyboard, Linking, View } from "react-native";
 import uuid from "react-native-uuid";
 import { defaultShops, getShopImage } from "./store/data/shops";
+import { setUiShowUndo } from "./store/uiSlice";
 
 export function ShopScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -93,6 +94,7 @@ export function ShopScreen(props: {
     }
 
     function handleDeletePress(): void {
+        dispatch(setUiShowUndo(true));
         dispatch(deleteShop(shop.id));
         props.navigation.goBack();
     }
@@ -202,7 +204,7 @@ export function ShopScreen(props: {
     const catsHidden = categories.filter((x) => !catsShown.includes(x));
 
     return (
-        <StatusBarView bottomPadding>
+        <StatusBarView>
             <Appbar.Header elevated>
                 <Appbar.BackAction onPress={handleGoBack} />
                 <Appbar.Content title={shop?.name ?? "Shop"} />
