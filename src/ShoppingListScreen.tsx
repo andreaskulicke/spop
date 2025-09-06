@@ -20,7 +20,7 @@ import {
     setShoppingListName,
     updateActiveShoppingList,
 } from "./store/otherDataSlice";
-import { setUiShowUndo } from "./store/uiSlice";
+import { setUiUndo } from "./store/uiSlice";
 
 export function ShoppingListScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -42,7 +42,7 @@ export function ShoppingListScreen(props: {
     }
 
     function handleDeletePress(): void {
-        dispatch(setUiShowUndo(true));
+        dispatch(setUiUndo("UNDO_OTHERDATA"));
         if (shoppingListTmp) {
             dispatch(deleteShoppingList(shoppingList.id));
         } else {

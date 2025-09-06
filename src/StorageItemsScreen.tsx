@@ -8,7 +8,7 @@ import { StorageItemsList } from "./StorageItemsList";
 import { StoragesStackParamList } from "./StoragesNavigationScreen";
 import { allStorage, selectStorage } from "./store/dataSlice";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { setUiShowUndo } from "./store/uiSlice";
+import { setUiUndo } from "./store/uiSlice";
 import { UndoSnackBar } from "./UndoSnackBar";
 
 export function StorageItemsScreen(props: {
@@ -27,7 +27,7 @@ export function StorageItemsScreen(props: {
     }
 
     function handleGoBack() {
-        dispatch(setUiShowUndo(false));
+        dispatch(setUiUndo(undefined));
         props.navigation.goBack();
     }
 

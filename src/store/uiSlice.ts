@@ -1,5 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
+
+type UndoType = "UNDO_DATA" | "UNDO_OTHERDATA" | undefined;
 
 export interface UiState {
     version: string;
@@ -22,7 +24,7 @@ export interface UiState {
             expanded: boolean;
         };
     };
-    showUndo?: boolean;
+    undo?: UndoType;
 }
 
 // Define the initial state using that type
@@ -92,8 +94,8 @@ export const uiSlice = createSlice({
             state.settings.data.expanded = action.payload.expanded;
         },
 
-        setUiShowUndo: (state, action: PayloadAction<boolean>) => {
-            state.showUndo = action.payload;
+        setUiUndo: (state, action: PayloadAction<UndoType>) => {
+            state.undo = action.payload;
         },
     },
 });
@@ -109,8 +111,11 @@ export const {
 
     setUiSettingsData,
 
-    setUiShowUndo,
+    setUiUndo,
 } = uiSlice.actions;
+
+export const undoData = createAction("UNDO_DATA");
+export const undoOtherData = createAction("UNDO_OTHERDATA");
 
 // Other code such as selectors can use the imported `RootState` type
 // export const selectCount = (state: RootState) => state.counter.value
@@ -125,6 +130,6 @@ export function selectUiSettingsDataExpanded(state: RootState): boolean {
     return state.ui.settings.data.expanded;
 }
 
-export function selectUiShowUndo(state: RootState): boolean {
-    return !!state.ui.showUndo;
+export function selectUiUndo(state: RootState): UndoType {
+    return state.ui.undo;
 }

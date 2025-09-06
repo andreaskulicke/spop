@@ -24,7 +24,7 @@ import {
     setUiItemsListLatest,
     setUiItemsListLatestInArea,
     setUiItemsListWithout,
-    setUiShowUndo,
+    setUiUndo,
 } from "./store/uiSlice";
 import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
@@ -73,7 +73,7 @@ export function CategoryItemsScreen(props: {
     }
 
     function handleGoBack() {
-        dispatch(setUiShowUndo(false));
+        dispatch(setUiUndo(undefined));
         props.navigation.goBack();
     }
 

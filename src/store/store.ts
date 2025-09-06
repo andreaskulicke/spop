@@ -83,18 +83,17 @@ const persistConfigSettings: PersistConfig<Settings> = {
     version: -1,
 };
 
-const undoLimit = 10;
+const undoLimit = 1;
 const rootReducer = combineReducers({
     data: undoable(persistReducer(persistConfigData, dataSlice), {
         limit: undoLimit,
+        undoType: "UNDO_DATA",
     }),
     otherData: undoable(
         persistReducer(persistConfigOtherData, otherDataSlice),
-        { limit: undoLimit },
+        { limit: undoLimit, undoType: "UNDO_OTHERDATA" },
     ),
-    settings: undoable(persistReducer(persistConfigSettings, settingsSlice), {
-        limit: undoLimit,
-    }),
+    settings: persistReducer(persistConfigSettings, settingsSlice),
     ui: uiSlice,
 });
 

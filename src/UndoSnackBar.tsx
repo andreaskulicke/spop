@@ -1,27 +1,38 @@
 import { useNavigation } from "@react-navigation/native";
 import { useEffect } from "react";
 import { Snackbar } from "react-native-paper";
-import { ActionCreators } from "redux-undo";
-import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { selectUiShowUndo, setUiShowUndo } from "./store/uiSlice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useAppDispatch, useAppSelector } from "./store/hooks";
+import {
+    selectUiUndo,
+    setUiUndo,
+    undoData,
+    undoOtherData,
+} from "./store/uiSlice";
 
 export function UndoSnackBar(props: {
     contextName: string;
     insetOffset?: boolean;
 }) {
     const navigation = useNavigation();
-    const showUndo = useAppSelector(selectUiShowUndo);
+    const undo = useAppSelector(selectUiUndo);
     const insets = useSafeAreaInsets();
     const dispatch = useAppDispatch();
 
     function handleDismissSnackBar(): void {
         // console.log(props.contextName + ": dismissing");
-        dispatch(setUiShowUndo(false));
+        dispatch(setUiUndo(undefined));
     }
 
     function handlePressUndo(): void {
-        dispatch(ActionCreators.undo());
+        switch (undo) {
+            case "UNDO_DATA":
+                dispatch(undoData());
+                break;
+            case "UNDO_OTHERDATA":
+                dispatch(undoOtherData());
+                break;
+        }
         handleDismissSnackBar();
     }
 
@@ -46,7 +57,7 @@ export function UndoSnackBar(props: {
                 bottom: props.insetOffset ? insets.bottom : 4,
                 position: "absolute",
             }}
-            visible={showUndo}
+            visible={undo !== undefined}
             onDismiss={handleDismissSnackBar}
         >
             Wieder rückgängig machen?

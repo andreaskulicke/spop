@@ -59,7 +59,7 @@ import { useAppDispatch, useAppSelector } from "./store/hooks";
 import React, { useEffect, useState } from "react";
 import uuid from "react-native-uuid";
 import { withPrefix } from "./with";
-import { setUiShowUndo } from "./store/uiSlice";
+import { setUiUndo } from "./store/uiSlice";
 
 type CalculatorCallSource = "quantity" | "packageQuantity" | "shop";
 
@@ -102,7 +102,7 @@ export function ItemScreen(props: {
     }
 
     function handleDeletePress(): void {
-        dispatch(setUiShowUndo(true));
+        dispatch(setUiUndo("UNDO_DATA"));
         dispatch(deleteItem(item.id));
         props.navigation.goBack();
     }

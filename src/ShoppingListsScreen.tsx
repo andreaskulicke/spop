@@ -24,7 +24,7 @@ import { AreaItemTitle } from "./AreaItemTitle";
 import { AvatarText } from "./AvatarText";
 import { CategoryIcon } from "./CategoryIcon";
 import { UndoSnackBar } from "./UndoSnackBar";
-import { setUiShowUndo } from "./store/uiSlice";
+import { setUiUndo } from "./store/uiSlice";
 
 export function ShoppingListsScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -40,7 +40,7 @@ export function ShoppingListsScreen(props: {
     }
 
     function handleGoBack() {
-        dispatch(setUiShowUndo(false));
+        dispatch(setUiUndo(undefined));
         props.navigation.goBack();
     }
 

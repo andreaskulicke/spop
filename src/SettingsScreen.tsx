@@ -152,7 +152,7 @@ export function SettingsScreen(props: {
             if (isRootState(state)) {
                 dispatch(setData(state.data.present));
                 dispatch(setOtherData(state.otherData.present));
-                dispatch(setSettings(state.settings.present));
+                dispatch(setSettings(state.settings));
                 dispatch(setUi(state.ui));
             }
         }

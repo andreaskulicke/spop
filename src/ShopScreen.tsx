@@ -38,7 +38,7 @@ import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { Keyboard, Linking, View } from "react-native";
 import uuid from "react-native-uuid";
 import { defaultShops, getShopImage } from "./store/data/shops";
-import { setUiShowUndo } from "./store/uiSlice";
+import { setUiUndo } from "./store/uiSlice";
 
 export function ShopScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -94,7 +94,7 @@ export function ShopScreen(props: {
     }
 
     function handleDeletePress(): void {
-        dispatch(setUiShowUndo(true));
+        dispatch(setUiUndo("UNDO_DATA"));
         dispatch(deleteShop(shop.id));
         props.navigation.goBack();
     }

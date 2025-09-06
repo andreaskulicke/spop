@@ -29,7 +29,7 @@ import { StatusBarView } from "./StatusBarView";
 import { categoryIcons } from "./store/data/categories";
 import { SubSection } from "./ShopScreen";
 import { getShopImage, Shop } from "./store/data/shops";
-import { setUiShowUndo } from "./store/uiSlice";
+import { setUiUndo } from "./store/uiSlice";
 
 export function CategoryScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -72,7 +72,7 @@ export function CategoryScreen(props: {
 
     function handleDeletePress(): void {
         if (category) {
-            dispatch(setUiShowUndo(true));
+            dispatch(setUiUndo("UNDO_DATA"));
             dispatch(deleteCategory(category.id));
         }
         props.navigation.goBack();

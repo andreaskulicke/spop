@@ -15,7 +15,7 @@ import {
 } from "./store/dataSlice";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import TrayOff from "./store/icons/tray-off";
-import { setUiShowUndo } from "./store/uiSlice";
+import { setUiUndo } from "./store/uiSlice";
 import { UndoSnackBar } from "./UndoSnackBar";
 
 export function ShopItemsScreen(props: {
@@ -41,7 +41,7 @@ export function ShopItemsScreen(props: {
     }
 
     function handleGoBack() {
-        dispatch(setUiShowUndo(false));
+        dispatch(setUiUndo(undefined));
         props.navigation.goBack();
     }
 

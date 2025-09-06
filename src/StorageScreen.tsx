@@ -13,7 +13,7 @@ import {
 import { CategoryMenu } from "./CategoryMenu";
 import { StatusBarView } from "./StatusBarView";
 import { useEffect, useState } from "react";
-import { setUiShowUndo } from "./store/uiSlice";
+import { setUiUndo } from "./store/uiSlice";
 
 export function StorageScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
@@ -34,7 +34,7 @@ export function StorageScreen(props: {
     }
 
     function handleDeletePress(): void {
-        dispatch(setUiShowUndo(true));
+        dispatch(setUiUndo("UNDO_DATA"));
         dispatch(deleteStorage(storage.id));
         props.navigation.goBack();
     }
