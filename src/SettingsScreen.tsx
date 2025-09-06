@@ -13,7 +13,14 @@ import {
     TextInput,
     TouchableRipple,
 } from "react-native-paper";
-import { Linking, ScrollView, Share, StyleSheet, View } from "react-native";
+import {
+    Linking,
+    ScrollView,
+    Share,
+    StyleSheet,
+    useColorScheme,
+    View,
+} from "react-native";
 import { NavigationProp } from "@react-navigation/native";
 import {
     addItem,
@@ -85,6 +92,7 @@ export function SettingsScreen(props: {
     const [colorThemeMenuVisible, setColorThemeMenuVisible] = useState(false);
     const [themeMenuVisible, setThemeMenuVisible] = useState(false);
 
+    const colorScheme = useColorScheme();
     const dispatch = useAppDispatch();
 
     function getDialogText(): string {
@@ -278,6 +286,10 @@ export function SettingsScreen(props: {
                             />
                         ))}
                     </Menu>
+                    <List.Item
+                        title="System color scheme"
+                        right={() => <Text>{`"${colorScheme}"`}</Text>}
+                    />
                     <List.Item
                         title="Shopping Liste in Titel anzeigen?"
                         right={() => (
