@@ -11,7 +11,7 @@ import {
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import React, { useState } from "react";
 import uuid from "react-native-uuid";
 
@@ -68,7 +68,6 @@ export function CategoryMenu(props: {
                                             category?.icon ?? "dots-horizontal"
                                         }
                                         color={theme.colors.primary}
-                                        style={{}}
                                     />
                                 }
                                 right={
@@ -86,28 +85,30 @@ export function CategoryMenu(props: {
                             />
                         </TouchableRipple>
                     }
-                    anchorPosition="top"
+                    anchorPosition="bottom"
                     visible={categoryMenuVisible}
                     onDismiss={() => setCategoryMenuVisible(false)}
                 >
-                    {[emptyCategory, ...categories].map((x) => (
-                        <Menu.Item
-                            key={x.id}
-                            contentStyle={{ marginLeft: 32 }}
-                            title={x.name}
-                            leadingIcon={(p) => (
-                                <CategoryIcon
-                                    {...p}
-                                    icon={x.icon}
-                                    selected={x.icon === category?.icon}
-                                />
-                            )}
-                            onPress={() => {
-                                setCategoryMenuVisible(false);
-                                props.onSetCategory(x.id);
-                            }}
-                        />
-                    ))}
+                    <ScrollView style={{ maxHeight: 48 * 10 }}>
+                        {[emptyCategory, ...categories].map((x) => (
+                            <Menu.Item
+                                key={x.id}
+                                contentStyle={{ marginLeft: 32 }}
+                                title={x.name}
+                                leadingIcon={(p) => (
+                                    <CategoryIcon
+                                        {...p}
+                                        icon={x.icon}
+                                        selected={x.icon === category?.icon}
+                                    />
+                                )}
+                                onPress={() => {
+                                    setCategoryMenuVisible(false);
+                                    props.onSetCategory(x.id);
+                                }}
+                            />
+                        ))}
+                    </ScrollView>
                 </Menu>
             </View>
             {props.categoryId && (

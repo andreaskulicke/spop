@@ -35,7 +35,7 @@ import {
 } from "./store/dataSlice";
 import { StatusBarView } from "./StatusBarView";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { Keyboard, Linking, View } from "react-native";
+import { Keyboard, Linking, ScrollView, View } from "react-native";
 import uuid from "react-native-uuid";
 import { defaultShops, getShopImage } from "./store/data/shops";
 import { setUiUndo } from "./store/uiSlice";
@@ -292,21 +292,23 @@ export function ShopScreen(props: {
                                     setExternalAppIdMenuVisible(false)
                                 }
                             >
-                                {defaultShops
-                                    .filter((x) => !!x.externalAppId)
-                                    .sort((a, b) =>
-                                        a.name.localeCompare(b.name),
-                                    )
-                                    .map((x) => (
-                                        <ExternalAppIdMenuItem
-                                            key={x.id}
-                                            name={x.name}
-                                            appId={x.externalAppId!}
-                                            onPress={
-                                                handleExternalAppIdMenuPress
-                                            }
-                                        />
-                                    ))}
+                                <ScrollView style={{ maxHeight: 48 * 6 }}>
+                                    {defaultShops
+                                        .filter((x) => !!x.externalAppId)
+                                        .sort((a, b) =>
+                                            a.name.localeCompare(b.name),
+                                        )
+                                        .map((x) => (
+                                            <ExternalAppIdMenuItem
+                                                key={x.id}
+                                                name={x.name}
+                                                appId={x.externalAppId!}
+                                                onPress={
+                                                    handleExternalAppIdMenuPress
+                                                }
+                                            />
+                                        ))}
+                                </ScrollView>
                             </Menu>
                         </View>
                         <IconButton
