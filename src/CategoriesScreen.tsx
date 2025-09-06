@@ -109,8 +109,9 @@ export function CategoriesScreen(props: {
                         <FlatList
                             data={[allCategory].concat(categories)}
                             renderItem={handleRenderItem}
-                            stickyHeaderIndices={[0]}
-                            stickyHeaderHiddenOnScroll={true}
+                            // BUG: Does not allow clicking on "Alle Dinge" when not fully scrolled up
+                            // stickyHeaderIndices={[0]}
+                            // stickyHeaderHiddenOnScroll={true}
                         ></FlatList>
                     </View>
                 }
