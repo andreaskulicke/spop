@@ -62,7 +62,7 @@ function AppWithStore() {
                 <NavigationContainer theme={theme}>
                     <RootStack.Navigator
                         screenOptions={{
-                            // statusBarStyle: theme.dark ? "light" : "dark",
+                            statusBarStyle: theme.dark ? "light" : "dark",
                             orientation: "portrait",
                         }}
                     >
