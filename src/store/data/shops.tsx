@@ -289,6 +289,7 @@ export const defaultShops: Shop[] = [
         id: "rewe",
         name: "Rewe",
         externalAppId: "de.rewe.app.mobile",
+        categoryIds: [...categoryIds],
     },
     {
         id: "rossmann",
