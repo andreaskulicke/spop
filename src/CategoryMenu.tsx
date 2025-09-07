@@ -89,7 +89,7 @@ export function CategoryMenu(props: {
                     visible={categoryMenuVisible}
                     onDismiss={() => setCategoryMenuVisible(false)}
                 >
-                    <ScrollView style={{ maxHeight: 48 * 10 }}>
+                    <ScrollView style={{ maxHeight: 48 * 8 }}>
                         {[emptyCategory, ...categories].map((x) => (
                             <Menu.Item
                                 key={x.id}
