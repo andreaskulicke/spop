@@ -97,6 +97,7 @@ export function getNormalizedPriceBase(
 
 export interface PriceData {
     price: number;
+    normalizedPrice?: number;
     quantity?: number;
     unit: Unit;
 }
@@ -132,28 +133,19 @@ export function getNormalizedPrice(
     itemShop: Partial<ItemShop>,
     item?: Partial<Item>,
 ): NormalizedPriceData {
-    let p = itemShop.price ?? 0;
-    const itemShopUnit = getUnit(itemShop.unitId);
-    const packageUnit = getUnit(
-        getUnit(itemShop?.packageUnitId).base === "-"
-            ? item?.packageUnitId
-            : itemShop?.packageUnitId,
-    );
-    let packageQuantity: number;
-    let unit: Unit;
+    const p = itemShop.price ?? 0;
 
-    if (itemShopUnit.base === "-") {
-        packageQuantity =
-            itemShop?.packageQuantity ?? item?.packageQuantity ?? 1;
-        unit = packageUnit;
-    } else {
-        packageQuantity = 1;
-        unit = itemShopUnit;
+    const packageQuantity =
+        itemShop?.packageQuantity ?? item?.packageQuantity ?? 1;
+
+    let packageUnit = getUnit(itemShop?.packageUnitId);
+    if (packageUnit.base === "-") {
+        packageUnit = getUnit(item?.packageUnitId);
     }
 
     return {
-        price: (p / packageQuantity) * unit.factorToNormalizedPriceBase,
-        unit: getUnit(unit.normalizedPriceBase),
+        price: (p / packageQuantity) * packageUnit.factorToNormalizedPriceBase,
+        unit: getUnit(packageUnit.normalizedPriceBase),
     };
 }
 
@@ -167,29 +159,27 @@ export function getPackagePrice(
     itemShop: Partial<ItemShop>,
     item?: Partial<Item>,
 ): PriceData {
-    let p = itemShop.price ?? 0;
-    const itemShopUnit = getUnit(itemShop.unitId);
-    const packageQuantity = itemShop?.packageQuantity ?? item?.packageQuantity;
-    const packageUnit = getUnit(
-        getUnit(itemShop?.packageUnitId).base === "-"
-            ? item?.packageUnitId
-            : itemShop?.packageUnitId,
-    );
+    const quantity = itemShop.packageQuantity ?? item?.packageQuantity ?? 1;
 
-    if (itemShopUnit.base !== "-" && packageUnit.base !== "-") {
-        p *= packageQuantity ?? 1;
-        if (itemShopUnit.factorToBase < packageUnit.factorToBase) {
-            p *= packageUnit.factorToBase;
-        }
-        if (itemShopUnit.factorToBase > packageUnit.factorToBase) {
-            p /= itemShopUnit.factorToBase;
-        }
+    let unit = getUnit(itemShop.packageUnitId);
+    if (unit.id === "-") {
+        unit = getUnit(item?.unitId);
+    }
+    if (unit.id === "-") {
+        unit = getUnit(item?.packageUnitId);
     }
 
+    let displayPackageUnit = getUnit(itemShop.packageUnitId);
+    if (displayPackageUnit.id === "-") {
+        displayPackageUnit = getUnit(item?.packageUnitId);
+    }
+    const p = (itemShop.price ?? 0) / quantity / unit.factorToBase;
+
     return {
-        price: p,
-        quantity: packageQuantity,
-        unit: packageUnit.base !== "-" ? packageUnit : itemShopUnit,
+        price: itemShop.price ?? 0,
+        normalizedPrice: p,
+        quantity: quantity,
+        unit: displayPackageUnit,
     };
 }
 
@@ -204,8 +194,7 @@ export function getPackagePriceBase(
     item?: Partial<Item>,
 ): number {
     const priceData = getPackagePrice(itemShop, item);
-    const price = priceData.price / (priceData.unit?.factorToBase ?? 1);
-    return price;
+    return priceData.normalizedPrice ?? 0;
 }
 
 // Units
@@ -248,18 +237,44 @@ export function getQuantityUnit(
     let s = "";
     if (quantity) {
         s = `${quantity} `;
-    }
-    if (unitId) {
-        s += getUnitName(unitId);
+        if (unitId) {
+            s += getUnitName(unitId);
+        }
     }
     return s;
 }
 
-export function getPackageQuantityUnit(item: Item): string {
+export function getPackageQuantityUnit(
+    shop: ItemShop | undefined,
+    item: Item,
+): string {
+    const packageQuantity = shop?.packageQuantity ?? item.packageQuantity;
+    if (packageQuantity != undefined) {
+        const packageUnitId = getPackageUnit(
+            shop?.packageUnitId,
+            item.packageUnitId,
+        ).id;
+        return `${packageQuantity}${getUnitName(packageUnitId)}`;
+    }
+    return "";
+}
+
+export function getItemPackageQuantityUnit(item: Item): string {
     if (item.packageQuantity != undefined) {
         return `${item.packageQuantity}${getUnitName(item.packageUnitId)}`;
     }
     return "";
+}
+
+export function getPackageUnit(
+    shopPackageUnitId: UnitId | undefined,
+    itemPackageUnitId: UnitId | undefined,
+): Unit {
+    let unit = getUnit(shopPackageUnitId);
+    if (unit.id === "-") {
+        unit = getUnit(itemPackageUnitId);
+    }
+    return unit;
 }
 
 export function getUnit(unitId: UnitId | undefined): Unit {
@@ -325,8 +340,6 @@ export interface ItemShop {
     checked?: boolean;
     shopId: string;
     price?: number;
-    /** UnitId of price */
-    unitId?: UnitId;
     packageQuantity?: number;
     packageUnitId?: UnitId;
 }

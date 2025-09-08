@@ -1,10 +1,6 @@
-import {
-    addItem,
-    allStorage,
-    allShop,
-    selectItems,
-    selectItemByName,
-} from "./store/dataSlice";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import { Keyboard, KeyboardAvoidingView, View } from "react-native";
 import {
     Button,
     Divider,
@@ -15,9 +11,13 @@ import {
     TouchableRipple,
     useTheme,
 } from "react-native-paper";
+import uuid from "react-native-uuid";
+import { RootStackParamList } from "../App";
 import { Calculator } from "./Calculator";
-import { Category, emptyCategory } from "./store/data/categories";
 import { HistoryList } from "./HistoryList";
+import { quantityToString } from "./numberToString";
+import { SearchBar } from "./SearchBar";
+import { Category, emptyCategory } from "./store/data/categories";
 import {
     Item,
     UnitId,
@@ -25,19 +25,18 @@ import {
     getQuantityUnit,
     getUnitName,
     parseQuantityUnit,
-    replaceUnitIdIfEmpty,
 } from "./store/data/items";
-import { Keyboard, KeyboardAvoidingView, View } from "react-native";
-import { modalContainerStyle, modalViewStyle } from "./styles";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { quantityToString } from "./numberToString";
-import { RootStackParamList } from "../App";
-import { SearchBar } from "./SearchBar";
 import { Shop } from "./store/data/shops";
 import { Storage } from "./store/data/storages";
+import {
+    addItem,
+    allShop,
+    allStorage,
+    selectItemByName,
+    selectItems,
+} from "./store/dataSlice";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import React, { useEffect, useState } from "react";
-import uuid from "react-native-uuid";
+import { modalContainerStyle, modalViewStyle } from "./styles";
 
 export function SearchBarList(props: {
     list: React.ReactNode;

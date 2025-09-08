@@ -9,7 +9,7 @@ import {
     Divider,
 } from "react-native-paper";
 import { Pressable, StyleSheet, View } from "react-native";
-import { UnitId, getUnitName, units } from "./store/data/items";
+import { Unit, UnitId, getUnit, getUnitName, units } from "./store/data/items";
 import React, { useEffect, useRef, useState } from "react";
 
 Array.prototype.with = function <T>(index: number, value: T): T[] {
@@ -18,16 +18,18 @@ Array.prototype.with = function <T>(index: number, value: T): T[] {
     return a;
 };
 
+export interface CalculatorField {
+    title: string;
+    value?: number;
+    unitId?: UnitId;
+    /** Default: "quantity" */
+    type?: "quantity" | "price";
+    state?: any;
+    selected?: boolean;
+}
+
 export function Calculator(props: {
-    fields: {
-        title: string;
-        value?: number;
-        unitId?: UnitId;
-        /** Default: "quantity" */
-        type?: "quantity" | "price";
-        state?: any;
-        selected?: boolean;
-    }[];
+    fields: CalculatorField[];
     visible: boolean;
     onClose: (
         values?: { value?: number; unitId?: UnitId; state?: any }[],
@@ -67,6 +69,27 @@ export function Calculator(props: {
             return [true, valueTmp];
         }
         return [false, value];
+    }
+
+    function getActiveUnitId(): UnitId | undefined {
+        if (props.fields[selectedField.index]?.type === "price") {
+            if (props.fields.length <= 2) {
+                return values[Math.abs(selectedField.index - 1)]?.unitId;
+            }
+        } else {
+            return values[selectedField.index]?.unitId;
+        }
+    }
+
+    function getOrignialUnitId(): UnitId | undefined {
+        if (props.fields[selectedField.index]?.type === "price") {
+            if (props.fields.length <= 2) {
+                return props.fields[Math.abs(selectedField.index - 1)]?.unitId;
+            }
+        } else {
+            return props.fields.find((x) => getUnit(x.unitId).id !== "-")
+                ?.unitId;
+        }
     }
 
     function handleButtonPress(enteredValue: number | string): void {
@@ -190,8 +213,17 @@ export function Calculator(props: {
         valuesTmp[selectedField.index] = {
             ...valuesTmp[selectedField.index],
             value: valueTmp,
-            unitId: unitIdTmp,
+            unitId: undefined,
         };
+        if (props.fields[selectedField.index]?.type === "price") {
+            for (let i = 0; i < props.fields.length; i++) {
+                if (i != selectedField.index) {
+                    valuesTmp[i].unitId = unitIdTmp;
+                }
+            }
+        } else {
+            valuesTmp[selectedField.index].unitId = unitIdTmp;
+        }
         setValues(valuesTmp);
 
         function evaluateOperation(): boolean {
@@ -247,7 +279,17 @@ export function Calculator(props: {
         (textInputRefs[selectedField.index]?.current as any)?.focus();
     });
 
-    const isItemScreen = props.fields.length === 1;
+    const tooManyFieldsForPriceUnit =
+        props.fields[selectedField.index]?.type === "price" &&
+        props.fields.length > 2;
+
+    const forceUnitsEnabled =
+        !tooManyFieldsForPriceUnit &&
+        (props.fields.length === 1 ||
+            !props.fields.find((x) => getUnit(x.unitId).base !== "-"));
+
+    const activeUnit = getUnit(getActiveUnitId());
+    const originalUnit = getUnit(getOrignialUnitId());
 
     return (
         <Portal>
@@ -335,7 +377,13 @@ export function Calculator(props: {
                         })}
                     <View style={style.row}>
                         <UnitButton
-                            activeUnitId={values[selectedField.index]?.unitId}
+                            activeUnit={activeUnit}
+                            disabled={tooManyFieldsForPriceUnit}
+                            forceEnabled={
+                                props.fields[selectedField.index]?.type ===
+                                "quantity"
+                            }
+                            originalUnit={originalUnit}
                             unitId="pkg"
                             onPress={(unitId) => handleButtonPress(unitId)}
                         />
@@ -361,34 +409,34 @@ export function Calculator(props: {
                     </View>
                     <View style={style.row}>
                         <UnitButton
-                            activeUnitId={values[selectedField.index]?.unitId}
-                            itemUnitId={
-                                isItemScreen ? "ml" : props.fields[0].unitId
-                            }
+                            activeUnit={activeUnit}
+                            disabled={tooManyFieldsForPriceUnit}
+                            forceEnabled={forceUnitsEnabled}
+                            originalUnit={originalUnit}
                             unitId="ml"
                             onPress={(unitId) => handleButtonPress(unitId)}
                         />
                         <UnitButton
-                            activeUnitId={values[selectedField.index]?.unitId}
-                            itemUnitId={
-                                isItemScreen ? "l" : props.fields[0].unitId
-                            }
+                            activeUnit={activeUnit}
+                            disabled={tooManyFieldsForPriceUnit}
+                            forceEnabled={forceUnitsEnabled}
+                            originalUnit={originalUnit}
                             unitId="l"
                             onPress={(unitId) => handleButtonPress(unitId)}
                         />
                         <UnitButton
-                            activeUnitId={values[selectedField.index]?.unitId}
-                            itemUnitId={
-                                isItemScreen ? "g" : props.fields[0].unitId
-                            }
+                            activeUnit={activeUnit}
+                            disabled={tooManyFieldsForPriceUnit}
+                            forceEnabled={forceUnitsEnabled}
+                            originalUnit={originalUnit}
                             unitId="g"
                             onPress={(unitId) => handleButtonPress(unitId)}
                         />
                         <UnitButton
-                            activeUnitId={values[selectedField.index]?.unitId}
-                            itemUnitId={
-                                isItemScreen ? "kg" : props.fields[0].unitId
-                            }
+                            activeUnit={activeUnit}
+                            disabled={tooManyFieldsForPriceUnit}
+                            forceEnabled={forceUnitsEnabled}
+                            originalUnit={originalUnit}
                             unitId="kg"
                             onPress={(unitId) => handleButtonPress(unitId)}
                         />
@@ -532,21 +580,27 @@ export function Calculator(props: {
 }
 
 function UnitButton(props: {
-    activeUnitId?: UnitId;
-    itemUnitId?: UnitId;
+    activeUnit?: Unit;
+    disabled: boolean;
+    forceEnabled: boolean;
+    originalUnit: Unit;
     unitId: UnitId;
     onPress: (unitId: UnitId, unitName: string) => void;
 }) {
     const unitName = getUnitName(props.unitId);
+    const unit = getUnit(props.unitId);
 
     const disabled =
-        units.find((x) => x.id === props.unitId)?.group !==
-        units.find((x) => x.id === props.itemUnitId)?.group;
+        !props.forceEnabled &&
+        (props.disabled ||
+            (props.activeUnit
+                ? unit.group !== props.originalUnit?.group
+                : false));
 
     return (
         <Button
             mode={
-                props.unitId === props.activeUnitId ? "contained" : "outlined"
+                props.unitId === props.activeUnit?.id ? "contained" : "outlined"
             }
             compact
             disabled={disabled}

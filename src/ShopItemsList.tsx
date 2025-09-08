@@ -1,21 +1,21 @@
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import React, { JSXElementConstructor, ReactElement, useState } from "react";
+import { Text, View } from "react-native";
 import {
-    allShop,
-    selectItemsNotWantedWithShop,
-    selectItemsWantedWithShop,
-    selectValidShops,
-    setItemQuantity,
-    setItemShop,
-    setItemShopPrice,
-    setItemUnit,
-    setItemWanted,
-    selectItemsWanted,
-    selectItemsWantedWithoutShop,
-    selectItemsNotWanted,
-    selectItemsNotWantedWithDifferentShop,
-    setItemShopPackage,
-} from "./store/dataSlice";
+    Checkbox,
+    IconButton,
+    List,
+    Tooltip,
+    TouchableRipple,
+    useTheme,
+} from "react-native-paper";
+import { RootStackParamList } from "../App";
 import { Calculator } from "./Calculator";
 import { getCalculatorFields } from "./getCalculatorFields";
+import { ItemsListTitle } from "./ItemsListTitle";
+import { ItemsSectionList, ItemsSectionListSection } from "./ItemsSectionList";
+import { numberToString, quantityToString } from "./numberToString";
+import { SummaryPriceIcon } from "./PriceIcon";
 import {
     Item,
     UnitId,
@@ -23,19 +23,24 @@ import {
     getUnitName,
     itemListStyle,
 } from "./store/data/items";
-import { ItemsSectionList, ItemsSectionListSection } from "./ItemsSectionList";
+import { Shop } from "./store/data/shops";
 import {
-    List,
-    Checkbox,
-    IconButton,
-    useTheme,
-    TouchableRipple,
-    Tooltip,
-} from "react-native-paper";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { numberToString, quantityToString } from "./numberToString";
-import { SummaryPriceIcon } from "./PriceIcon";
-import { RootStackParamList } from "../App";
+    allShop,
+    selectItemsNotWanted,
+    selectItemsNotWantedWithDifferentShop,
+    selectItemsNotWantedWithShop,
+    selectItemsWanted,
+    selectItemsWantedWithShop,
+    selectItemsWantedWithoutShop,
+    selectValidShops,
+    setItemQuantity,
+    setItemShop,
+    setItemShopPackage,
+    setItemShopPrice,
+    setItemUnit,
+    setItemWanted,
+} from "./store/dataSlice";
+import { useAppDispatch, useAppSelector } from "./store/hooks";
 import {
     selectUiItemsList,
     setUiItemsListItems,
@@ -43,12 +48,7 @@ import {
     setUiItemsListLatestInArea,
     setUiItemsListWithout,
 } from "./store/uiSlice";
-import { Shop } from "./store/data/shops";
-import { Text, View } from "react-native";
-import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { withSeparator } from "./with";
-import React, { JSXElementConstructor, ReactElement, useState } from "react";
-import { ItemsListTitle } from "./ItemsListTitle";
 
 export function ShopItemsList(props: {
     shop: Shop;
@@ -122,7 +122,6 @@ export function ShopItemsList(props: {
                         itemId: item.id,
                         shopId: props.shop.id,
                         price: value.value,
-                        unitId: value.unitId,
                     }),
                 );
             }
@@ -154,18 +153,17 @@ export function ShopItemsList(props: {
     function handleRenderItem(
         item: Item,
     ): ReactElement<any, string | JSXElementConstructor<any>> | null {
+        const currentItemShop = item.shops.find(
+            (x) => x.shopId === props.shop.id,
+        );
         const description = withSeparator(
-            getPackageQuantityUnit(item),
+            getPackageQuantityUnit(currentItemShop, item),
             " - ",
             item.shops
                 .filter((x) => x.checked)
                 .map((x) => shops.find((s) => s.id === x.shopId)?.name)
                 .filter((x) => !!x)
                 .join(", "),
-        );
-
-        const currentItemShop = item.shops.find(
-            (x) => x.shopId === props.shop.id,
         );
 
         let quantity = quantityToString(item.quantity);
@@ -176,10 +174,6 @@ export function ShopItemsList(props: {
         let price = numberToString(currentItemShop?.price);
         if (price) {
             price += " €";
-            const unitName = getUnitName(currentItemShop?.unitId);
-            if (unitName) {
-                price += `/${unitName}`;
-            }
         }
 
         return (

@@ -39,6 +39,7 @@ import {
     formatPrice,
     getNormalizedPrice,
     getPackagePrice,
+    getPackageUnit,
     getQuantityUnit,
 } from "./store/data/items";
 import {
@@ -171,7 +172,6 @@ export function ItemScreen(props: {
                         itemId: item.id,
                         shopId: value1.state.shop.id,
                         price: value1.value,
-                        unitId: value1.unitId,
                     }),
                 );
             }
@@ -206,9 +206,11 @@ export function ItemScreen(props: {
         setShowCalculator({
             visible: true,
             value: currentItemShop?.price,
-            unitId: currentItemShop?.unitId,
             packageValue: currentItemShop?.packageQuantity,
-            packageUnitId: currentItemShop?.packageUnitId,
+            packageUnitId: getPackageUnit(
+                currentItemShop?.packageUnitId,
+                item.packageUnitId,
+            ).id,
             shop: shop,
             source: "shop",
         });

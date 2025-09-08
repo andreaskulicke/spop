@@ -1,11 +1,14 @@
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import React, { useState } from "react";
+import { Keyboard, ScrollView } from "react-native";
+import { RootStackParamList } from "../App";
 import { Calculator } from "./Calculator";
-import { Category } from "./store/data/categories";
 import { getCalculatorFields } from "./getCalculatorFields";
 import { HistoryListItem } from "./HistoryListItem";
+import { Category } from "./store/data/categories";
 import { Item, UnitId, replaceUnitIdIfEmpty } from "./store/data/items";
-import { Keyboard, ScrollView } from "react-native";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "../App";
+import { Shop } from "./store/data/shops";
+import { Storage } from "./store/data/storages";
 import {
     selectItems,
     setItemPackageQuantity,
@@ -13,10 +16,7 @@ import {
     setItemShopPackage,
     setItemShopPrice,
 } from "./store/dataSlice";
-import { Shop } from "./store/data/shops";
-import { Storage } from "./store/data/storages";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import React, { useState } from "react";
 
 export function HistoryList(props: {
     item: Item;
@@ -84,7 +84,6 @@ export function HistoryList(props: {
                         itemId: item.id,
                         shopId: props.shop!.id,
                         price: value.value,
-                        unitId: value.unitId,
                     }),
                 );
             }

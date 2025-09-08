@@ -19,7 +19,7 @@ import { getCalculatorFields } from "./getCalculatorFields";
 import {
     Item,
     UnitId,
-    getPackageQuantityUnit,
+    getItemPackageQuantityUnit,
     getUnitName,
     itemListStyle,
 } from "./store/data/items";
@@ -124,7 +124,7 @@ export function StorageItemsList(props: {
         item: Item,
     ): ReactElement<any, string | JSXElementConstructor<any>> | null {
         const description = withSeparator(
-            getPackageQuantityUnit(item),
+            getItemPackageQuantityUnit(item),
             " - ",
             item.storages
                 .map((x) => storages.find((s) => s.id === x.storageId)?.name)

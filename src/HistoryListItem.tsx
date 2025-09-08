@@ -76,7 +76,6 @@ export function HistoryListItem(props: {
                         gap: 8,
                     }}
                 >
-                    <Text>{getQuantityUnitFromItem(props.item)}</Text>
                     {props.onCalculatorPress && price && (
                         <TouchableRipple
                             style={{

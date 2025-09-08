@@ -2,7 +2,7 @@
 
 | Icon                 | Color | Package Price | Normalized Price |
 | -------------------- | ----- | :-----------: | :--------------: |
-| "arrow-down          | green |       +       |        +         |
+| "arrow-down          | green | (multiple) +  |        +         |
 | "arrow-bottom-right" | green |       -       |        +         |
 | "arrow-right"        | green |  multiple +   |    multiple +    |
 | "arrow-up-right"     | red   |       +       |        -         |

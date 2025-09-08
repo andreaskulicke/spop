@@ -246,6 +246,9 @@ export const itemsSlice = createSlice({
             );
             if (item) {
                 item.quantity = action.payload.quantity;
+                if (item.wanted && !item.quantity) {
+                    item.quantity = 1;
+                }
             }
         },
         setItemCategory: (
@@ -373,8 +376,13 @@ export const itemsSlice = createSlice({
                     shop.packageQuantity = action.payload.packageQuantity;
                     shop.packageUnitId = action.payload.packageUnitId; // TODO: check diff unit across item.unitId, item.packageUnitId
                 }
+                if (!item.unitId || item.unitId === "-") {
+                    item.unitId = action.payload.packageUnitId;
+                }
                 if (!item.packageQuantity) {
                     item.packageQuantity = action.payload.packageQuantity;
+                }
+                if (!item.packageUnitId || item.packageUnitId === "-") {
                     item.packageUnitId = action.payload.packageUnitId;
                 }
             }
@@ -385,7 +393,6 @@ export const itemsSlice = createSlice({
                 itemId: string;
                 shopId: string;
                 price?: number;
-                unitId?: UnitId;
             }>,
         ) => {
             if (action.payload.shopId !== allShop.id) {
@@ -401,7 +408,6 @@ export const itemsSlice = createSlice({
                         item.shops.push(shop);
                     }
                     shop.price = action.payload.price;
-                    shop.unitId = action.payload.unitId;
                 }
             }
         },
@@ -459,6 +465,9 @@ export const itemsSlice = createSlice({
                 const item = state.items.splice(index, 1)[0];
                 state.items.unshift(item);
                 item.wanted = action.payload.wanted;
+                if (action.payload.wanted && !item.quantity) {
+                    item.quantity = 1;
+                }
             }
         },
 
@@ -1137,17 +1146,19 @@ export const makeSelectItemShopsWithMinPrice = () =>
             }
             const prices = item.shops
                 .filter((x) => x.price !== undefined && x.price !== null)
-                .map((x) => ({
-                    p: getPackagePriceBase(x, item),
-                    pb: getNormalizedPriceBase(x, item),
-                    s: x,
-                }));
-            const minPrice = Math.min(...prices.map((x) => x.p));
-            const minBasePrice = Math.min(...prices.map((x) => x.pb));
+                .map((x) => {
+                    return {
+                        np: getPackagePriceBase(x, item),
+                        npb: getNormalizedPriceBase(x, item),
+                        s: x,
+                    };
+                });
+            const minPrice = Math.min(...prices.map((x) => x.np));
+            const minBasePrice = Math.min(...prices.map((x) => x.npb));
             return {
-                prices: prices.filter((x) => x.p === minPrice).map((x) => x.s),
+                prices: prices.filter((x) => x.np === minPrice).map((x) => x.s),
                 normalizedPrices: prices
-                    .filter((x) => x.pb === minBasePrice)
+                    .filter((x) => x.npb === minBasePrice)
                     .map((x) => x.s),
             };
         },
@@ -1240,9 +1251,8 @@ export const selectStorage = createSelector(
 function updateItemShopUnits(item: WritableDraft<Item>) {
     const unit = getUnit(item.unitId);
     item.shops
-        .filter((s) => getUnit(s.unitId).group !== unit.group)
+        .filter((s) => getUnit(s.packageUnitId).group !== unit.group)
         .forEach((s) => {
-            s.unitId = item.unitId;
             s.packageUnitId = item.unitId;
         });
 }
