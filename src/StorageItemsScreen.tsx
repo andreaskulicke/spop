@@ -15,7 +15,8 @@ export function StorageItemsScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
     route: RouteProp<StoragesStackParamList, "Fill">;
 }) {
-    const [selectedItemId, setSelectedItemId] = useState("");
+    const [filterText, setFilterText] = useState("");
+
     const storage = useAppSelector((state) =>
         selectStorage(state, props.route.params.storageId),
     );
@@ -28,7 +29,11 @@ export function StorageItemsScreen(props: {
 
     function handleGoBack() {
         dispatch(setUiUndo(undefined));
-        props.navigation.goBack();
+        if (filterText) {
+            setFilterText("");
+        } else {
+            props.navigation.goBack();
+        }
     }
 
     return (
@@ -44,14 +49,10 @@ export function StorageItemsScreen(props: {
                 )}
             </Appbar.Header>
             <SearchBarList
-                list={
-                    <StorageItemsList
-                        storage={storage}
-                        selectedItemId={selectedItemId}
-                    />
-                }
+                filterText={filterText}
+                list={<StorageItemsList storage={storage} />}
                 storage={storage}
-                onItemPress={(itemId) => setSelectedItemId(itemId)}
+                onFilterChange={(x) => setFilterText(x)}
             />
             <UndoSnackBar contextName="StorageItemsScreen" />
         </StatusBarView>

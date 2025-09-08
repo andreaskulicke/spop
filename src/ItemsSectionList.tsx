@@ -34,7 +34,6 @@ function isExpanded(collapsed: ItemsSectionListSection["collapsed"]): boolean {
 
 export function ItemsSectionList(props: {
     data: ItemsSectionListSection[];
-    selectedItemId?: string;
     renderItem: (
         item: Item,
     ) => ReactElement<any, string | JSXElementConstructor<any>> | null;

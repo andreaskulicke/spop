@@ -43,6 +43,8 @@ export function SearchBarList(props: {
     category?: Category;
     shop?: Shop;
     storage?: Storage;
+    filterText?: string;
+    onFilterChange?: (text: string) => void;
     onItemPress?: (itemId: string) => void;
 }) {
     const categoryId =
@@ -137,6 +139,7 @@ export function SearchBarList(props: {
         quantity: string,
     ): void {
         setFilter({ text, name, quantity });
+        props.onFilterChange?.(text);
     }
 
     useEffect(() => {
@@ -149,6 +152,12 @@ export function SearchBarList(props: {
         navigation.addListener("beforeRemove", r);
         return () => navigation.removeListener("beforeRemove", r);
     }, []);
+
+    useEffect(() => {
+        setFilter((x) =>
+            !props.filterText ? undefined : { ...x, text: props.filterText },
+        );
+    }, [props.filterText]);
 
     useEffect(() => {
         const [q, u] = parseQuantityUnit(filter?.quantity);

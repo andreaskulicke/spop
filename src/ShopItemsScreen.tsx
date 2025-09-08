@@ -22,9 +22,9 @@ export function ShopItemsScreen(props: {
     navigation: NavigationProp<RootStackParamList>;
     route: RouteProp<ShopsStackParamList, "Shopping">;
 }) {
-    const [selectedItemId, setSelectedItemId] = useState("");
     const [showHidden, setShowHidden] = useState(false);
     const [stopperOff, setStopperOff] = useState(false);
+    const [filterText, setFilterText] = useState("");
 
     const shop = useAppSelector((state) =>
         selectShop(state, props.route.params.id),
@@ -42,7 +42,11 @@ export function ShopItemsScreen(props: {
 
     function handleGoBack() {
         dispatch(setUiUndo(undefined));
-        props.navigation.goBack();
+        if (filterText) {
+            setFilterText("");
+        } else {
+            props.navigation.goBack();
+        }
     }
 
     function handleOpenPress(): void {
@@ -130,16 +134,16 @@ export function ShopItemsScreen(props: {
                 )}
             </Appbar.Header>
             <SearchBarList
+                filterText={filterText}
                 list={
                     <ShopItemsList
                         shop={shop}
-                        selectedItemId={selectedItemId}
                         stopperOff={stopperOff}
                         showHidden={showHidden}
                     />
                 }
                 shop={shop}
-                onItemPress={(itemId) => setSelectedItemId(itemId)}
+                onFilterChange={(x) => setFilterText(x)}
             />
             <UndoSnackBar contextName="ShopItemsScreen" />
         </StatusBarView>

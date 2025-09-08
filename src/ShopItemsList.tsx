@@ -52,7 +52,6 @@ import { withSeparator } from "./with";
 
 export function ShopItemsList(props: {
     shop: Shop;
-    selectedItemId?: string;
     stopperOff?: boolean;
     showHidden?: boolean;
 }) {
@@ -321,7 +320,6 @@ export function ShopItemsList(props: {
             <ItemsSectionList
                 data={data}
                 renderItem={handleRenderItem}
-                selectedItemId={props.selectedItemId}
             />
             <Calculator
                 fields={getCalculatorFields(showCalculator.item, props.shop)}

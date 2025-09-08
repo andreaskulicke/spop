@@ -3,7 +3,7 @@ import { CategoriesStackParamList } from "./CategoriesNavigationScreen";
 import { Item, itemListStyle } from "./store/data/items";
 import { ItemsSectionList, ItemsSectionListSection } from "./ItemsSectionList";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
-import { ReactElement, JSXElementConstructor } from "react";
+import { ReactElement, JSXElementConstructor, useState } from "react";
 import { RootStackParamList } from "../App";
 import { SearchBarList } from "./SearchBarList";
 import {
@@ -37,6 +37,8 @@ export function CategoryItemsScreen(props: {
     navigation: NavigationProp<RootStackParamList & CategoriesStackParamList>;
     route: RouteProp<CategoriesStackParamList, "CategoryItems">;
 }) {
+    const [filterText, setFilterText] = useState("");
+
     const category = useAppSelector((state) =>
         selectCategory(state, props.route.params.id ?? ""),
     );
@@ -56,7 +58,7 @@ export function CategoryItemsScreen(props: {
         selectItemsNotWantedWithDifferentCategory(state, category?.id),
     );
     const uiItemsList = useAppSelector(selectUiItemsList);
-    
+
     const dispatch = useAppDispatch();
     const theme = useTheme();
 
@@ -74,7 +76,11 @@ export function CategoryItemsScreen(props: {
 
     function handleGoBack() {
         dispatch(setUiUndo(undefined));
-        props.navigation.goBack();
+        if (filterText) {
+            setFilterText("");
+        } else {
+            props.navigation.goBack();
+        }
     }
 
     function handleRenderItem(
@@ -225,6 +231,7 @@ export function CategoryItemsScreen(props: {
                 )}
             </Appbar.Header>
             <SearchBarList
+                filterText={filterText}
                 list={
                     <ItemsSectionList
                         data={data}
@@ -232,6 +239,7 @@ export function CategoryItemsScreen(props: {
                     />
                 }
                 category={category}
+                onFilterChange={(x) => setFilterText(x)}
             />
             <UndoSnackBar contextName="CategoryItemsScreen" />
         </StatusBarView>

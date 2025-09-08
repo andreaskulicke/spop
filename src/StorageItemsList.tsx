@@ -49,7 +49,6 @@ import { ItemsListTitle } from "./ItemsListTitle";
 
 export function StorageItemsList(props: {
     storage: Storage;
-    selectedItemId?: string;
 }) {
     const storages = useAppSelector(selectStorages);
     const itemsWanted = useAppSelector(selectItemsWanted);
@@ -303,7 +302,6 @@ export function StorageItemsList(props: {
             <ItemsSectionList
                 data={data}
                 renderItem={handleRenderItem}
-                selectedItemId={props.selectedItemId}
             />
             <Calculator
                 fields={getCalculatorFields(showCalculator.item)}
