@@ -1,5 +1,5 @@
 import { Avatar, MD3Theme } from "react-native-paper";
-import { categoryIds } from "./categories";
+import { categoryIds, defaultCategories } from "./categories";
 import { Style } from "react-native-paper/lib/typescript/components/List/utils";
 import { StyleProp, ViewStyle } from "react-native";
 import { SvgProps } from "react-native-svg";
@@ -289,7 +289,7 @@ export const defaultShops: Shop[] = [
         id: "rewe",
         name: "Rewe",
         externalAppId: "de.rewe.app.mobile",
-        categoryIds: [...categoryIds],
+        categoryIds: defaultCategories.map(x => x.id),
     },
     {
         id: "rossmann",
