@@ -376,9 +376,6 @@ export const itemsSlice = createSlice({
                     shop.packageQuantity = action.payload.packageQuantity;
                     shop.packageUnitId = action.payload.packageUnitId; // TODO: check diff unit across item.unitId, item.packageUnitId
                 }
-                if (!item.unitId || item.unitId === "-") {
-                    item.unitId = action.payload.packageUnitId;
-                }
                 if (!item.packageQuantity) {
                     item.packageQuantity = action.payload.packageQuantity;
                 }
@@ -928,8 +925,8 @@ export function sortItemsByCategory(
             ? -1
             : 0
         : !b.categoryId
-          ? 1
-          : c.get(a.categoryId)!.name.localeCompare(c.get(b.categoryId)!.name);
+            ? 1
+            : c.get(a.categoryId)!.name.localeCompare(c.get(b.categoryId)!.name);
 }
 
 // Items: Shop
@@ -977,7 +974,7 @@ export const selectItemsWithShop = createSelector(
         const c = new Map(categories.map((x) => [x.id, x]));
         const shopCategories = [undefined as Category | undefined].concat(
             shop.categoryIds?.filter((x) => !!x).map((x) => c.get(x)) ??
-                [...categories].sort((a, b) => a.name.localeCompare(b.name)),
+            [...categories].sort((a, b) => a.name.localeCompare(b.name)),
         );
 
         // Add all previous shops from last stopper
@@ -1026,10 +1023,10 @@ export const selectItemsWithShop = createSelector(
         ) {
             const sortedArray = sortByCategory
                 ? array.sort(
-                      (a, b) =>
-                          categories.findIndex((x) => x?.id === a.categoryId) -
-                          categories.findIndex((x) => x?.id === b.categoryId),
-                  )
+                    (a, b) =>
+                        categories.findIndex((x) => x?.id === a.categoryId) -
+                        categories.findIndex((x) => x?.id === b.categoryId),
+                )
                 : array;
             return sortedArray.reduce(
                 (v, x) => {
